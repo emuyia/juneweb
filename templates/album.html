@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block content %}
+<img src="{{ url_for('static', filename=album.cover_image) }}" alt="Album cover">
+{% endblock %}
