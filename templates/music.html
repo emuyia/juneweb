@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+  <div class="row">
+    {% for album in albums %}
+    <div class="col-md-4">
+      <a href="{{ url_for('album', id=album.id) }}">
+        <img src="{{ url_for('static', filename=album.cover_image) }}" alt="{{ album.title }}" class="img-fluid album-img">
+      </a>
+      <h5>{{ album.title }}</h5>
+    </div>
+    {% endfor %}
+  </div>
 {% endblock %}

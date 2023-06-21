@@ -31,10 +31,6 @@ a:hover {
     color: #0F67A1;
 }
 
-h1 {
-    text-align: center;
-}
-
 .container {
     max-width: 960px;
     margin: 0 auto;
@@ -104,4 +100,14 @@ footer {
 .button:hover {
     background-color: #0F67A1;
     color: white;
+}
+
+.album-img {
+  object-fit: cover;
+  height: 200px;  /* adjust this to your preferred height */
+}
+
+.album-img-large {
+  object-fit: cover;
+  height: 500px;  /* adjust this to your preferred height */
 }

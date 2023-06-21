@@ -20,12 +20,11 @@ class Album(db.Model):
 
 @app.route('/')
 def home():
-    albums = Album.query.all()
-    return render_template('home.html', albums=albums)
+    return render_template('home.html')
 
-@app.route('/album/<id>')
+@app.route('/album/<int:id>')
 def album(id):
-    album = Album.query.get(id)  # Query the database for a single album
+    album = Album.query.get(id)
     if album is None:
         abort(404)  # Album not found
     return render_template('album.html', album=album)
@@ -36,7 +35,8 @@ def blog():
 
 @app.route('/music')
 def music():
-    return render_template('music.html')
+    albums = Album.query.all()
+    return render_template('music.html', albums=albums)
 
 @app.route('/art')
 def art():
