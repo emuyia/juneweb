@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+    <a href="{{ url_for('add_post') }}">Add a new post</a>
+    <ul>
+        {% for post_id, post in posts.items() %}
+            <li>
+                <a href="{{ url_for('view_post', post_id=post_id) }}">{{ post["title"] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
