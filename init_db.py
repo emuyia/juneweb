@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'albums.db')
+db_path = os.path.join(basedir, 'database.db')
 db_uri = 'sqlite:///' + db_path
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
@@ -18,6 +18,11 @@ class Album(db.Model):
     artist = db.Column(db.String(80), nullable=False)
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
+
+class BlogPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
 
 with app.app_context():
     db.drop_all()
@@ -51,5 +56,8 @@ with app.app_context():
     db.session.add(new_album)
     new_album = Album(title="Maodun", artist="Seven Frames", release_date="29th December 2014", cover_image="images/albums/maodun.jpg")
     db.session.add(new_album)
+
+    new_blogpost = BlogPost(title="First Post", content="This is the first blog post")
+    db.session.add(new_blogpost)
 
     db.session.commit()
