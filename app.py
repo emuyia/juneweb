@@ -140,7 +140,8 @@ def blog():
 
 @app.route('/music')
 def music():
-    albums = Album.query.all()
+    # albums = Album.query.all()
+    albums = Album.query.order_by(Album.release_date).all()
     return render_template('music.html', albums=albums)
 
 

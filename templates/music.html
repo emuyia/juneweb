@@ -8,7 +8,7 @@
 {% endif %}
 
   <div class="row">
-  {% for album in albums %}
+  {% for album in albums|reverse %}
     <div class="col-md-3 mb-3">
       <div class="card bg-dark text-white border-0">
         <a href="{{ url_for('view_album', album_id=album.id) }}">
