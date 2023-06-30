@@ -111,3 +111,18 @@ footer {
   object-fit: cover;
   height: 500px;  /* adjust this to your preferred height */
 }
+
+.form-dark .form-control {
+    background-color: #212529;
+    border-color: #212529;
+    color: #fff;
+}
+
+.form-dark .form-control::placeholder {
+    color: #ccc;
+}
+
+.form-dark .form-control:focus {
+    background-color: #212529;
+    border-color: #fff;
+}

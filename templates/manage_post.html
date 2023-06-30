@@ -1,0 +1,9 @@
+{% extends "manage.html" %}
+
+{% block fields %}
+    <input type="text" class="form-control mb-3" name="title" placeholder="Title" value="{{ post.title if post else '' }}">
+    <textarea name="content" class="form-control mb-3" placeholder="Content">{{ post.content if post else '' }}</textarea>
+{% endblock %}
+
+{% set item_id = post.id %}
+{% set item_type = 'post' %}

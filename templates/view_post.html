@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a class="btn btn-primary" href="javascript:goBack()">Back</a>
+
+{% if check_if_admin() %}
+    <a class="btn btn-primary" href="{{ url_for('manage_post', post_id=post.id) }}">Edit</a>
+{% endif %}
+
+<div class="p-3">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+</div>
+
+{% endblock %}

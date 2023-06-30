@@ -24,6 +24,12 @@ class BlogPost(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(100), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -59,5 +65,8 @@ with app.app_context():
 
     new_blogpost = BlogPost(title="First Post", content="This is the first blog post")
     db.session.add(new_blogpost)
+
+    # admin_user = User(username="june", password="***REMOVED***", is_admin=True)
+    # db.session.add(admin_user)
 
     db.session.commit()

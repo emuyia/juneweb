@@ -1,0 +1,11 @@
+{% extends "manage.html" %}
+
+{% block fields %}
+    <input type="text" class="form-control mb-3" name="title" placeholder="Title" value="{{ album.title if album else '' }}">
+    <input type="text" class="form-control mb-3" name="artist" placeholder="Artist" value="{{ album.artist if album else '' }}">
+    <input type="text" class="form-control mb-3" name="release_date" placeholder="Release Date" value="{{ album.release_date if album else '' }}">
+    <input type="text" class="form-control mb-3" name="cover_image" placeholder="Cover Image" value="{{ album.cover_image if album else '' }}">
+{% endblock %}
+
+{% set item_id = album.id %}
+{% set item_type = 'album' %}
