@@ -2,9 +2,10 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_session import Session
+from datetime import datetime
+from sqlalchemy import DateTime
 
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    date = db.Column(DateTime, nullable=False)
 
 
 class Album(db.Model):
@@ -136,7 +138,7 @@ def home():
 @app.route('/blog')
 def blog():
     print("blog")
-    posts = BlogPost.query.all()
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
     return render_template("blog.html", posts=posts)
 
 
@@ -155,7 +157,12 @@ def view_post(post_id):
 @app.route("/album/<int:album_id>")
 def view_album(album_id):
     album = Album.query.get(album_id)
-    return render_template("view_album.html", album=album)
+
+    # Convert the release_date from 'YYYYMMDD' to 'DD-MM-YYYY'.
+    dt = datetime.strptime(album.release_date, "%Y%m%d")
+    formatted_release_date = dt.strftime("%d-%m-%Y")
+
+    return render_template("view_album.html", album=album, release_date=formatted_release_date)
 
 
 @app.route("/add_post", methods=["GET", "POST"])
@@ -168,11 +175,20 @@ def manage_post(post_id=None):
     if request.method in ["POST", "PUT"]:
         title = request.form["title"]
         content = request.form["content"]
+        date_str = request.form.get("date")
+
+        # Use current date and time if no date input is provided
+        if date_str:
+            date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
+        else:
+            date = datetime.now()
+
         if post:
             post.title = title
             post.content = content
+            post.date = date
         else:
-            post = BlogPost(title=title, content=content)
+            post = BlogPost(title=title, content=content, date=date)
             db.session.add(post)
         db.session.commit()
         return redirect(url_for("home"))

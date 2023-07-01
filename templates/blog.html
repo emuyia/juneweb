@@ -11,7 +11,7 @@
     <h3 class="text-center pb-3">blog</h3>
     {% if posts %}
         <div class="row">
-            {% for post in posts|reverse %}
+            {% for post in posts %}
                 <div class="col-md-6 col-lg-6">
                     <div class="card mb-2">
                         <div class="card-body">
@@ -21,7 +21,8 @@
                             <p class="card-text">{{ post.content[:100] | safe }}...</p>
                         </div>
                         <div class="card-footer text-muted">
-                            <p>date - tag - author</p>
+                            <p>{{ post.date.strftime('%d-%m-%Y - %H:%M') if post.date else '' }}</p>
+                            <p>author - tag</p>
                         </div>
                     </div>
                 </div>

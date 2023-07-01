@@ -12,6 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
 db = SQLAlchemy(app)
 
+
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
@@ -19,16 +20,20 @@ class Album(db.Model):
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
 
+
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.String(80), nullable=False)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
 
 with app.app_context():
     db.drop_all()
@@ -62,11 +67,5 @@ with app.app_context():
     db.session.add(new_album)
     new_album = Album(title="Maodun", artist="Seven Frames", release_date="20141229", cover_image="https://images2.imgbox.com/87/4e/DarFeSz0_o.jpg")
     db.session.add(new_album)
-
-    new_blogpost = BlogPost(title="First Post", content="This is the first blog post")
-    db.session.add(new_blogpost)
-
-    # admin_user = User(username="june", password="***REMOVED***", is_admin=True)
-    # db.session.add(admin_user)
 
     db.session.commit()
