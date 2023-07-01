@@ -2,7 +2,11 @@
 
 {% block fields %}
     <input type="text" class="form-control mb-3" name="title" placeholder="Title" value="{{ post.title if post else '' }}">
-    <textarea name="content" class="form-control mb-3" placeholder="Content">{{ post.content if post else '' }}</textarea>
+    <textarea name="content" id="editor" class="form-control mb-3" placeholder="Content">{{ post.content if post else '' }}</textarea>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'editor' );
+    </script>
 {% endblock %}
 
 {% set item_id = post.id %}

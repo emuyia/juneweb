@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a class="btn btn-primary" href="javascript:goBack()">Back</a>
+<a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
 
 <form method="POST" class="text-white p-3 form-dark">
     <div class="form-group">
@@ -10,12 +10,13 @@
     </div>
     <div class="d-flex justify-content-start">
         <input type="submit" class="btn btn-primary mr-2" value="Submit">
-        {% if item_id and item_type %}
-            <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="ml-2">
-                <input type="submit" class="btn btn-danger" value="Delete">
-            </form>
-        {% endif %}
     </div>
 </form>
+
+{% if item_id and item_type %}
+    <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="ml-2">
+        <input type="submit" class="btn btn-danger" value="Delete">
+    </form>
+{% endif %}
 
 {% endblock %}

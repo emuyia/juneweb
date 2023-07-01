@@ -5,7 +5,9 @@
 <h3 class="text-center pb-4">blog</h3>
 
 {% if check_if_admin() %}
-    <a class="btn btn-primary" href="{{ url_for('manage_post') }}">Add</a>
+    <div class="pb-3">
+        <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
+    </div>
 {% endif %}
 
     {% if posts %}

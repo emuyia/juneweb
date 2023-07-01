@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a class="btn btn-primary" href="javascript:goBack()">Back</a>
+<a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
 
 {% if check_if_admin() %}
     <a class="btn btn-primary" href="{{ url_for('manage_album', album_id=album.id) }}">Edit</a>
@@ -12,7 +12,7 @@
     <h1>{{ album.title }}</h1>
     <p>{{ album.artist }}</p>
     <p>{{ album.release_date }}</p>
-    <img src="{{ url_for('static', filename=album.cover_image) }}" alt="{{ album.title }}" class="img-fluid album-img">
+    <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="img-fluid album-img">
 </div>
 
 {% endblock %}

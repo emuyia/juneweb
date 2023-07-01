@@ -4,7 +4,9 @@
   <h3 class="text-center pb-4">discography</h3>
 
 {% if check_if_admin() %}
-    <a class="btn btn-primary" href="{{ url_for('manage_album') }}">Add</a>
+    <div class="pb-3">
+      <a class="btn btn-primary btn-sm" href="{{ url_for('manage_album') }}">Add</a>
+    </div>
 {% endif %}
 
   <div class="row">
@@ -12,7 +14,7 @@
     <div class="col-md-3 mb-3">
       <div class="card bg-dark text-white border-0">
         <a href="{{ url_for('view_album', album_id=album.id) }}">
-          <img src="{{ url_for('static', filename=album.cover_image) }}" alt="{{ album.title }}" class="card-img-top">
+          <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top">
         </a>
         <div class="card-body p-2">
           <span class="card-title mb-1">{{ album.title }}</span>

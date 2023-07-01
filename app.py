@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_session import Session
 
@@ -134,13 +135,13 @@ def home():
 
 @app.route('/blog')
 def blog():
+    print("blog")
     posts = BlogPost.query.all()
     return render_template("blog.html", posts=posts)
 
 
 @app.route('/music')
 def music():
-    # albums = Album.query.all()
     albums = Album.query.order_by(Album.release_date).all()
     return render_template('music.html', albums=albums)
 
@@ -206,6 +207,8 @@ def manage_album(album_id=None):
 @app.route("/delete_item/<item_type>/<int:item_id>", methods=["POST"])
 @admin_required
 def delete_item(item_type, item_id):
+    print(f"delete_item({item_type}, {item_id}")
+    item = None
     if item_type == 'post':
         item = BlogPost.query.get(item_id)
     elif item_type == 'album':
@@ -213,6 +216,10 @@ def delete_item(item_type, item_id):
     if item:
         db.session.delete(item)
         db.session.commit()
+    else:
+        print('Item not found', 'error')
+        return redirect(url_for('home'))
+    print('Item deleted successfully', 'success')
     return redirect(url_for('home'))
 
 
