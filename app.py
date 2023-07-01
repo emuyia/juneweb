@@ -26,6 +26,8 @@ class BlogPost(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date = db.Column(DateTime, nullable=False)
+    author = db.Column(db.String(50), nullable=False)
+    tag = db.Column(db.String(100), nullable=True)
 
 
 class Album(db.Model):
@@ -176,6 +178,9 @@ def manage_post(post_id=None):
         title = request.form["title"]
         content = request.form["content"]
         date_str = request.form.get("date")
+        tag = request.form["tag"]
+        user = User.query.get(session['user_id'])
+        author = user.username
 
         # Use current date and time if no date input is provided
         if date_str:
@@ -187,8 +192,10 @@ def manage_post(post_id=None):
             post.title = title
             post.content = content
             post.date = date
+            post.tag = tag
+            post.author = author
         else:
-            post = BlogPost(title=title, content=content, date=date)
+            post = BlogPost(title=title, content=content, date=date, tag=tag, author=author)
             db.session.add(post)
         db.session.commit()
         return redirect(url_for("home"))

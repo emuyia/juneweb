@@ -13,7 +13,8 @@
     <p>{{ post.date.strftime('%H:%M %d-%m-%Y') if post.date else '' }}</p>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content | safe }}</p>
-
+    <p>{{ post.tag }}</p>
+    <p>{{ post.author }}</p>
 </div>
 
 {% endblock %}

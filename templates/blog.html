@@ -22,7 +22,7 @@
                         </div>
                         <div class="card-footer text-muted">
                             <p>{{ post.date.strftime('%d-%m-%Y - %H:%M') if post.date else '' }}</p>
-                            <p>author - tag</p>
+                            <p>{{ post.author }} - #{{ post.tag }}</p>
                         </div>
                     </div>
                 </div>
