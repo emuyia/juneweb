@@ -2,23 +2,33 @@
 
 {% block content %}
 
-<h3 class="text-center pb-4">blog</h3>
-
 {% if check_if_admin() %}
     <div class="pb-3">
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
     </div>
 {% endif %}
 
+    <h3 class="text-center pb-3">blog</h3>
     {% if posts %}
-        <ul>
-            {% for post in posts %}
-                <li>
-                    <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
-                </li>
+        <div class="row">
+            {% for post in posts|reverse %}
+                <div class="col-md-6 col-lg-6">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ post.content[:100] | safe }}...</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <p>date - tag - author</p>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p>No blog posts found.</p>
     {% endif %}
+
 {% endblock %}

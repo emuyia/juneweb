@@ -2,21 +2,25 @@
 
 {% block content %}
 
-<a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
+<div class="d-flex justify-content-between">
+    <a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
+    {% if item_id and item_type %}
+        <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="d-inline-block">
+            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+        </form>
+    {% endif %}
+</div>
 
-<form method="POST" class="text-white p-3 form-dark">
-    <div class="form-group">
-        {% block fields %}{% endblock %}
-    </div>
-    <div class="d-flex justify-content-start">
-        <input type="submit" class="btn btn-primary mr-2" value="Submit">
-    </div>
-</form>
 
-{% if item_id and item_type %}
-    <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="ml-2">
-        <input type="submit" class="btn btn-danger" value="Delete">
+<div class="p-3">
+    <form method="POST" class="text-white form-dark">
+        <div class="form-group">
+            {% block fields %}{% endblock %}
+        </div>
+        <div class="d-flex justify-content-start">
+            <input type="submit" class="btn btn-success mr-2" value="Submit">
+        </div>
     </form>
-{% endif %}
+</div>
 
 {% endblock %}

@@ -34,7 +34,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    new_album = Album(title="Mahjong Hospital", artist="June", release_date="20230710", cover_image="https://images2.imgbox.com/34/2a/c6hF2yJh_o.jpg")
+    new_album = Album(title="Mahjong Hospital", artist="Daffodil", release_date="20230710", cover_image="https://images2.imgbox.com/34/2a/c6hF2yJh_o.jpg")
     db.session.add(new_album)
     new_album = Album(title="Killy candy laura tell", artist="Daffodil", release_date="20220902", cover_image="https://images2.imgbox.com/27/6b/w4r2lsHB_o.jpg")
     db.session.add(new_album)

@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3 class="text-center pb-4">discography</h3>
 
 {% if check_if_admin() %}
     <div class="pb-3">
       <a class="btn btn-primary btn-sm" href="{{ url_for('manage_album') }}">Add</a>
     </div>
 {% endif %}
+
+  <h3 class="text-center pb-4">discography</h3>
 
   <div class="row">
   {% for album in albums|reverse %}
