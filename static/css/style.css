@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Cambo');
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Cambo', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #181818;
+    background-color: #121212;
     color: #FFFFFF;
 }
 
@@ -10,6 +11,7 @@ body {
     width: 60%; /* take up 60% of the viewport width, effectively creating 20% margins on each side */
     margin: 0 auto; /* centers the container horizontally */
     padding: 20px;
+    max-width: 960px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -29,12 +31,6 @@ a {
 
 a:hover {
     color: #0F67A1;
-}
-
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
 .navbar {
