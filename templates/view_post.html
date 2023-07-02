@@ -10,11 +10,11 @@
 </div>
 
 <div class="p-3">
-    <p>{{ post.date.strftime('%H:%M %d-%m-%Y') if post.date else '' }}</p>
+    <p>author: {{ post.author }}</p>
+    <p>created: {{ post.date.strftime('%H:%M %d-%m-%Y') if post.date else '' }}</p>
+    <p>tags: {% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content | safe }}</p>
-    <p>{{ post.tag }}</p>
-    <p>{{ post.author }}</p>
 </div>
 
 {% endblock %}

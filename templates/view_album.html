@@ -14,6 +14,11 @@
     <p>{{ album.artist }}</p>
     <p>{{ release_date }}</p>
     <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="img-fluid album-img">
+    <ul class="p-4">
+        {% for track in album.tracks %}
+            <li>{{ track.id }}. {{ track.name }} ({{ track.duration }})</li>
+        {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}

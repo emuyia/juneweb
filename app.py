@@ -5,7 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from flask_session import Session
 from datetime import datetime
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, Table, Text
+from sqlalchemy.orm import relationship
 
 app = Flask(__name__)
 
@@ -20,6 +21,17 @@ db_uri = 'sqlite:///' + db_path  # create the full SQLite database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db = SQLAlchemy(app)
 
+# association tables
+post_tags = db.Table('post_tags',
+    db.Column('post_id', db.Integer, db.ForeignKey('blog_post.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+)
+
+album_tracks = db.Table('album_tracks',
+    db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
+    db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
+)
+
 
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +39,14 @@ class BlogPost(db.Model):
     content = db.Column(db.Text, nullable=False)
     date = db.Column(DateTime, nullable=False)
     author = db.Column(db.String(50), nullable=False)
-    tag = db.Column(db.String(100), nullable=True)
+    tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
+    def get_tags(self):
+        return ', '.join(tag.name for tag in self.tags)
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
 
 
 class Album(db.Model):
@@ -36,6 +55,13 @@ class Album(db.Model):
     artist = db.Column(db.String(80), nullable=False)
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
+    tracks = relationship('Track', secondary=album_tracks, backref=db.backref('albums'))
+
+
+class Track(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(50))
 
 
 class User(db.Model):
@@ -68,7 +94,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         session["username"] = username
-        return redirect(url_for("home"))
+        return redirect(url_for("blog"))
     return render_template("register.html")
 
 
@@ -82,7 +108,7 @@ def login():
             session["user_id"] = user.id
             flash("Logged in successfully.", "success")
             print("Logged in successfully.")
-            return redirect(url_for("home"))
+            return redirect(url_for("blog"))
         else:
             flash("Invalid username or password.", "error")
     return render_template("login.html")
@@ -107,7 +133,7 @@ def admin_required(f):
         user = User.query.get(session["user_id"])
         if not user.is_admin:
             flash("You do not have access to this page.", "error")
-            return redirect(url_for("home"))
+            return redirect(url_for("blog"))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -119,22 +145,16 @@ def check_if_admin():
     return False
 
 
-@app.route("/profile", methods=["GET", "POST"])
-def profile():
-    #
-    return redirect(url_for("profile"))
+@app.route("/")
+def home():
+    return redirect(url_for("blog"))
 
 
 @app.route("/logout")
 def logout():
     session.pop("user_id", None)
     flash("You have been logged out.", "success")
-    return redirect(url_for("home"))
-
-
-@app.route('/')
-def home():
-    return render_template('home.html')
+    return redirect(url_for("blog"))
 
 
 @app.route('/blog')
@@ -178,11 +198,10 @@ def manage_post(post_id=None):
         title = request.form["title"]
         content = request.form["content"]
         date_str = request.form.get("date")
-        tag = request.form["tag"]
+        tag_names = request.form["tag"].split(",")  # get list of tags
         user = User.query.get(session['user_id'])
         author = user.username
 
-        # Use current date and time if no date input is provided
         if date_str:
             date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
         else:
@@ -192,16 +211,24 @@ def manage_post(post_id=None):
             post.title = title
             post.content = content
             post.date = date
-            post.tag = tag
             post.author = author
         else:
-            post = BlogPost(title=title, content=content, date=date, tag=tag, author=author)
+            post = BlogPost(title=title, content=content, date=date, author=author)
             db.session.add(post)
+
+        for tag_name in tag_names:
+            tag = Tag.query.filter_by(name=tag_name.strip()).first()  # check if tag exists
+            if not tag:  # if tag doesn't exist, create it
+                tag = Tag(name=tag_name.strip())
+                db.session.add(tag)
+            post.tags.append(tag)  # add tag to post
+
         db.session.commit()
-        return redirect(url_for("home"))
+        return redirect(url_for("blog"))
     return render_template("manage_post.html", post=post)
 
 
+# needs updating for adding tracks
 @app.route("/add_album", methods=["GET", "POST"])
 @app.route("/edit_album/<int:album_id>", methods=["GET", "POST"])
 @admin_required
@@ -223,7 +250,7 @@ def manage_album(album_id=None):
             album = Album(title=title, artist=artist, release_date=release_date, cover_image=cover_image)
             db.session.add(album)
         db.session.commit()
-        return redirect(url_for("home"))
+        return redirect(url_for("blog"))
     return render_template("manage_album.html", album=album)
 
 
@@ -241,9 +268,9 @@ def delete_item(item_type, item_id):
         db.session.commit()
     else:
         print('Item not found', 'error')
-        return redirect(url_for('home'))
+        return redirect(url_for('blog'))
     print('Item deleted successfully', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('blog'))
 
 
 if __name__ == "__main__":

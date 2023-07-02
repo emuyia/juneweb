@@ -3,7 +3,7 @@
 {% block fields %}
     <input type="text" class="form-control mb-3" name="title" placeholder="Title" value="{{ post.title if post else '' }}">
     <textarea name="content" id="editor" class="form-control mb-3" placeholder="Content">{{ post.content if post else '' }}</textarea>
-    <input type="text" class="form-control mb-3" name="tag" placeholder="tag" value="{{ post.tag if post else '' }}">
+    <input type="text" class="form-control mb-3" name="tag" placeholder="Tags (separate with commas)" value="{{ post.get_tags() if post else '' }}">
     <input type="datetime-local" class="form-control mb-3" name="date" value="{{ post.date.strftime('%Y-%m-%dT%H:%M') if post else '' }}">
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script>
