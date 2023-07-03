@@ -37,7 +37,9 @@ class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date = db.Column(DateTime, nullable=False)
+    date_created = db.Column(DateTime)
+    date_posted = db.Column(DateTime, nullable=False)
+    date_updated = db.Column(DateTime, nullable=False)
     author = db.Column(db.String(50), nullable=False)
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
     def get_tags(self):
@@ -160,7 +162,7 @@ def logout():
 @app.route('/blog')
 def blog():
     print("blog")
-    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
     return render_template("blog.html", posts=posts)
 
 
@@ -197,23 +199,32 @@ def manage_post(post_id=None):
     if request.method in ["POST", "PUT"]:
         title = request.form["title"]
         content = request.form["content"]
-        date_str = request.form.get("date")
         tag_names = request.form["tag"].split(",")  # get list of tags
         user = User.query.get(session['user_id'])
         author = user.username
 
-        if date_str:
-            date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M')
+        date_created_str = request.form.get("date_created")
+
+        if date_created_str:
+            date_created = datetime.strptime(date_created_str, '%Y-%m-%d')
         else:
-            date = datetime.now()
+            date_created = None
 
         if post:
+            if title != post.title or content != post.content:
+                post.date_updated = datetime.now()
             post.title = title
             post.content = content
-            post.date = date
             post.author = author
+            if date_created:  # only update date_created if a new date is provided
+                post.date_created = date_created
         else:
-            post = BlogPost(title=title, content=content, date=date, author=author)
+            post = BlogPost(title=title,
+                            content=content,
+                            date_created=date_created,
+                            date_posted=datetime.now(),
+                            date_updated=datetime.now(),
+                            author=author)
             db.session.add(post)
 
         for tag_name in tag_names:

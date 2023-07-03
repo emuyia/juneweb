@@ -10,13 +10,24 @@
 </div>
 
 <div class="p-3">
-    <div class="mono">
-        <p class="pt-2">author: {{ post.author }}</p>
-        <p>created: {{ post.date.strftime('%H:%M %d-%m-%Y') if post.date else '' }}</p>
-        <p>tags: {% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+    <div class="info d-flex justify-content-between">
+        <div class="text-left">
+            <p>{{ post.author }} - {% for tag in post.tags %} {{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+        </div>
+        <div class="text-right">
+            <p>posted on {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
+            {% if post.date_posted.replace(second=0, microsecond=0) != post.date_updated.replace(second=0, microsecond=0) %}
+                <p>updated on {{ post.date_updated.strftime('%d-%m-%Y at %H:%M') if post.date_updated else '' }}</p>
+            {% endif %}
+        </div>
     </div>
+
     <h1 class="pt-4">{{ post.title }}</h1>
     <p>{{ post.content | safe }}</p>
+
+
+    <p class="info pt-5 text-right">originally written on {{ post.date_created.strftime('%d-%m-%Y') if post.date_created else 'an unspecified date' }}</p>
+
 </div>
 
 {% endblock %}

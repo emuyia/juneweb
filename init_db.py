@@ -29,9 +29,13 @@ class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date = db.Column(DateTime, nullable=False)
+    date_created = db.Column(DateTime)
+    date_posted = db.Column(DateTime, nullable=False)
+    date_updated = db.Column(DateTime, nullable=False)
     author = db.Column(db.String(50), nullable=False)
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
+    def get_tags(self):
+        return ', '.join(tag.name for tag in self.tags)
 
 
 class Tag(db.Model):

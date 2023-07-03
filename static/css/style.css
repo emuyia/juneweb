@@ -16,8 +16,9 @@ body {
     max-width: 960px;
 }
 
-.mono {
-    font-family: 'Chivo Mono';
+.info {
+    font-family: 'Inter';
+    font-size: 12px;
 }
 
 h1, h2, h3, h4, h5, h6 {

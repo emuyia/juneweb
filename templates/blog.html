@@ -19,10 +19,9 @@
                         </h5>
                         <p class="card-text">{{ post.content[:100] | safe }}...</p>
                     </div>
-                    <div class="card-footer text-muted mono">
-                        <p class="pt-2">{{ post.author }}</p>
-                        <p>{{ post.date.strftime('%H:%M - %d-%m-%Y') if post.date else '' }}</p>
-                        <p>{% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+                    <div class="card-footer text-muted info d-flex justify-content-between">
+                        <p>{{ post.author }} - {% for tag in post.tags %} {{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+                        <p>posted {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
                     </div>
                 </div>
             </div>
