@@ -12,16 +12,16 @@
     <div class="row">
         {% for post in posts %}
             <div class="col-md-6 col-lg-6">
-                <div class="card bg-secondary text-white mb-2">
+                <div class="card text-white">
                     <div class="card-body">
                         <h5 class="card-title">
                             <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
                         </h5>
                         <p class="card-text">{{ post.content[:100] | safe }}...</p>
                     </div>
-                    <div class="card-footer text-muted">
-                        <p>{{ post.author }}</p>
-                        <p>{{ post.date.strftime('%d-%m-%Y - %H:%M') if post.date else '' }}</p>
+                    <div class="card-footer text-muted mono">
+                        <p class="pt-2">{{ post.author }}</p>
+                        <p>{{ post.date.strftime('%H:%M - %d-%m-%Y') if post.date else '' }}</p>
                         <p>{% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
                     </div>
                 </div>
