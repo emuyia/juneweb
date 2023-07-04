@@ -115,13 +115,15 @@ footer {
 }
 
 .album-img {
-  object-fit: cover;
-  height: 200px;  /* adjust this to your preferred height */
+  object-fit: unset;
+  height: 30%;
+  max-width: 30%;
 }
 
 .album-img-large {
-  object-fit: cover;
-  height: 500px;  /* adjust this to your preferred height */
+  object-fit: unset;
+  height: 60%;
+  max-width: 60%;
 }
 
 .form-dark .form-control {

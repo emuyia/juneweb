@@ -9,16 +9,23 @@
     {% endif %}
 </div>
 
-<div class="p-3">
-    <h1>{{ album.title }}</h1>
-    <p>{{ album.artist }}</p>
-    <p>{{ release_date }}</p>
-    <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="img-fluid album-img">
-    <ul class="p-4">
-        {% for track in album.tracks %}
-            <li>{{ track.id }}. {{ track.name }} ({{ track.duration }})</li>
-        {% endfor %}
-    </ul>
+<div class="d-flex justify-content-between">
+    <div class="card text-white mt-3 p-4" style="flex: 0 0 60%;">
+        <div class="card-body">
+            <h1 class="card-title">{{ album.title }}</h1>
+            <p class="card-text">{{ album.artist }}</p>
+            <p class="card-text">{{ release_date }}</p>
+            <ul class="list-group list-group-flush">
+                {% for track in album.tracks %}
+                    <li class="list-group-item">{{ track.id }}. {{ track.name }} ({{ track.duration }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="card text-white" style="flex: 0 0 40%;">
+        <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top">
+    </div>
 </div>
+
 
 {% endblock %}
