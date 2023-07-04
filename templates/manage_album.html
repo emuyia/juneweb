@@ -6,61 +6,47 @@
     <input type="text" class="form-control mb-3" name="release_date" placeholder="Release Date" value="{{ album.release_date if album else '' }}">
     <input type="text" class="form-control mb-3" name="cover_image" placeholder="Cover Image" value="{{ album.cover_image if album else '' }}">
 
-    <!-- Tracks section -->
-    <div id="tracks-section">
-        {% for track in album.tracks if album %}
+    <div id="all-tracks">
+        {% for track in album.tracks %}
         <div class="card mb-3 track-card">
             <div class="card-body">
-                <input type="hidden" name="tracks" value="{{ track|tojson|safe if track else '{}' }}">
+                <input type="hidden" name="tracks[][id]" value="{{ track.id }}">
                 <input type="text" class="form-control mb-3" name="tracks[][name]" placeholder="Track Name" value="{{ track.name }}">
                 <input type="text" class="form-control mb-3" name="tracks[][duration]" placeholder="Track Duration" value="{{ track.duration }}">
+                <button type="button" class="btn btn-danger delete-track">Delete Track</button>
             </div>
         </div>
-        {% else %}
-        <div class="card mb-3 track-card">
+        {% endfor %}
+        <div id="tracks-container"></div>
+    </div>
+    <button type="button" class="btn btn-success mb-3" id="add-track">Add Track</button>
+    <script>
+    document.getElementById('add-track').addEventListener('click', function() {
+        var trackCard = document.createElement('div');
+        trackCard.className = 'card mb-3 track-card';
+        trackCard.innerHTML = `
             <div class="card-body">
                 <input type="hidden" name="tracks[][id]">
                 <input type="text" class="form-control mb-3" name="tracks[][name]" placeholder="Track Name">
                 <input type="text" class="form-control mb-3" name="tracks[][duration]" placeholder="Track Duration">
+                <button class="btn btn-danger delete-track">Delete Track</button>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- Add and Delete buttons -->
-    <button type="button" class="btn btn-success mb-3" id="add-track-btn">Add Track</button>
-    <button type="button" class="btn btn-danger mb-3" id="delete-track-btn">Delete Track</button>
+        `;
+        document.getElementById('tracks-container').appendChild(trackCard);
+    });
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('add-track-btn').onclick = function() {
-            var tracksSection = document.getElementById('tracks-section');
-            var trackCards = tracksSection.getElementsByClassName('track-card');
-            var newTrackCard = trackCards[0].cloneNode(true);  // clone the first card
+    document.getElementById('tracks-container').addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-track')) {
+            e.target.parentElement.parentElement.remove();
+        }
+    });
 
-            // clear the fields in the cloned card
-            var inputs = newTrackCard.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].value = '';
-            }
-
-            // serialize new track data to a JSON string
-            inputs[0].value = JSON.stringify({name: '', duration: ''});
-
-            tracksSection.appendChild(newTrackCard);  // add the cloned card to the end
-        };
-
-        document.getElementById('delete-track-btn').onclick = function() {
-            var tracksSection = document.getElementById('tracks-section');
-            var trackCards = tracksSection.getElementsByClassName('track-card');
-            if (trackCards.length > 1) {  // don't delete the last card
-                tracksSection.removeChild(trackCards[trackCards.length - 1]);  // remove the last card
-            }
-        };
+    document.getElementById('all-tracks').addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-track')) {
+            e.target.parentElement.parentElement.remove();
+        }
     });
     </script>
-
-
 {% endblock %}
 
 {% set item_id = album.id %}

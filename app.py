@@ -59,7 +59,7 @@ class Album(db.Model):
     artist = db.Column(db.String(80), nullable=False)
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
-    tracks = relationship('Track', secondary=album_tracks, backref=db.backref('albums'))
+    tracks = relationship('Track', cascade="all,delete", secondary=album_tracks, backref=db.backref('albums', cascade="all,delete"))
 
 
 class Track(db.Model):
@@ -255,22 +255,6 @@ def manage_album(album_id=None):
         release_date = request.form["release_date"]
         cover_image = request.form["cover_image"]
 
-        tracks_data = request.form.getlist('tracks')  # Get list of track data from form
-        tracks_data = [json.loads(track_data) for track_data in tracks_data]
-
-        for track_data in tracks_data:
-            track_id = track_data.get('id')
-            track_name = track_data.get('name')
-            track_duration = track_data.get('duration')
-
-            if track_id:  # if track id is present, it is an existing track
-                track = Track.query.get(track_id)
-                track.name = track_name
-                track.duration = track_duration
-            else:  # else, it is a new track
-                track = Track(name=track_name, duration=track_duration)
-                album.tracks.append(track)  # add the new track to the album
-
         if album:
             album.name = title
             album.artist = artist
@@ -279,6 +263,26 @@ def manage_album(album_id=None):
         else:
             album = Album(title=title, artist=artist, release_date=release_date, cover_image=cover_image)
             db.session.add(album)
+
+        track_ids = request.form.getlist('tracks[][id]')
+        track_names = request.form.getlist('tracks[][name]')
+        track_durations = request.form.getlist('tracks[][duration]')
+        submitted_track_ids = set(int(track_id) for track_id in track_ids if track_id)
+        db_track_ids = set(track.id for track in album.tracks)
+        deleted_track_ids = db_track_ids - submitted_track_ids
+
+        for track_id in deleted_track_ids:
+            Track.query.filter_by(id=track_id).delete()
+
+        for track_id, track_name, track_duration in zip(track_ids, track_names, track_durations):
+            if track_id:
+                track = Track.query.get(int(track_id))
+                track.name = track_name
+                track.duration = track_duration
+            else:
+                track = Track(name=track_name, duration=track_duration)
+                album.tracks.append(track)
+
         db.session.commit()
         return redirect(url_for("blog"))
     return render_template("manage_album.html", album=album)

@@ -3,13 +3,12 @@
 {% block fields %}
     <input type="text" class="form-control mb-3" name="title" placeholder="Title" value="{{ post.title if post else '' }}">
     <textarea name="content" id="editor" class="form-control" placeholder="Content">{{ post.content if post else '' }}</textarea>
-    <input type="text" class="form-control mb-1 mt-3" name="tag" placeholder="Tags (separate with commas)" value="{{ post.get_tags() if post else '' }}">
-    <input type="date" class="form-control mb-1" name="date_created" value="{{ post.date_created.strftime('%Y-%m-%d') if post.date_created else '' }}">
-
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace( 'editor' );
     </script>
+    <input type="text" class="form-control mb-1 mt-3" name="tag" placeholder="Tags (separate with commas)" value="{{ post.get_tags() if post else '' }}">
+    <input type="date" class="form-control mb-1" name="date_created" value="{{ post.date_created.strftime('%Y-%m-%d') if post.date_created else '' }}">
 
 {% endblock %}
 
