@@ -11,7 +11,7 @@
         {% for track in album.tracks if album %}
         <div class="card mb-3 track-card">
             <div class="card-body">
-                <input type="hidden" name="tracks" value="{{ track|tojson|safe if track else '{}' }}">
+                <input type="hidden" name="tracks" value="{{ track|todict|tojson|safe if track else '{}' }}">
                 <input type="text" class="form-control mb-3" name="tracks[][name]" placeholder="Track Name" value="{{ track.name }}">
                 <input type="text" class="form-control mb-3" name="tracks[][duration]" placeholder="Track Duration" value="{{ track.duration }}">
             </div>
