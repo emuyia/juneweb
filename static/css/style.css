@@ -128,7 +128,7 @@ footer {
 
 .form-dark .form-control {
     background-color: #212529;
-    border-color: #212529;
+    border-color: #141414;
     color: #fff;
 }
 
@@ -138,9 +138,14 @@ footer {
 
 .form-dark .form-control:focus {
     background-color: #212529;
-    border-color: #fff;
 }
 
 .card {
     background-color: #22262a;
+}
+
+.list-group .list-group-item {
+    background-color: #22262a;
+    padding: 0px;
+    border: none;
 }
