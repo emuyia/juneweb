@@ -5,8 +5,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from flask_session import Session
 from datetime import datetime
-from sqlalchemy import DateTime, Table, Text
+from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
+import json
 
 app = Flask(__name__)
 
@@ -23,14 +24,14 @@ db = SQLAlchemy(app)
 
 # association tables
 post_tags = db.Table('post_tags',
-    db.Column('post_id', db.Integer, db.ForeignKey('blog_post.id')),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-)
+                     db.Column('post_id', db.Integer, db.ForeignKey('blog_post.id')),
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+                     )
 
 album_tracks = db.Table('album_tracks',
-    db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
-    db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
-)
+                        db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
+                        db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
+                        )
 
 
 class BlogPost(db.Model):
@@ -42,6 +43,7 @@ class BlogPost(db.Model):
     date_updated = db.Column(DateTime, nullable=False)
     author = db.Column(db.String(50), nullable=False)
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
+
     def get_tags(self):
         return ', '.join(tag.name for tag in self.tags)
 
@@ -123,6 +125,7 @@ def login_required(f):
             flash("You need to login first.", "error")
             return redirect(url_for("login"))
         return f(*args, **kwargs)
+
     return decorated_function
 
 
@@ -137,6 +140,7 @@ def admin_required(f):
             flash("You do not have access to this page.", "error")
             return redirect(url_for("blog"))
         return f(*args, **kwargs)
+
     return decorated_function
 
 
@@ -182,7 +186,6 @@ def view_post(post_id):
 def view_album(album_id):
     album = Album.query.get(album_id)
 
-    # Convert the release_date from 'YYYYMMDD' to 'DD-MM-YYYY'.
     dt = datetime.strptime(album.release_date, "%Y%m%d")
     formatted_release_date = dt.strftime("%d-%m-%Y")
 
@@ -239,7 +242,6 @@ def manage_post(post_id=None):
     return render_template("manage_post.html", post=post)
 
 
-# needs updating for adding tracks
 @app.route("/add_album", methods=["GET", "POST"])
 @app.route("/edit_album/<int:album_id>", methods=["GET", "POST"])
 @admin_required
@@ -252,6 +254,23 @@ def manage_album(album_id=None):
         artist = request.form["artist"]
         release_date = request.form["release_date"]
         cover_image = request.form["cover_image"]
+
+        tracks_data = request.form.getlist('tracks')  # Get list of track data from form
+        tracks_data = [json.loads(track_data) for track_data in tracks_data]
+
+        for track_data in tracks_data:
+            track_id = track_data.get('id')
+            track_name = track_data.get('name')
+            track_duration = track_data.get('duration')
+
+            if track_id:  # if track id is present, it is an existing track
+                track = Track.query.get(track_id)
+                track.name = track_name
+                track.duration = track_duration
+            else:  # else, it is a new track
+                track = Track(name=track_name, duration=track_duration)
+                album.tracks.append(track)  # add the new track to the album
+
         if album:
             album.name = title
             album.artist = artist
