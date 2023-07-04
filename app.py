@@ -242,6 +242,15 @@ def manage_post(post_id=None):
     return render_template("manage_post.html", post=post)
 
 
+@app.template_filter('todict')
+def to_dict(track):
+    return {
+        'id': track.id,
+        'name': track.name,
+        'duration': track.duration
+    }
+
+
 @app.route("/add_album", methods=["GET", "POST"])
 @app.route("/edit_album/<int:album_id>", methods=["GET", "POST"])
 @admin_required
