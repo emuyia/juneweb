@@ -13,8 +13,8 @@ def init_db():
         album = Album(title="Example",
                       artist="Example",
                       release_date="20200101",
-                      cover_image="https://images2.imgbox.com/34/2a/c6hF2yJh_o.jpg",
-                      content="Example")
+                      cover_image="https://images2.imgbox.com/34/2a/c6hF2yJh_o.jpg")
+
         track = Track(name="Track 1",
                       duration="3:45")
         album.tracks.append(track)
