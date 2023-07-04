@@ -7,7 +7,6 @@ from flask_session import Session
 from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
-import json
 
 app = Flask(__name__)
 
@@ -60,6 +59,7 @@ class Album(db.Model):
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
     tracks = relationship('Track', cascade="all,delete", secondary=album_tracks, backref=db.backref('albums', cascade="all,delete"))
+    content = db.Column(db.Text, nullable=False)
 
 
 class Track(db.Model):
