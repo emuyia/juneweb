@@ -166,8 +166,13 @@ def logout():
 @app.route('/blog')
 def blog():
     print("blog")
-    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
-    return render_template("blog.html", posts=posts)
+    selected_tag = request.args.get('tag')
+    if selected_tag:
+        posts = BlogPost.query.join(BlogPost.tags).filter(Tag.name == selected_tag).order_by(BlogPost.date_posted.desc()).all()
+    else:
+        posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("blog.html", posts=posts, tags=tags, selected_tag=selected_tag or '')
 
 
 @app.route('/music')

@@ -2,13 +2,13 @@
 
 {% block content %}
 
-{% if check_if_admin() %}
-    <div class="pb-3">
-      <a class="btn btn-primary btn-sm" href="{{ url_for('manage_album') }}">Add</a>
-    </div>
-{% endif %}
-
-  <!--<h3 class="text-center pb-4">discography</h3>-->
+<div class="d-flex pb-3">
+  {% if check_if_admin() %}
+      <div class="ps-1">
+        <a class="btn btn-primary btn-sm" href="{{ url_for('manage_album') }}">Add</a>
+      </div>
+  {% endif %}
+</div>
 
   <div class="row">
   {% for album in albums|reverse %}
@@ -24,5 +24,6 @@
       </div>
     </div>
   {% endfor %}
-</div>
+  </div>
+
 {% endblock %}

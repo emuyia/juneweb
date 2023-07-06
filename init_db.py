@@ -25,7 +25,7 @@ def init_db():
                         date_updated=datetime.now(),
                         author="example")
 
-        db.session.add(admin_user)
+        # db.session.add(admin_user)
         db.session.add(album)
         db.session.add(post)
 

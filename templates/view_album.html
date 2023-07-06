@@ -9,10 +9,10 @@
     {% endif %}
 </div>
 
-<div class="d-flex justify-content-between mt-3 p-4">
-    <div class="card text-white mr-2" style="flex: 0 0 65%;">
+<div class="d-flex justify-content-between pt-3">
+    <div class="card text-white me-2 p-4" style="flex: 0 0 65%;">
         <div class="card-body">
-            <h1 class="card-title display-5">{{ album.title }}</h1>
+            <h2 class="card-title">{{ album.title }}</h2>
             <p class="card-text">{{ album.artist }} — {{ release_date }}</p>
             <ul class="list-group list-group-flush mt-3">
                 {% for track in album.tracks %}
@@ -23,7 +23,7 @@
     </div>
     <div class="text-white" style="flex: 0 0 35%;">
         <a href="{{ album.cover_image }}" target="_blank"><img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top"></a>
-        <div class="card text-white p-1">
+        <div class="card text-white mt-2 p-2">
             <p>{{ album.content | safe }}</p>
         </div>
     </div>

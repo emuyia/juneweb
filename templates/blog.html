@@ -2,17 +2,39 @@
 
 {% block content %}
 
-{% if check_if_admin() %}
-    <div class="pb-3">
+<div class="d-flex pb-3">
+    {% if check_if_admin() %}
+    <div class="ps-1">
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
     </div>
+    <div class="dropdown ps-1 ms-auto" data-bs-theme="dark">
+      <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButtonDark" data-bs-toggle="dropdown" aria-expanded="false">
+        Filter by tag
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButtonDark">
+        <li><a class="dropdown-item {% if selected_tag == '' %}active{% endif %}" href="?tag=">-</a></li>
+        {% for tag in tags %}
+            <li><a class="dropdown-item {% if selected_tag == tag.name %}active{% endif %}" href="?tag={{ tag.name }}">#{{ tag.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
 {% endif %}
+</div>
+
+
+<script>
+function filterPostsByTag() {
+    const selectedTag = document.getElementById('tag-select').value;
+    window.location.href = `?tag=${selectedTag}`;
+}
+</script>
 
 {% if posts %}
     <div class="row">
         {% for post in posts %}
             <div class="col-md-6 col-lg-6">
-                <div class="card text-white">
+                <div class="card text-white mb-2">
                     <div class="card-body">
                         <h5 class="card-title">
                             <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
@@ -20,8 +42,11 @@
                         <p class="card-text">{{ post.content[:100] | safe }}...</p>
                     </div>
                     <div class="card-footer text-muted info d-flex justify-content-between">
-                        <p>{{ post.author }} - {% for tag in post.tags %} {{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
-                        <p>posted {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
+                        <div>
+                            <p>posted by {{ post.author }}</p>
+                            <p style="font-size:10px;color:gray;">on {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
+                        </div>
+                        <p class="text-end">{% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %} {% endif %}{% endfor %}</p>
                     </div>
                 </div>
             </div>
