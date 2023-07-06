@@ -23,11 +23,18 @@
             <p class="mt-1" style="color:gray;">originally written {{ post.date_created.strftime('%d-%m-%Y') if post.date_created else 'on an unspecified date' }}</p>
         </div>
         <div class="text-end">
-            <a class="mb-1 d-inline-block">{% for tag in post.tags %} #{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}</a>
-            <p style="color:gray;">posted {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
+
+            {% for tag in post.tags %}
+              <a href="{{ url_for('blog', tag=tag.name) }}" class="text-end d-inline-block">#{{ tag.name }}</a>
+              {% if not loop.last %} {% endif %}
+            {% endfor %}
+
+            <p class="mt-1" style="color:gray;">posted {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
+
             {% if post.date_posted.replace(second=0, microsecond=0) != post.date_updated.replace(second=0, microsecond=0) %}
                 <p style="color:gray;">updated {{ post.date_updated.strftime('%d-%m-%Y at %H:%M') if post.date_updated else '' }}</p>
             {% endif %}
+
         </div>
     </div>
 
