@@ -235,27 +235,21 @@ def manage_post(post_id=None):
                             author=author)
             db.session.add(post)
 
-        # Get a list of all the current tags of the post
-        current_tag_names = [tag.name for tag in post.tags] if post else []
+        # Clear existing tags before adding new ones
+        if post:
+            post.tags = []
 
         for tag_name in tag_names:
-            tag = Tag.query.filter_by(name=tag_name.strip()).first()  # check if tag exists
+            tag = Tag.query.filter_by(name=tag_name.strip()).first()
             if not tag:  # if tag doesn't exist, create it
                 tag = Tag(name=tag_name.strip())
                 db.session.add(tag)
-            if post and tag not in post.tags:  # add tag to post if it's not already there
-                post.tags.append(tag)
+            post.tags.append(tag)  # append each tag to post
 
-        # If post exists, remove tags that are not in the new tag list
-        if post:
-            for tag_name in current_tag_names:
-                if tag_name not in tag_names:
-                    tag = Tag.query.filter_by(name=tag_name.strip()).first()
-                    if tag:
-                        post.tags.remove(tag)
-                        # Check if the tag is used by any other post
-                        if not tag.posts:
-                            db.session.delete(tag)
+        # Remove unused tags from the database
+        for tag in Tag.query.all():
+            if not tag.posts:
+                db.session.delete(tag)
 
         db.session.commit()
 
