@@ -60,6 +60,7 @@ class Album(db.Model):
     cover_image = db.Column(db.String(120), nullable=True)
     tracks = relationship('Track', cascade="all,delete", secondary=album_tracks, backref=db.backref('albums', cascade="all,delete"))
     content = db.Column(db.Text)
+    content_main = db.Column(db.Text)
 
 
 class Track(db.Model):
@@ -274,11 +275,12 @@ def manage_album(album_id=None):
     if album_id:
         album = Album.query.get(album_id)
     if request.method in ["POST", "PUT"]:
-        title = request.form["title"]
+        title = request.form.get["title"]
         artist = request.form["artist"]
         release_date = request.form["release_date"]
         cover_image = request.form["cover_image"]
         content = request.form["content"]
+        content_main = request.form["content_main"]
 
         if album:
             album.name = title
@@ -286,12 +288,14 @@ def manage_album(album_id=None):
             album.release_date = release_date
             album.cover_image = cover_image
             album.content = content
+            album.content_main = content_main
         else:
             album = Album(title=title,
                           artist=artist,
                           release_date=release_date,
                           cover_image=cover_image,
-                          content=content)
+                          content=content,
+                          content_main=content_main)
             db.session.add(album)
 
         track_ids = request.form.getlist('tracks[][id]')

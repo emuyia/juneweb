@@ -1,9 +1,6 @@
 aims
-- filter posts by tag
-- sort posts by attributes
-
-- allow for adding tracks
-- restyle view_album.html
 
 - make music navbar item dropdown containing discography page
 - move current music.html to discog.html
+
+- add attribute to albums that lets you add content below the tracklist
