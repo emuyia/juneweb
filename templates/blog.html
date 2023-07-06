@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="d-flex pb-3">
+<div class="d-flex pb-1">
     {% if check_if_admin() %}
     <div class="ps-1">
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
@@ -28,15 +28,17 @@ function filterPostsByTag() {
 </script>
 
 {% if posts %}
-    <div class="row">
+    <div class="row ps-2 pe-2">
         {% for post in posts %}
-            <div class="col-md-6 col-lg-6">
-                <div class="card text-white mb-2">
+            <div class="col-md-6 col-lg-6 g-2">
+                <div class="card text-white" style="max-height:300px;">
                     <div class="card-body">
                         <h5 class="card-title">
                             <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
                         </h5>
-                        <p class="card-text">{{ post.content[:100] | safe }}...</p>
+                        <div class="miniature-view">
+                          <p class="card-text">{{ post.content | safe }}...</p>
+                        </div>
                     </div>
                     <div class="card-footer text-muted info d-flex justify-content-between">
                         <div>
