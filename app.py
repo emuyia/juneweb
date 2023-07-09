@@ -27,7 +27,7 @@ migrate = Migrate(app, db)
 
 # association tables
 post_tags = db.Table('post_tags',
-                     db.Column('post_id', db.Integer, db.ForeignKey('blog_post.id')),
+                     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
                      db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
                      )
 
@@ -37,7 +37,7 @@ album_tracks = db.Table('album_tracks',
                         )
 
 
-class BlogPost(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
@@ -63,8 +63,8 @@ class Album(db.Model):
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
     tracks = relationship('Track', cascade="all,delete", secondary=album_tracks, backref=db.backref('albums', cascade="all,delete"))
+    embed = db.Column(db.Text)
     content = db.Column(db.Text)
-    content_main = db.Column(db.Text)
 
 
 class Track(db.Model):
@@ -173,9 +173,9 @@ def blog():
     print("blog")
     selected_tag = request.args.get('tag')
     if selected_tag:
-        posts = BlogPost.query.join(BlogPost.tags).filter(Tag.name == selected_tag).order_by(BlogPost.date_posted.desc()).all()
+        posts = Post.query.join(Post.tags).filter(Tag.name == selected_tag).order_by(Post.date_posted.desc()).all()
     else:
-        posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
+        posts = Post.query.order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
     return render_template("blog.html", posts=posts, tags=tags, selected_tag=selected_tag or '')
 
@@ -188,7 +188,7 @@ def music():
 
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
-    post = BlogPost.query.get(post_id)
+    post = Post.query.get(post_id)
     return render_template("view_post.html", post=post)
 
 
@@ -208,7 +208,7 @@ def view_album(album_id):
 def manage_post(post_id=None):
     post = None
     if post_id:
-        post = BlogPost.query.get(post_id)
+        post = Post.query.get(post_id)
     if request.method in ["POST", "PUT"]:
         title = request.form["title"]
         content = request.form["content"]
@@ -232,7 +232,7 @@ def manage_post(post_id=None):
             if date_created:  # only update date_created if a new date is provided
                 post.date_created = date_created
         else:
-            post = BlogPost(title=title,
+            post = Post(title=title,
                             content=content,
                             date_created=date_created,
                             date_posted=datetime.now(),
@@ -279,27 +279,27 @@ def manage_album(album_id=None):
     if album_id:
         album = Album.query.get(album_id)
     if request.method in ["POST", "PUT"]:
-        title = request.form.get["title"]
+        title = request.form["title"]
         artist = request.form["artist"]
         release_date = request.form["release_date"]
         cover_image = request.form["cover_image"]
+        embed = request.form["embed"]
         content = request.form["content"]
-        content_main = request.form["content_main"]
 
         if album:
             album.name = title
             album.artist = artist
             album.release_date = release_date
             album.cover_image = cover_image
+            album.embed = embed
             album.content = content
-            album.content_main = content_main
         else:
             album = Album(title=title,
                           artist=artist,
                           release_date=release_date,
                           cover_image=cover_image,
-                          content=content,
-                          content_main=content_main)
+                          embed=embed,
+                          content=content)
             db.session.add(album)
 
         track_ids = request.form.getlist('tracks[][id]')
@@ -332,7 +332,7 @@ def delete_item(item_type, item_id):
     print(f"delete_item({item_type}, {item_id}")
     item = None
     if item_type == 'post':
-        item = BlogPost.query.get(item_id)
+        item = Post.query.get(item_id)
     elif item_type == 'album':
         item = Album.query.get(item_id)
     if item:
