@@ -7,6 +7,7 @@ from flask_session import Session
 from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -20,6 +21,9 @@ db_uri = 'sqlite:///' + db_path  # create the full SQLite database URI
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
+
 
 # association tables
 post_tags = db.Table('post_tags',
