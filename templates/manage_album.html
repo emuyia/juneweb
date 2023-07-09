@@ -1,7 +1,7 @@
 {% extends "manage.html" %}
 
 {% block fields %}
-    <div class="card mb-3 track-card">
+    <div class="card mb-4 track-card">
         <div class="card-body">
             <div class="d-flex justify-content-between">
                 <div class="row p-3">
@@ -13,20 +13,24 @@
                     <input type="text" class="form-control mb-1" name="release_date" id="release_date" placeholder="Release Date" value="{{ album.release_date if album else '' }}">
                     <label for="cover_image" class="mt-2">Cover (URL): </label>
                     <input type="text" class="form-control mb-1" name="cover_image" id="cover_image" placeholder="Cover Image" value="{{ album.cover_image if album else '' }}">
+
+                    <label for="embed" class="mt-2">Embed (HTML): </label>
+                    <textarea name="embed" id="embed" class="form-control" placeholder="Embed">{{ album.embed if album else '' }}</textarea>
+
                     <label for="editor" class="mt-2">Content (HTML): </label>
-                    <div class="mt-5">
-                        <textarea name="content" id="editor" class="form-control" placeholder="Content">{{ album.content if album else '' }}</textarea>
-                    </div>
+                    <div><textarea name="content" id="editor" class="form-control" placeholder="Content">{{ album.content if album else '' }}</textarea></div>
                     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
                     <script>
                         CKEDITOR.replace( 'editor' );
                     </script>
+
                 </div>
             </div>
         </div>
     </div>
 
     <div id="all-tracks">
+        <p class="text-center mb-2" style="font-size:1.1em;">Tracklist</p>
         {% set counter = namespace(value=1) %}
         {% for track in album.tracks %}
         <div class="card mb-1 track-card">
