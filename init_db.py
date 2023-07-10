@@ -1,14 +1,10 @@
-from app import app, db, Album, Track, BlogPost, User, datetime
+from app import app, db, Album, Track, Post, User, datetime
 
 
 def init_db():
     with app.app_context():
         db.drop_all()
         db.create_all()
-
-        admin_user = User(username="june",
-                          password="***REMOVED***",
-                          is_admin=True)
 
         album = Album(title="Example",
                       artist="Example",
@@ -19,13 +15,12 @@ def init_db():
                       duration="3:45")
         album.tracks.append(track)
 
-        post = BlogPost(title="Example",
+        post = Post(title="Example",
                         content="Example",
                         date_posted=datetime.now(),
                         date_updated=datetime.now(),
                         author="example")
 
-        # db.session.add(admin_user)
         db.session.add(album)
         db.session.add(post)
 
