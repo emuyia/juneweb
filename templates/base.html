@@ -21,7 +21,7 @@
           <li class="nav-item dropdown">
               <div style="display:flex;">
                   <a class="nav-link px-2 {{'active' if request.path == url_for('discog') else ''}}"
-                     href="{{ url_for('blog') }}">
+                     href="{{ url_for('blog', tag='music') }}">
                       music
                   </a>
               </div>
