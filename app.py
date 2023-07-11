@@ -1,4 +1,4 @@
-import os
+import config
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,15 +11,11 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = "***REMOVED***"
+app.config["SESSION_TYPE"] = config.SESSION_TYPE
+app.config["SECRET_KEY"] = config.SECRET_KEY
 Session(app)
 
-basedir = os.path.abspath(os.path.dirname(__file__))  # get the path to the directory of the current file
-db_path = os.path.join(basedir, 'database.db')  # create a path that adds database.db to the end of the base dir path
-db_uri = 'sqlite:///' + db_path  # create the full SQLite database URI
-
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
