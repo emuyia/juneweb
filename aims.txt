@@ -1,6 +1,0 @@
-aims
-
-- make music navbar item dropdown containing discography page
-- move current music.html to discog.html
-
-- add attribute to albums that lets you add content below the tracklist
