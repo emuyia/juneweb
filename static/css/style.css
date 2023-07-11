@@ -16,7 +16,7 @@ body {
 .container {
     width: 60%; /* take up 60% of the viewport width, effectively creating 20% margins on each side */
     margin: 0 auto; /* centers the container horizontally */
-    padding: 20px;
+    padding: 15px;
     max-width: 960px;
 }
 
@@ -74,9 +74,9 @@ a:hover {
     color: #FFFFFF;
     font-weight: 600;
     text-decoration: none;
-    padding: 15px 20px;
+    margin: 0px 0px;
     border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.6s ease;
 }
 
 .nav-link:hover {
@@ -128,4 +128,10 @@ a:hover {
 
 .post-title {
     font-size: 30px;
+}
+
+@media (min-width: 992px) {
+  .navbar-hover .dropdown:hover .dropdown-menu {
+    display: block;
+  }
 }

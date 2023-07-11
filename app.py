@@ -180,10 +180,10 @@ def blog():
     return render_template("blog.html", posts=posts, tags=tags, selected_tag=selected_tag or '')
 
 
-@app.route('/music')
-def music():
+@app.route('/discog')
+def discog():
     albums = Album.query.order_by(Album.release_date).all()
-    return render_template('music.html', albums=albums)
+    return render_template('discog.html', albums=albums)
 
 
 @app.route("/post/<int:post_id>")
