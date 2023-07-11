@@ -18,27 +18,45 @@
       <div class="collapse navbar-collapse" id="navbarNav">
 
         <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-              <div style="display:flex;">
-                  <a class="nav-link px-2 {{'active' if request.path == url_for('discog') else ''}}"
-                     href="{{ url_for('blog', tag='music') }}">
-                      music
-                  </a>
-              </div>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="{{ url_for('discog') }}">discography</a>
-                  <a class="dropdown-item" href="#">live</a>
-                  <!-- add more links if needed -->
-              </div>
-          </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link px-2" href="{{ url_for('blog', tag='music') }}">music</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{{ url_for('discog') }}">discography</a>
+                    <a class="dropdown-item" href="#">live</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link px-2" href="{{ url_for('blog', tag='tech') }}">tech</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">software</a>
+                    <a class="dropdown-item" href="#">hardware</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link px-2" href="{{ url_for('blog', tag='writing') }}">writing</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">fiction</a>
+                    <a class="dropdown-item" href="#">reviews</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-2" href="{{ url_for('blog', tag='writing') }}">art</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link px-2" href="{{ url_for('blog', tag='video') }}">video</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">speedruns</a>
+                </div>
+            </li>
+
         </ul>
 
         <ul class="navbar-nav ms-auto">
             {% if user %}
-            <li class="nav-item px-2">
+            <li class="nav-item px-1">
                 <div class="nav-link">{{ user.username }}</div>
             </li>
-            <li class="nav-item px-2">
+            <li class="nav-item px-1">
                 <a class="nav-link" href="{{ url_for('logout') }}">logout</a>
             </li>
         {% endif %}
