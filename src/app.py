@@ -3,11 +3,11 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from flask_session import Session
 from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
+from flask_session import Session
 
 app = Flask(__name__)
 
@@ -58,7 +58,10 @@ class Album(db.Model):
     artist = db.Column(db.String(80), nullable=False)
     release_date = db.Column(db.String(80), nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
-    tracks = relationship('Track', cascade="all,delete", secondary=album_tracks, backref=db.backref('albums', cascade="all,delete"))
+    tracks = relationship('Track',
+                          cascade="all,delete",
+                          secondary=album_tracks,
+                          backref=db.backref('albums', cascade="all,delete"))
     embed = db.Column(db.Text)
     content = db.Column(db.Text)
 
@@ -229,11 +232,11 @@ def manage_post(post_id=None):
                 post.date_created = date_created
         else:
             post = Post(title=title,
-                            content=content,
-                            date_created=date_created,
-                            date_posted=datetime.now(),
-                            date_updated=datetime.now(),
-                            author=author)
+                        content=content,
+                        date_created=date_created,
+                        date_posted=datetime.now(),
+                        date_updated=datetime.now(),
+                        author=author)
             db.session.add(post)
 
         # Clear existing tags before adding new ones
