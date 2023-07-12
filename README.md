@@ -5,4 +5,3 @@ Personal blog & online portfolio website made with Flask, SQLAlchemy and CSS boo
 ### To do:
 - multi tag filter
 - sort by
-- 
