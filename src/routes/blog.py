@@ -6,16 +6,23 @@ from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 
 
+from sqlalchemy import func
+
 @app.route('/blog')
 def blog():
     print("blog")
-    selected_tag = request.args.get('tag')
-    if selected_tag:
-        posts = Post.query.join(Post.tags).filter(Tag.name == selected_tag).order_by(Post.date_posted.desc()).all()
-    else:
-        posts = Post.query.order_by(Post.date_posted.desc()).all()
+    selected_tags = request.args.get('tags')
+    posts = Post.query
+
+    if selected_tags:
+        selected_tags = selected_tags.split(',')
+        subquery = db.session.query(Post.id).join(Post.tags).filter(Tag.name.in_(selected_tags))\
+            .group_by(Post.id).having(func.count(Tag.id) == len(selected_tags)).subquery()
+        posts = posts.filter(Post.id.in_(subquery))
+
+    posts = posts.order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
-    return render_template("blog.html", posts=posts, tags=tags, selected_tag=selected_tag or '')
+    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
 
 
 @app.route("/post/<int:post_id>")
