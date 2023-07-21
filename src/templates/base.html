@@ -24,39 +24,37 @@
                 <a class="nav-link px-2" href="{{ url_for('blog', tags='music') }}">music</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{{ url_for('discog') }}">discography</a>
-                    <a class="dropdown-item" href="#">live</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='music,live') }}">live</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link px-2" href="{{ url_for('blog', tags='tech') }}">tech</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">software</a>
-                    <a class="dropdown-item" href="#">hardware</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='tech,software') }}">software</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='tech,hardware') }}">hardware</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">writing</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">fiction</a>
-                    <a class="dropdown-item" href="#">reviews</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='writing,fiction') }}">fiction</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='writing,review') }}">reviews</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='art,speedrun') }}">visual</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='art') }}">art</a>
+                    <a class="dropdown-item" href="{{ url_for('blog', tags='speedrun') }}">speedruns</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">art</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='video') }}">video</a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">speedruns</a>
-                </div>
+                <a class="nav-link px-2" href="{{ url_for('about') }}">about</a>
             </li>
 
         </ul>
 
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link px-2" href="{{ url_for('about') }}">about</a>
-            </li>
             {% if user %}
             <li class="nav-item px-1">
                 <div class="nav-link">{{ user.username }}</div>
@@ -65,6 +63,9 @@
                 <a class="nav-link" href="{{ url_for('logout') }}">logout</a>
             </li>
         {% endif %}
+            <li class="nav-item px-1 ms-2">
+                <a class="mt-1 btn btn-sm" style="background-color:#e88000;color:white;" href="{{ url_for('subscribe') }}">Subscribe</a>
+            </li>
         </ul>
     </div>
   </div>
