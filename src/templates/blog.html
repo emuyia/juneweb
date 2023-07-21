@@ -9,18 +9,22 @@
     </div>
     {% endif %}
 
-    <div class="dropdown ps-1 ms-auto">
-      <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
-      <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
-        {% for tag in tags %}
-          <li>
-            <a class="dropdown-item" id="{{tag.name}}">
-                <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
-                <label class="form-check-label">#{{tag.name}}</label>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
+    <div class="ms-auto d-flex">
+        <a class="btn btn-sm" style="background-color: #FF8C00; color: white;" href="{{ url_for('subscribe') }}">Subscribe</a>
+
+        <div class="dropdown ps-1">
+          <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
+          <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
+            {% for tag in tags %}
+              <li>
+                <a class="dropdown-item" id="{{tag.name}}">
+                    <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
+                    <label class="form-check-label">#{{tag.name}}</label>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
     </div>
 
 </div>
