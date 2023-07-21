@@ -2,7 +2,7 @@ from src import app, db
 from src.models import Album, Post
 from src.routes.auth import admin_required
 
-from flask import redirect, url_for
+from flask import redirect, url_for, render_template
 
 
 @app.route("/")
@@ -25,3 +25,8 @@ def delete_item(item_type, item_id):
     else:
         return redirect(url_for('blog'))
     return redirect(url_for('blog'))
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html')

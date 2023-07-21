@@ -54,6 +54,9 @@
         </ul>
 
         <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link px-2" href="{{ url_for('about') }}">about</a>
+            </li>
             {% if user %}
             <li class="nav-item px-1">
                 <div class="nav-link">{{ user.username }}</div>
