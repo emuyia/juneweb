@@ -43,8 +43,6 @@ def login():
         if user and check_password_hash(user.password, password):
             session["user_id"] = user.id
             flash("Logged in successfully.", "success")
-            print("Logged in successfully.")
-            return redirect(url_for("blog"))
         else:
             flash("Invalid username or password.", "error")
     return render_template("login.html")
@@ -87,4 +85,4 @@ def check_if_admin():
 def logout():
     session.pop("user_id", None)
     flash("You have been logged out.", "success")
-    return redirect(url_for("blog"))
+    return redirect(url_for("login"))
