@@ -21,31 +21,31 @@
 
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tag='music') }}">music</a>
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='music') }}">music</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{{ url_for('discog') }}">discography</a>
                     <a class="dropdown-item" href="#">live</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tag='tech') }}">tech</a>
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='tech') }}">tech</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#">software</a>
                     <a class="dropdown-item" href="#">hardware</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tag='writing') }}">writing</a>
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">writing</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#">fiction</a>
                     <a class="dropdown-item" href="#">reviews</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link px-2" href="{{ url_for('blog', tag='writing') }}">art</a>
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">art</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tag='video') }}">video</a>
+                <a class="nav-link px-2" href="{{ url_for('blog', tags='video') }}">video</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#">speedruns</a>
                 </div>
