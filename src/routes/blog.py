@@ -1,16 +1,18 @@
-from src import app, db
-from src.models import Post, Tag, User
+from src import app, db, mail
+from src.models import Post, Tag, User, Subscription
 from src.routes.auth import admin_required
 
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, flash
 from datetime import datetime
-
-
 from sqlalchemy import func
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Email
+from flask_mail import Message
+
 
 @app.route('/blog')
 def blog():
-    print("blog")
     selected_tags = request.args.get('tags')
     posts = Post.query
 
@@ -68,6 +70,7 @@ def manage_post(post_id=None):
                         date_updated=datetime.now(),
                         author=author)
             db.session.add(post)
+            send_new_post_email(post)
 
         # Clear existing tags before adding new ones
         if post:
@@ -89,3 +92,30 @@ def manage_post(post_id=None):
 
         return redirect(url_for("blog"))
     return render_template("manage_post.html", post=post)
+
+
+class SubscriptionForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Subscribe')
+
+
+@app.route('/subscribe', methods=['GET', 'POST'])
+def subscribe():
+    form = SubscriptionForm()
+    if form.validate_on_submit():
+        subscription = Subscription(email=form.email.data)
+        db.session.add(subscription)
+        db.session.commit()
+        flash('Thanks for subscribing!', 'success')
+        return redirect(url_for('subscribe'))
+    return render_template('subscribe.html', title='Subscribe', form=form)
+
+
+def send_new_post_email(post):
+    subscribers = Subscription.query.all()
+    with mail.connect() as conn:
+        for subscriber in subscribers:
+            msg = Message('New Post', recipients=[subscriber.email])
+            msg.body = f'A new post has been published: {post.title}'
+            conn.send(msg)
+
