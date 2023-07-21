@@ -1,3 +1,4 @@
+import src.config
 from src import app, db
 from src.models import User
 
@@ -24,7 +25,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = generate_password_hash(request.form["password"])
-        is_admin = True if username == "june" else False
+        is_admin = True if username == src.config.ADMIN_USERNAME else False
         user = User(username=username, password=password, is_admin=is_admin)
         db.session.add(user)
         db.session.commit()
