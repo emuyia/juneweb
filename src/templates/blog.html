@@ -61,7 +61,7 @@ function filterPostsByTags() {
                     </div>
                     <div class="card-footer text-muted info d-flex justify-content-between">
                         <div>
-                            <p>posted by <a href="#" class="author">{{ post.author }}</a></p>
+                            <p>posted by <span class="author">{{ post.author }}</span></p>
                             <p style="font-size:10px;color:gray;">on {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
                         </div>
                         <div>
