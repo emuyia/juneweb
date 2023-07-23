@@ -1,11 +1,11 @@
 <div class="col-md-3 mb-3">
-  <div class="card text-white border-0">
+  <div class="rounded border-0">
     <a href="{{ url_for('view_album', album_id=album.id) }}">
-      <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top" style="border-radius: .25rem;">
+      <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top" style="border-radius:.25rem;">
     </a>
-    <div class="card-body p-2" style="background-color:transparent;">
-      <span class="card-title mb-1">{{ album.title }}</span>
-      <p class="card-text small text-muted">{{ album.artist }}</p>
+    <div class="p-2" style="background-color:transparent;">
+      <span class="mb-1">{{ album.title }}</span>
+      <p class="small text-muted">{{ album.artist }}</p>
     </div>
   </div>
 </div>
