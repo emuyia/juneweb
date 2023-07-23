@@ -1,18 +1,31 @@
 from src import app, db
-from src.models import Album, Track
+from src.models import Album, Track, Post, Tag
 from src.routes.auth import admin_required
-
 from flask import render_template, request, redirect, url_for
 from datetime import datetime
+from sqlalchemy import desc
 
 
-@app.route('/discog')
+@app.route('/music')
+def music():
+    posts = Post.query.join(Post.tags).filter(Tag.name == 'music').order_by(Post.date_posted.desc()).limit(21).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
+    return render_template("music.html", posts=posts, tags=tags, albums=albums)
+
+
+@app.route('/music/discog')
 def discog():
-    albums = Album.query.order_by(Album.release_date).all()
+    albums = Album.query.order_by(desc(Album.release_date)).all()
     return render_template('discog.html', albums=albums)
 
 
-@app.route("/album/<int:album_id>")
+@app.route('/music/live')
+def live():
+    return render_template('live.html')
+
+
+@app.route("/music/album/<int:album_id>")
 def view_album(album_id):
     album = Album.query.get(album_id)
 
@@ -31,8 +44,8 @@ def to_dict(track):
     }
 
 
-@app.route("/add_album", methods=["GET", "POST"])
-@app.route("/edit_album/<int:album_id>", methods=["GET", "POST"])
+@app.route("/music/add_album", methods=["GET", "POST"])
+@app.route("/music/edit_album/<int:album_id>", methods=["GET", "POST"])
 @admin_required
 def manage_album(album_id=None):
     album = None

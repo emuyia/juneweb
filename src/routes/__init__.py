@@ -1,1 +1,1 @@
-from . import common, auth, blog, discog
+from . import common, auth, blog, music

@@ -21,18 +21,14 @@
 
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='music') }}">music</a>
+                <a class="nav-link px-2" href="{{ url_for('music') }}">music</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{{ url_for('discog') }}">discography</a>
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='music,live') }}">live</a>
+                    <a class="dropdown-item" href="{{ url_for('live') }}">live</a>
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='tech') }}">tech</a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='tech,software') }}">software</a>
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='tech,hardware') }}">hardware</a>
-                </div>
+            <li class="nav-item">
+                <a class="nav-link px-2" href="{{ url_for('dev') }}">dev</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">writing</a>

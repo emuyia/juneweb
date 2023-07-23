@@ -12,21 +12,13 @@
 {% endif %}
 
 
-<p class="pt-1 mb-4 text-center page-title">Discography</p>
+<p class="page-title">Discography</p>
+
+<hr class="hr">
 
   <div class="row">
-  {% for album in albums|reverse %}
-    <div class="col-md-3 mb-3">
-      <div class="card bg-dark text-white border-0">
-        <a href="{{ url_for('view_album', album_id=album.id) }}">
-          <img src="{{ album.cover_image }}" alt="{{ album.title }}" class="card-img-top">
-        </a>
-        <div class="card-body p-2">
-          <span class="card-title mb-1">{{ album.title }}</span>
-          <p class="card-text small text-muted">{{ album.artist }}</p>
-        </div>
-      </div>
-    </div>
+  {% for album in albums %}
+    {% include 'item_album.html' %}
   {% endfor %}
   </div>
 

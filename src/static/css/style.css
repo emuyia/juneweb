@@ -128,6 +128,21 @@ a:hover {
 
 .page-title {
     font-size: 30px;
+    padding-top: .25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.post-title {
+    font-size: 30px;
+    padding-top: .25rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.sub-title {
+    font-size: 18px;
+    text-align: left;
 }
 
 @media (min-width: 992px) {
@@ -138,4 +153,8 @@ a:hover {
 
 .author {
     color: #5e8de8;
+}
+
+ul {
+  padding-left: 20px;
 }

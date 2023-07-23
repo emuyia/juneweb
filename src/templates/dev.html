@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p class="page-title">Dev</p>
+
+<hr class="hr">
+
+<p class="sub-title mb-1">Projects</p>
+<ul>
+    <li>project</li>
+</ul>
+<p class="sub-title mt-2 mb-1">Unfinished</p>
+<ul>
+    <li>unfinished project</li>
+</ul>
+
+<hr class="hr">
+
+<p class="sub-title mb-1">Related Posts</p>
+
+{% if posts %}
+    <div class="row ps-2 pe-2">
+        {% for post in posts %}
+            {% include 'item_post.html' %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No posts found.</p>
+{% endif %}
+
+<a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('blog', tags='dev') }}">View all #dev posts</a>
+
+{% endblock %}

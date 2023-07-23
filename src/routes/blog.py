@@ -1,7 +1,6 @@
 from src import app, db, mail
 from src.models import Post, Tag, User, Subscription
 from src.routes.auth import admin_required
-
 from flask import render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 from sqlalchemy import func
@@ -11,7 +10,7 @@ from wtforms.validators import DataRequired, Email
 from flask_mail import Message
 
 
-@app.route('/blog')
+@app.route('/')
 def blog():
     selected_tags = request.args.get('tags')
     posts = Post.query
@@ -24,6 +23,7 @@ def blog():
 
     posts = posts.order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
+
     return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
 
 
