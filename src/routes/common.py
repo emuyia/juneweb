@@ -31,3 +31,24 @@ def dev():
     posts = Post.query.join(Post.tags).filter(Tag.name == 'dev').order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
     return render_template("dev.html", posts=posts, tags=tags)
+
+
+@app.route('/art')
+def art():
+    posts = Post.query.join(Post.tags).filter(Tag.name == 'art').order_by(Post.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("art.html", posts=posts, tags=tags)
+
+
+@app.route('/writing')
+def writing():
+    posts = Post.query.join(Post.tags).filter(Tag.name == 'writing').order_by(Post.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("writing.html", posts=posts, tags=tags)
+
+
+@app.route('/speedrun')
+def speedrun():
+    posts = Post.query.join(Post.tags).filter(Tag.name == 'speedrun').order_by(Post.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("speedrun.html", posts=posts, tags=tags)

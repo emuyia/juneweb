@@ -158,3 +158,27 @@ a:hover {
 ul {
   padding-left: 20px;
 }
+
+.fs-10 {
+  font-size: 10px;
+}
+
+.fs-9 {
+  font-size: 11px;
+}
+
+.fs-8 {
+  font-size: 12px;
+}
+
+.fs-7 {
+  font-size: 13px;
+}
+
+.bg-darker {
+  background-color: #1d1d1d;
+}
+
+.bg-evendarker {
+  background-color: #171717;
+}

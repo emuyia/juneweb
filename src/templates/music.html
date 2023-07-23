@@ -2,33 +2,45 @@
 
 {% block content %}
 
-<p class="page-title">Music</p>
+<p class="page-title">my music</p>
 
-<hr class="hr">
+<p class="text-center fs-7">
+    <a href="#">Bandcamp</a> /
+    <a href="#">Spotify</a> /
+    <a href="#">YouTube</a> /
+    <a href="#">SoundCloud</a>
+</p>
 
-<p class="sub-title mb-2">Latest Releases</p>
-<div class="row">
-  {% for album in albums %}
-    {% include 'item_album.html' %}
-  {% endfor %}
-</div>
-<a class="btn btn-secondary btn-sm mb-3" href="{{ url_for('discog') }}">View full discography</a>
-
-
-<hr class="hr">
-
-<p class="sub-title mb-1">Related Posts</p>
-
-{% if posts %}
-    <div class="row ps-2 pe-2">
-        {% for post in posts %}
-            {% include 'item_post.html' %}
-        {% endfor %}
+<div class="bg-darker p-3 rounded mt-4">
+    <p class="sub-title mb-2">Latest Releases</p>
+    <div class="row">
+      {% for album in albums %}
+        {% include 'item_album.html' %}
+      {% endfor %}
     </div>
-{% else %}
-    <p>No posts found.</p>
-{% endif %}
+    <a class="btn btn-secondary btn-sm" href="{{ url_for('discog') }}">View full discography</a>
+</div>
 
-<a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('blog', tags='music') }}">View all #music posts</a>
+<div class="bg-darker p-3 rounded mt-4">
+    <p class="sub-title mb-2">Live</p>
+    <ul>
+        <li>date</li>
+    </ul>
+    <a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('live') }}">View live archive</a>
+</div>
+
+<div class="bg-darker p-3 rounded mt-4">
+    <p class="sub-title mb-1">Related Posts</p>
+    {% if posts %}
+        <div class="row ps-2 pe-2">
+            {% for post in posts %}
+                {% include 'item_post.html' %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No posts found.</p>
+    {% endif %}
+    <a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('blog', tags='music') }}">View all #music posts</a>
+</div>
 
 {% endblock %}

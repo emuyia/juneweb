@@ -12,14 +12,15 @@
 {% endif %}
 
 
-<p class="page-title">Discography</p>
+<p class="page-title">my discography</p>
 
-<hr class="hr">
 
+<div class="bg-darker p-3 rounded mt-4 pb-0">
   <div class="row">
   {% for album in albums %}
     {% include 'item_album.html' %}
   {% endfor %}
   </div>
+</div>
 
 {% endblock %}

@@ -31,17 +31,11 @@
                 <a class="nav-link px-2" href="{{ url_for('dev') }}">dev</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='writing') }}">writing</a>
+                <a class="nav-link px-2">other</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='writing,fiction') }}">fiction</a>
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='writing,review') }}">reviews</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link px-2" href="{{ url_for('blog', tags='art,speedrun') }}">visual</a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='art') }}">art</a>
-                    <a class="dropdown-item" href="{{ url_for('blog', tags='speedrun') }}">speedruns</a>
+                    <a class="dropdown-item" href="{{ url_for('art') }}">art</a>
+                    <a class="dropdown-item" href="{{ url_for('writing') }}">writing</a>
+                    <a class="dropdown-item" href="{{ url_for('speedrun') }}">speedruns</a>
                 </div>
             </li>
             <li class="nav-item">

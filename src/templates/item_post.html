@@ -1,5 +1,5 @@
-<div class="col-md-4 col-lg-4 g-1">
-    <div class="card text-white" style="max-height:300px;">
+<div class="col-md-4 col-lg-4 g-2">
+    <div class="card text-white bg-evendarker border-0" style="max-height:300px;">
         <div class="card-body">
             <h5 class="card-title">
                 <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
@@ -8,7 +8,7 @@
               <p class="card-text">{{ post.content | safe }}</p>
             </div>
         </div>
-        <div class="card-footer text-muted info d-flex justify-content-between">
+        <div class="card-footer text-muted info d-flex justify-content-between" style="background-color:#171a25;">
             <div>
                 <p>posted by <span class="author">{{ post.author }}</span></p>
                 <p style="font-size:10px;color:gray;">on {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}</p>
