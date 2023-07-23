@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Inter');
 @import url('https://fonts.googleapis.com/css?family=Chivo Mono');
 
-html {
-    data-bs-theme: dark;
-}
-
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
@@ -14,8 +10,8 @@ body {
 }
 
 .container {
-    width: 60%; /* take up 60% of the viewport width, effectively creating 20% margins on each side */
-    margin: 0 auto; /* centers the container horizontally */
+    width: 60%;
+    margin: 0 auto;
     padding: 15px;
     max-width: 960px;
 }
