@@ -2,12 +2,15 @@ from src import app, db, mail
 from src.models import Post, Tag, User, Subscription
 from src.routes.auth import admin_required
 from flask import render_template, request, redirect, url_for, session, flash
-from datetime import datetime
 from sqlalchemy import func
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Email
 from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField
+from wtforms.widgets import ListWidget, CheckboxInput
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField
+from wtforms.validators import DataRequired, Email
+from datetime import datetime, timedelta
 
 
 @app.route('/')
@@ -96,19 +99,39 @@ def manage_post(post_id=None):
 
 class SubscriptionForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
+    tags = QuerySelectMultipleField('Tags', query_factory=lambda: Tag.query.all(),
+                                    widget=ListWidget(html_tag='ul', prefix_label=False),
+                                    option_widget=CheckboxInput())
+    interval = SelectField('Summary Email Frequency', choices=[('daily', 'Daily'), ('weekly', 'Weekly'),
+                                                               ('monthly', 'Monthly'), ('yearly', 'Yearly')])
     submit = SubmitField('Subscribe')
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
 def subscribe():
     form = SubscriptionForm()
-    if form.validate_on_submit():
-        subscription = Subscription(email=form.email.data)
+    if request.method == 'POST' and form.validate():
+        email = form.email.data
+        interval = form.interval.data
+        subscription = Subscription(email=email, interval=interval)
         db.session.add(subscription)
         db.session.commit()
-        flash('Thanks for subscribing!', 'success')
-        return redirect(url_for('subscribe'))
-    return render_template('subscribe.html', title='Subscribe', form=form)
+        return 'Subscription added!'
+    return render_template('subscribe.html', form=form)
+
+
+@app.route('/unsubscribe/<token>', methods=['GET'])
+def unsubscribe(token):
+    try:
+        email = URLSafeTimedSerializer(app.config['SECRET_KEY']).loads(token, salt='unsubscribe-salt', max_age=31536000) # 1 year
+        subscription = Subscription.query.filter_by(email=email).first()
+        if subscription:
+            db.session.delete(subscription)
+            db.session.commit()
+            flash('You have successfully unsubscribed.', 'success')
+    except:
+        flash('The unsubscribe link is invalid.', 'error')
+    return redirect(url_for('subscribe'))
 
 
 def send_new_post_email(post):
@@ -119,3 +142,44 @@ def send_new_post_email(post):
             msg.body = f'A new post has been published: {post.title}'
             conn.send(msg)
 
+
+def prepare_summary_email(subscription):
+    # Fetch posts that match the subscription's tags and were created after the last email was sent
+    posts = Post.query.join(Post.tags).filter(
+        Tag.id.in_([tag.id for tag in subscription.tags]),
+        Post.date_created > subscription.last_email_sent
+    ).all()
+
+    # Prepare email body with titles and URLs of the posts
+    email_body = "Here are the latest posts you've subscribed to:\n\n"
+    for post in posts:
+        post_url = url_for('post_detail', post_id=post.id, _external=True)  # Replace with your post detail endpoint
+        email_body += f"{post.title}: {post_url}\n"
+
+    # Prepare message
+    msg = Message('Post Updates', recipients=[subscription.email])
+    msg.body = email_body
+
+    return msg
+
+
+def send_summary_emails():
+    subscriptions = Subscription.query.all()
+    for subscription in subscriptions:
+        if check_interval(subscription):
+            prepare_summary_email(subscription)
+            subscription.last_email_sent = datetime.now()
+            db.session.commit()
+
+
+def check_interval(subscription):
+    intervals = {
+        'daily': timedelta(days=1),
+        'weekly': timedelta(weeks=1),
+        'monthly': timedelta(days=30),  # Approximation
+        'yearly': timedelta(days=365)   # Approximation
+    }
+    if subscription.last_email_sent is None or \
+       datetime.now() - subscription.last_email_sent > intervals[subscription.interval]:
+        return True
+    return False

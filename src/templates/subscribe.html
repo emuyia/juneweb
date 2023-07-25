@@ -7,6 +7,8 @@
     <form method="POST">
         {{ form.hidden_tag() }}
         {{ form.email.label }} {{ form.email() }}
+        {{ form.tags.label }} {{ form.tags() }}
+        {{ form.interval.label }} {{ form.interval() }}
         {{ form.submit() }}
     </form>
 

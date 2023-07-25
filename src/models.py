@@ -1,5 +1,5 @@
 from src import db
-
+import secrets
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 
@@ -13,6 +13,11 @@ album_tracks = db.Table('album_tracks',
                         db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
                         db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
                         )
+
+subscription_tags = db.Table('subscription_tags',
+                             db.Column('subscription_id', db.Integer, db.ForeignKey('subscription.id')),
+                             db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+                             )
 
 
 class Post(db.Model):
@@ -32,6 +37,9 @@ class Post(db.Model):
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Album(db.Model):
@@ -62,5 +70,23 @@ class User(db.Model):
 
 
 class Subscription(db.Model):
+    __tablename__ = 'subscription'
+
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    unsubscribe_token = db.Column(db.String(32), nullable=False)
+    interval = db.Column(db.String(20), nullable=False)
+    last_email_sent = db.Column(db.DateTime)
+    tags = db.relationship('Tag', secondary=subscription_tags,
+                           backref=db.backref('subscriptions', lazy='dynamic'))
+
+    __table_args__ = (
+        db.UniqueConstraint('email', name='uix_email'),
+        db.UniqueConstraint('unsubscribe_token', name='uix_unsubscribe_token'),
+    )
+
+    # Add a constructor/initializer
+    def __init__(self, email, interval):
+        self.email = email
+        self.interval = interval
+        self.unsubscribe_token = secrets.token_hex(16)
