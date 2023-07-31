@@ -6,14 +6,15 @@
 
 <div class="bg-darker p-3 rounded mt-4">
     <form method="POST" class="text-white p-3 form-dark">
+        {{ form.hidden_tag() }}
         <div class="form-group">
-            <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
+            {{ form.username(class="form-control mb-3", placeholder="Username") }}
         </div>
         <div class="form-group">
-            <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+            {{ form.password(class="form-control mb-3", placeholder="Password") }}
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Login">
+            {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 </div>

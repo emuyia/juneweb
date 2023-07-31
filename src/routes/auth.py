@@ -1,9 +1,9 @@
-import src.config
-from src import app, db
+from src import app
 from src.models import User
+from src.forms import LoginForm
 
-from flask import render_template, request, redirect, url_for, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import render_template, redirect, url_for, session, flash
+from werkzeug.security import check_password_hash
 from functools import wraps
 
 
@@ -20,32 +20,18 @@ def context_processor():
     return {"user": user, "check_if_admin": lambda: is_admin}
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = generate_password_hash(request.form["password"])
-        is_admin = True if username == src.config.ADMIN_USERNAME else False
-        user = User(username=username, password=password, is_admin=is_admin)
-        db.session.add(user)
-        db.session.commit()
-        session["username"] = username
-        return redirect(url_for("blog"))
-    return render_template("register.html")
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and check_password_hash(user.password, form.password.data):
             session["user_id"] = user.id
             flash("Logged in successfully.", "success")
+            return redirect(url_for('blog'))
         else:
             flash("Invalid username or password.", "error")
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 
 def login_required(f):
