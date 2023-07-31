@@ -1,15 +1,11 @@
 from src import app, db, mail
 from src.models import Post, Tag, User, Subscription
+from src.forms import SubscriptionForm
 from src.routes.auth import admin_required
 from flask import render_template, request, redirect, url_for, session, flash
 from sqlalchemy import func
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
-from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms_sqlalchemy.fields import QuerySelectMultipleField
-from wtforms.validators import DataRequired, Email
 from datetime import datetime, timedelta
 
 
@@ -95,16 +91,6 @@ def manage_post(post_id=None):
 
         return redirect(url_for("blog"))
     return render_template("manage_post.html", post=post)
-
-
-class SubscriptionForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    tags = QuerySelectMultipleField('Tags', query_factory=lambda: Tag.query.all(),
-                                    widget=ListWidget(html_tag='ul', prefix_label=False),
-                                    option_widget=CheckboxInput())
-    interval = SelectField('Summary Email Frequency', choices=[('daily', 'Daily'), ('weekly', 'Weekly'),
-                                                               ('monthly', 'Monthly'), ('yearly', 'Yearly')])
-    submit = SubmitField('Subscribe')
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
