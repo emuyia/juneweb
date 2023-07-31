@@ -12,12 +12,13 @@
 </div>
 
 <div class="p-3">
-    <form method="POST" class="text-white form-dark">
+    <form method="POST" action="" class="text-white form-dark">
+        {{ form.hidden_tag() }}  <!-- CSRF token -->
         <div class="form-group">
             {% block fields %}{% endblock %}
         </div>
         <div class="d-flex justify-content-start">
-            <input type="submit" class="btn btn-success mr-2" value="Submit">
+            {{ form.submit(class="btn btn-success mr-2") }}
         </div>
     </form>
 </div>

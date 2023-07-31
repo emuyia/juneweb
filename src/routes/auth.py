@@ -1,7 +1,6 @@
 from src import app
 from src.models import User
 from src.forms import LoginForm
-
 from flask import render_template, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
 from functools import wraps

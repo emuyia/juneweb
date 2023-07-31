@@ -1,6 +1,6 @@
 from src import app, db, mail
 from src.models import Post, Tag, User, Subscription
-from src.forms import SubscriptionForm
+from src.forms import SubscriptionForm, PostForm
 from src.routes.auth import admin_required
 from flask import render_template, request, redirect, url_for, session, flash
 from sqlalchemy import func
@@ -39,41 +39,35 @@ def manage_post(post_id=None):
     post = None
     if post_id:
         post = Post.query.get(post_id)
-    if request.method in ["POST", "PUT"]:
-        title = request.form["title"]
-        content = request.form["content"]
-        tag_names = request.form["tag"].split(",")  # get list of tags
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        tag_names = form.tag.data.split(",")  # get list of tags
         user = User.query.get(session['user_id'])
         author = user.username
 
-        date_created_str = request.form.get("date_created")
-
-        if date_created_str:
-            date_created = datetime.strptime(date_created_str, '%Y-%m-%d')
-        else:
-            date_created = None
+        date_created = form.date_created.data or datetime.now()  # set to now if not provided
 
         if post:
-            if title != post.title or content != post.content:
+            if form.title.data != post.title or form.content.data != post.content:
                 post.date_updated = datetime.now()
-            post.title = title
-            post.content = content
+            post.title = form.title.data
+            post.content = form.content.data
             post.author = author
-            if date_created:  # only update date_created if a new date is provided
-                post.date_created = date_created
+            post.date_created = date_created  # we always update date_created here
         else:
-            post = Post(title=title,
-                        content=content,
+            post = Post(title=form.title.data,
+                        content=form.content.data,
                         date_created=date_created,
                         date_posted=datetime.now(),
                         date_updated=datetime.now(),
                         author=author)
             db.session.add(post)
-            send_new_post_email(post)
+            # send_new_post_email(post)
 
         # Clear existing tags before adding new ones
-        if post:
-            post.tags = []
+        post.tags = []
 
         for tag_name in tag_names:
             tag = Tag.query.filter_by(name=tag_name.strip()).first()
@@ -90,7 +84,14 @@ def manage_post(post_id=None):
         db.session.commit()
 
         return redirect(url_for("blog"))
-    return render_template("manage_post.html", post=post)
+
+    elif request.method == 'GET' and post:
+        form.title.data = post.title
+        form.content.data = post.content
+        form.tag.data = ', '.join(tag.name for tag in post.tags)
+        form.date_created.data = post.date_created
+
+    return render_template("manage_post.html", form=form, post=post)
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
@@ -118,15 +119,6 @@ def unsubscribe(token):
     except:
         flash('The unsubscribe link is invalid.', 'error')
     return redirect(url_for('subscribe'))
-
-
-def send_new_post_email(post):
-    subscribers = Subscription.query.all()
-    with mail.connect() as conn:
-        for subscriber in subscribers:
-            msg = Message('New Post', recipients=[subscriber.email])
-            msg.body = f'A new post has been published: {post.title}'
-            conn.send(msg)
 
 
 def prepare_summary_email(subscription):
