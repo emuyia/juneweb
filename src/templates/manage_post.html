@@ -1,21 +1,40 @@
-{% extends "manage.html" %}
+{% extends "base.html" %}
 
-{% block fields %}
-    <label for="title" class="mt-2">Title: </label>
-    {{ form.title(id="title", class="form-control mb-1") }}
+{% block content %}
+<div class="d-flex justify-content-between">
+    <a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
+    {% if item_id and item_type %}
+        <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="d-inline-block">
+            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+        </form>
+    {% endif %}
+</div>
 
-    <label for="editor" class="mt-2">Content: </label>
-    {{ form.content(id="editor", class="form-control") }}
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace( 'editor' );
-    </script>
+<div class="p-3">
+    <form method="POST" action="" class="text-white form-dark">
+        {{ form.hidden_tag() }}  <!-- CSRF token -->
+        <div class="form-group">
+            <label for="title" class="mt-2">Title: </label>
+            {{ form.title(id="title", class="form-control mb-1") }}
 
-    <label for="tag" class="mt-3">Tags (,): </label>
-    {{ form.tag(id="tag", class="form-control mb-1") }}
+            <label for="editor" class="mt-2">Content: </label>
+            {{ form.content(id="editor", class="form-control") }}
+            <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+            <script>
+                CKEDITOR.replace( 'editor' );
+            </script>
 
-    <label for="date_created" class="mt-2">Written (Date): </label>
-    {{ form.date_created(id="date_created", class="form-control mb-1") }}
+            <label for="tag" class="mt-3">Tags (,): </label>
+            {{ form.tag(id="tag", class="form-control mb-1") }}
+
+            <label for="date_created" class="mt-2">Written (Date): </label>
+            {{ form.date_created(id="date_created", class="form-control mb-1") }}
+        </div>
+        <div class="d-flex justify-content-start">
+            {{ form.submit(class="btn btn-success mr-2") }}
+        </div>
+    </form>
+</div>
 {% endblock %}
 
 {% set item_id = post.id if post else None %}

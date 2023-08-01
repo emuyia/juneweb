@@ -1,131 +1,149 @@
-{% extends "manage.html" %}
+{% extends "base.html" %}
 
-{% block fields %}
-    <div class="card mb-4 track-card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <div class="row p-3">
-                    <label for="title" class="mt-2">Title: </label>
-                    <input type="text" class="form-control mb-1" name="title" id="title" placeholder="Title" value="{{ album.title if album else '' }}">
-                    <label for="artist" class="mt-2">Artist: </label>
-                    <input type="text" class="form-control mb-1" name="artist" id="artist" placeholder="Artist" value="{{ album.artist if album else '' }}">
-                    <label for="release_date" class="mt-2">Released (YYYYMMDD): </label>
-                    <input type="text" class="form-control mb-1" name="release_date" id="release_date" placeholder="Release Date" value="{{ album.release_date if album else '' }}">
-                    <label for="cover_image" class="mt-2">Cover (URL): </label>
-                    <input type="text" class="form-control mb-1" name="cover_image" id="cover_image" placeholder="Cover Image" value="{{ album.cover_image if album else '' }}">
+{% block content %}
+<div class="d-flex justify-content-between">
+    <a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
+    {% if item_id and item_type %}
+        <form method="POST" action="{{ url_for('delete_item', item_type=item_type, item_id=item_id) }}" class="d-inline-block">
+            <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+        </form>
+    {% endif %}
+</div>
 
-                    <label for="embed" class="mt-2">Embed (HTML): </label>
-                    <textarea name="embed" id="embed" class="form-control" placeholder="Embed">{{ album.embed if album else '' }}</textarea>
+<div class="p-3">
+    <form method="POST" class="text-white form-dark">
+        <div class="form-group">
+            <div class="card mb-4 track-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="row p-3">
+                            <label for="title" class="mt-2">Title: </label>
+                            <input type="text" class="form-control mb-1" name="title" id="title" placeholder="Title" value="{{ album.title if album else '' }}">
+                            <label for="artist" class="mt-2">Artist: </label>
+                            <input type="text" class="form-control mb-1" name="artist" id="artist" placeholder="Artist" value="{{ album.artist if album else '' }}">
+                            <label for="release_date" class="mt-2">Released (YYYYMMDD): </label>
+                            <input type="text" class="form-control mb-1" name="release_date" id="release_date" placeholder="Release Date" value="{{ album.release_date if album else '' }}">
+                            <label for="cover_image" class="mt-2">Cover (URL): </label>
+                            <input type="text" class="form-control mb-1" name="cover_image" id="cover_image" placeholder="Cover Image" value="{{ album.cover_image if album else '' }}">
 
-                    <label for="editor" class="mt-2">Content (HTML): </label>
-                    <div><textarea name="content" id="editor" class="form-control" placeholder="Content">{{ album.content if album else '' }}</textarea></div>
-                    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-                    <script>
-                        CKEDITOR.replace( 'editor' );
-                    </script>
+                            <label for="embed" class="mt-2">Embed (HTML): </label>
+                            <textarea name="embed" id="embed" class="form-control" placeholder="Embed">{{ album.embed if album else '' }}</textarea>
 
-                </div>
-            </div>
-        </div>
-    </div>
+                            <label for="editor" class="mt-2">Content (HTML): </label>
+                            <div><textarea name="content" id="editor" class="form-control" placeholder="Content">{{ album.content if album else '' }}</textarea></div>
+                            <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+                            <script>
+                                CKEDITOR.replace( 'editor' );
+                            </script>
 
-    <div id="all-tracks">
-        <p class="text-center mb-2" style="font-size:1.1em;">Tracklist</p>
-        {% set counter = namespace(value=1) %}
-        {% for track in album.tracks %}
-        <div class="card mb-1 track-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div style="flex: 0 0 90%;">
-                        <h6>#{{ counter.value }}</h6>
-                        <input type="hidden" name="tracks[][id]" value="{{ track.id }}">
-                        <div class="row">
-                            <div class="col-2 mt-2">
-                                <label for="track-name">Title: </label>
-                            </div>
-                            <div class="col-10">
-                                <input type="text" id="track-name" class="form-control mb-1" name="tracks[][name]" placeholder="Track Name" value="{{ track.name }}">
-                            </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-2 mt-2">
-                                <label for="track-duration">Duration: </label>
-                            </div>
-                            <div class="col-10">
-                                <input type="text" id="track-duration" class="form-control mb-1" name="tracks[][duration]" placeholder="Track Duration" value="{{ track.duration }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="justify-content-end text-right">
-                        <button type="button" class="btn btn-danger btn-sm delete-track">×</button>
                     </div>
                 </div>
             </div>
-        </div>
-        {% set counter.value = counter.value + 1 %}
-        {% endfor %}
 
-        <div id="tracks-container"></div>
-    </div>
-    <button type="button" class="btn btn-success float-right" id="add-track">Add Track</button>
-    <script type="text/javascript">
-    function updateTrackNumbers() {
-        var trackCards = document.querySelectorAll('#all-tracks .track-card');
-        trackCards.forEach(function(trackCard, index) {
-            var trackNumber = index + 1;
-            var header = trackCard.querySelector('h6');
-            header.textContent = '#' + trackNumber;
-        });
-    }
+            <div id="all-tracks">
+                <p class="text-center mb-2" style="font-size:1.1em;">Tracklist</p>
+                {% set counter = namespace(value=1) %}
+                {% for track in album.tracks %}
+                <div class="card mb-1 track-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div style="flex: 0 0 90%;">
+                                <h6>#{{ counter.value }}</h6>
+                                <input type="hidden" name="tracks[][id]" value="{{ track.id }}">
+                                <div class="row">
+                                    <div class="col-2 mt-2">
+                                        <label for="track-name">Title: </label>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="text" id="track-name" class="form-control mb-1" name="tracks[][name]" placeholder="Track Name" value="{{ track.name }}">
+                                    </div>
+                                </div>
 
-    document.getElementById('add-track').addEventListener('click', function() {
-        var trackCard = document.createElement('div');
-        trackCard.className = 'card mb-1 track-card';
-        var trackNumber = document.querySelectorAll('#all-tracks .track-card').length + 1;
-        trackCard.innerHTML = `
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <div style="flex: 0 0 90%;">
-                    <h6>#` + trackNumber + `</h6>
-                    <input type="hidden" name="tracks[][id]">
-                    <div class="row">
-                        <div class="col-2 mt-2">
-                            <label for="track-name">Title: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" class="form-control mb-1" name="tracks[][name]" placeholder="Track Name">
-                        </div>
-                    </div>
+                                <div class="row">
+                                    <div class="col-2 mt-2">
+                                        <label for="track-duration">Duration: </label>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="text" id="track-duration" class="form-control mb-1" name="tracks[][duration]" placeholder="Track Duration" value="{{ track.duration }}">
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-2 mt-2">
-                            <label for="track-duration">Duration: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" class="form-control mb-1" name="tracks[][duration]" placeholder="Track Duration">
+                            <div class="justify-content-end text-right">
+                                <button type="button" class="btn btn-danger btn-sm delete-track">×</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% set counter.value = counter.value + 1 %}
+                {% endfor %}
 
-                <div class="justify-content-end text-right">
-                    <button type="button" class="btn btn-danger btn-sm delete-track">×</button>
-                </div>
+                <div id="tracks-container"></div>
             </div>
-        </div>
-        `;
-        document.getElementById('tracks-container').appendChild(trackCard);
-    });
+            <button type="button" class="btn btn-success float-right" id="add-track">Add Track</button>
+            <script type="text/javascript">
+            function updateTrackNumbers() {
+                var trackCards = document.querySelectorAll('#all-tracks .track-card');
+                trackCards.forEach(function(trackCard, index) {
+                    var trackNumber = index + 1;
+                    var header = trackCard.querySelector('h6');
+                    header.textContent = '#' + trackNumber;
+                });
+            }
 
-    document.getElementById('all-tracks').addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-track')) {
-            e.target.closest('.track-card').remove();
-            updateTrackNumbers();
-        }
-    });
-    </script>
-    <p class="pb-5"></p>
+            document.getElementById('add-track').addEventListener('click', function() {
+                var trackCard = document.createElement('div');
+                trackCard.className = 'card mb-1 track-card';
+                var trackNumber = document.querySelectorAll('#all-tracks .track-card').length + 1;
+                trackCard.innerHTML = `
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div style="flex: 0 0 90%;">
+                            <h6>#` + trackNumber + `</h6>
+                            <input type="hidden" name="tracks[][id]">
+                            <div class="row">
+                                <div class="col-2 mt-2">
+                                    <label for="track-name">Title: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" class="form-control mb-1" name="tracks[][name]" placeholder="Track Name">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-2 mt-2">
+                                    <label for="track-duration">Duration: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" class="form-control mb-1" name="tracks[][duration]" placeholder="Track Duration">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="justify-content-end text-right">
+                            <button type="button" class="btn btn-danger btn-sm delete-track">×</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                document.getElementById('tracks-container').appendChild(trackCard);
+            });
+
+            document.getElementById('all-tracks').addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-track')) {
+                    e.target.closest('.track-card').remove();
+                    updateTrackNumbers();
+                }
+            });
+            </script>
+            <p class="pb-5"></p>
+        </div>
+        <div class="d-flex justify-content-start">
+            <input type="submit" class="btn btn-success mr-2" value="Submit">
+        </div>
+    </form>
+</div>
 {% endblock %}
 
 {% set item_id = album.id %}

@@ -1,4 +1,4 @@
-from src import app
+from src import app, db, config
 from src.models import User
 from src.forms import LoginForm
 from flask import render_template, redirect, url_for, session, flash
@@ -71,3 +71,13 @@ def logout():
     session.pop("user_id", None)
     flash("You have been logged out.", "success")
     return redirect(url_for("login"))
+
+
+@app.cli.command("createadmin")
+def create_admin_user():
+    admin = User(username=config.ADMIN_USERNAME)
+    admin.set_password(config.ADMIN_PASSWORD)
+    admin.is_admin = True
+    db.session.add(admin)
+    db.session.commit()
+    print(f"Admin user created with username: {config.ADMIN_USERNAME}")

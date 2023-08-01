@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_session import Session
 from flask_mail import Mail
-
 from src import config
 
 app = Flask(__name__)

@@ -13,21 +13,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-class SubscriptionForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    tags = QuerySelectMultipleField('Tags', query_factory=lambda: Tag.query.all(),
-                                    widget=ListWidget(html_tag='ul', prefix_label=False),
-                                    option_widget=CheckboxInput())
-    interval = SelectField('Summary Email Frequency', choices=[('daily', 'Daily'), ('weekly', 'Weekly'),
-                                                               ('monthly', 'Monthly'), ('yearly', 'Yearly')])
-    submit = SubmitField('Subscribe')
-
-
 class OptionalDateField(DateField):
     def process_formdata(self, valuelist):
         if valuelist:
             if valuelist[0] == '':
-                self.data = datetime.now().date()
+                self.data = None  # set to None if no date is provided
             else:
                 super(OptionalDateField, self).process_formdata(valuelist)
         else:

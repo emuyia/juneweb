@@ -18,7 +18,7 @@
         {% if album.tracks %}
             <div class="bg-evendarker rounded p-2 mt-3">
                 {% for track in album.tracks %}
-                    <p>{{ track.id }}. {{ track.name }} ({{ track.duration }})</p>
+                    <p class="p-1">{{ track.id }}. {{ track.name }} ({{ track.duration }})</p>
                 {% endfor %}
             </div>
         {% endif %}

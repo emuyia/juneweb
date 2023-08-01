@@ -2,6 +2,7 @@ from src import db
 import secrets
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash
 
 # association tables
 post_tags = db.Table('post_tags',
@@ -13,11 +14,6 @@ album_tracks = db.Table('album_tracks',
                         db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
                         db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
                         )
-
-subscription_tags = db.Table('subscription_tags',
-                             db.Column('subscription_id', db.Integer, db.ForeignKey('subscription.id')),
-                             db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-                             )
 
 
 class Post(db.Model):
@@ -68,25 +64,5 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-
-class Subscription(db.Model):
-    __tablename__ = 'subscription'
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), nullable=False)
-    unsubscribe_token = db.Column(db.String(32), nullable=False)
-    interval = db.Column(db.String(20), nullable=False)
-    last_email_sent = db.Column(db.DateTime)
-    tags = db.relationship('Tag', secondary=subscription_tags,
-                           backref=db.backref('subscriptions', lazy='dynamic'))
-
-    __table_args__ = (
-        db.UniqueConstraint('email', name='uix_email'),
-        db.UniqueConstraint('unsubscribe_token', name='uix_unsubscribe_token'),
-    )
-
-    # Add a constructor/initializer
-    def __init__(self, email, interval):
-        self.email = email
-        self.interval = interval
-        self.unsubscribe_token = secrets.token_hex(16)
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
