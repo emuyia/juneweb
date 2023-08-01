@@ -30,3 +30,8 @@ class PostForm(FlaskForm):
     tag = StringField('Tags')
     date_created = OptionalDateField('Date Created')
     submit = SubmitField('Submit')
+
+
+class SearchForm(FlaskForm):
+    query = StringField('Search', render_kw={'placeholder': 'Search...'})
+    submit = SubmitField('Go')
