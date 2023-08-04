@@ -9,15 +9,15 @@
     </head>
     <body>
         <div class="container">
-          <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded p-1">
             <div class="container-fluid">
-              <a class="navbar-brand {{'active' if request.path == url_for('blog') else ''}}" href="{{ url_for('blog') }}">june's room</a>
+              <a class="navbar-brand {{'active' if request.path == url_for('blog') else ''}} brand" href="{{ url_for('blog') }}">june's room</a>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
 
-              <div class="collapse navbar-collapse" id="navbarNav">
+              <div class="collapse navbar-collapse nav-text" id="navbarNav">
 
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -58,7 +58,7 @@
           </div>
           </nav>
 
-            <div class="bg-dark p-3 rounded">
+            <div class="p-3 panel-main">
                 {% block content %}{% endblock %}
             </div>
 
