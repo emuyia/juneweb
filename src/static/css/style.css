@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Inter');
 @import url('https://fonts.googleapis.com/css?family=Chivo Mono');
 
+/*
 @font-face {
     font-family: 'Daydream';
     src: url('/static/fonts/daydream/Daydream.ttf') format('truetype');
@@ -89,17 +90,18 @@
     font-family: 'hybrid_o';
     src: url('/static/fonts/hybrid/hybrid_o.ttf') format('truetype');
 }
+*/
 
 .brand {
-    font-family: 'pixelpoiiz', fallback, sans-serif;
+    font-family: 'Inter', fallback, sans-serif;
 }
 
 .nav-text {
-    font-family: 'KiwiSoda', fallback, sans-serif;
+    font-family: 'Inter', fallback, sans-serif;
 }
 
 body {
-    font-family: 'PixdorTwo', sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #000000;
@@ -155,12 +157,16 @@ ul {
 }
 
 a {
-    color: #1D8BF1;
+    color: #FFC0CB;  /* pink */
     text-decoration: none;
 }
 
 a:hover {
-    color: #0F67A1;
+    color: #FF69B4;  /* darker pink */
+}
+
+.author {
+    color: #FFC0CB;
 }
 
 .navbar-nav {
@@ -244,6 +250,7 @@ a:hover {
     padding-top: .25rem;
     margin-bottom: 1.5rem;
     text-align: left;
+    color: #FFC0CB;
 }
 
 .sub-title {
@@ -255,10 +262,6 @@ a:hover {
   .navbar-hover .dropdown:hover .dropdown-menu {
     display: block;
   }
-}
-
-.author {
-    color: #5e8de8;
 }
 
 ul {
