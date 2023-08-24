@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="d-flex mb-3">
+<div class="d-flex mb-1">
     {% if check_if_admin() %}
     <div class="ps-1">
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
     </div>
     {% endif %}
 
-    <div class="ms-auto d-flex">
+    <!--<div class="ms-auto d-flex">
         <form method="POST" action="{{ url_for('blog') }}" class="d-flex">
             {{ search_form.hidden_tag() }}
             {{ search_form.query(class="form-control form-control-sm rounded-pill fs-7", size=12, placeholder="Search") }}
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="d-flex mb-2">
+<div class="d-flex mb-2">-->
     <div class="ms-auto d-flex">
         <div class="dropdown ps-1">
           <button class="btn btn-secondary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Tag</button>
