@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="d-flex justify-content-between">
-    <a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>
+    <!--<a class="btn btn-primary btn-sm" href="javascript:goBack()">Back</a>-->
     {% if check_if_admin() %}
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post', post_id=post.id) }}">Edit</a>
     {% endif %}

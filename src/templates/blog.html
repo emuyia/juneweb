@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex mb-1">
     {% if check_if_admin() %}
-    <div class="ps-1">
+    <div class="ps-0">
         <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
     </div>
     {% endif %}
@@ -20,7 +20,7 @@
 <div class="d-flex mb-2">-->
     <div class="ms-auto d-flex">
         <div class="dropdown ps-1">
-          <button class="btn btn-secondary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Tag</button>
+          <button class="btn btn-primary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Tag</button>
           <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
             {% for tag in tags %}
               <li>
