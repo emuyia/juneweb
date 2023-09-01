@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+
 <div class="d-flex mb-1">
     {% if check_if_admin() %}
     <div class="ps-0">
@@ -8,32 +10,28 @@
     </div>
     {% endif %}
 
-    <!--<div class="ms-auto d-flex">
-        <form method="POST" action="{{ url_for('blog') }}" class="d-flex">
-            {{ search_form.hidden_tag() }}
-            {{ search_form.query(class="form-control form-control-sm rounded-pill fs-7", size=12, placeholder="Search") }}
-            <button type="submit" class="btn btn-secondary btn-sm ms-1 rounded-pill fs-7">Go</button>
-        </form>
-    </div>
-</div>
-
-<div class="d-flex mb-2">-->
     <div class="ms-auto d-flex">
+        {% for tag_name in selected_tags %}
+            <div class="d-flex m-1">
+                <span class="badge bg-primary">#{{ tag_name }}</span>
+            </div>
+        {% endfor %}
         <div class="dropdown ps-1">
-          <button class="btn btn-primary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Tag</button>
+          <button class="btn btn-primary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
           <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
             {% for tag in tags %}
-              <li>
-                <a class="dropdown-item fs-7" id="{{tag.name}}">
-                    <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
-                    <label class="form-check-label">#{{tag.name}}</label>
-                </a>
-              </li>
+              {% if tag.name %}
+                  <li>
+                    <a class="dropdown-item fs-7" id="{{tag.name}}">
+                        <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
+                        <label class="form-check-label">#{{tag.name}}</label>
+                    </a>
+                  </li>
+              {% endif %}
             {% endfor %}
           </ul>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -62,7 +60,7 @@ function filterPostsByTags() {
         {% endfor %}
     </div>
 {% else %}
-    <p>No posts found.</p>
+    <p class="ms-5">No posts found.</p>
 {% endif %}
 
 {% endblock %}
