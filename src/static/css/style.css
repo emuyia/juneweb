@@ -112,7 +112,8 @@ ul {
 .container {
     padding: 15px;
     max-width: 960px;
-    margin-left: 18%;
+    /*margin-left: 18%;*/
+    margin: auto;
 }
 
 .panel-main {
