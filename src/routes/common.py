@@ -33,30 +33,15 @@ def dev():
     return render_template("dev.html", posts=posts, tags=tags)
 
 
-@app.route('/art')
-def art():
-    posts = Post.query.join(Post.tags).filter(Tag.name == 'art').order_by(Post.date_posted.desc()).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    return render_template("art.html", posts=posts, tags=tags)
-
-
-@app.route('/writing')
-def writing():
-    posts = Post.query.join(Post.tags).filter(Tag.name == 'writing').order_by(Post.date_posted.desc()).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    return render_template("writing.html", posts=posts, tags=tags)
-
-
-@app.route('/speedrun')
-def speedrun():
-    posts = Post.query.join(Post.tags).filter(Tag.name == 'speedrun').order_by(Post.date_posted.desc()).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    return render_template("speedrun.html", posts=posts, tags=tags)
-
-
 @app.route("/page/<title>")
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
     posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
     tags_list = ','.join(tag.name for tag in page.related_tags)
     return render_template('page.html', page=page, posts=posts, tags_list=tags_list)
+
+
+@app.route('/page_list')
+def page_list():
+    pages = Page.query.order_by(Page.title).all()
+    return render_template('page_list.html', pages=pages)

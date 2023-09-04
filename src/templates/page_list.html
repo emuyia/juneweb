@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p class="page-title">page list</p>
+
+<div class="panel-a p-3 rounded mt-4">
+    {% if pages %}
+        <div class="row ps-2 pe-2">
+            {% for page in pages %}
+                <a href="{{ url_for('page', title=page.title) }}">{{ page.title }}</a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No pages found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

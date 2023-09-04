@@ -20,11 +20,6 @@ def discog():
     return render_template('discog.html', albums=albums)
 
 
-@app.route('/music/live')
-def live():
-    return render_template('live.html')
-
-
 @app.route("/music/album/<int:album_id>")
 def view_album(album_id):
     album = Album.query.get(album_id)
