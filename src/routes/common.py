@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import Album, Post, Tag
+from src.models import Album, Post, Tag, Page
 from src.routes.auth import admin_required
 from flask import redirect, url_for, render_template
 
@@ -52,3 +52,11 @@ def speedrun():
     posts = Post.query.join(Post.tags).filter(Tag.name == 'speedrun').order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
     return render_template("speedrun.html", posts=posts, tags=tags)
+
+
+@app.route("/page/<title>")
+def page(title):
+    page = Page.query.filter_by(title=title).first_or_404()
+    posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
+    tags_list = ','.join(tag.name for tag in page.related_tags)
+    return render_template('page.html', page=page, posts=posts, tags_list=tags_list)
