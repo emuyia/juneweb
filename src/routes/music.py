@@ -6,14 +6,6 @@ from datetime import datetime
 from sqlalchemy import desc
 
 
-@app.route('/music')
-def music():
-    posts = Post.query.join(Post.tags).filter(Tag.name == 'music').order_by(Post.date_posted.desc()).limit(21).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
-    return render_template("music.html", posts=posts, tags=tags, albums=albums)
-
-
 @app.route('/music/discog')
 def discog():
     albums = Album.query.order_by(desc(Album.release_date)).all()
