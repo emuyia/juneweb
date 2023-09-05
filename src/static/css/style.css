@@ -2,6 +2,7 @@
 
 /* Variables */
 :root {
+    --bg-color: #212529;
     --panel-color: #111415;
     --text-color: #c3c3c3;
     --border-color: #868686;
@@ -38,6 +39,7 @@ body {
     margin: 0;
     padding: 0;
     color: var(--text-color);
+    background-color: var(--bg-color);
 }
 
 .info {

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{{ page.content|safe }}
+{{ content|safe }}
 
 <div class="panel-a p-3 rounded mt-4">
     <p class="sub-title mb-1">Related Posts</p>
@@ -17,7 +17,6 @@
     {% endif %}
 
     <a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('blog', tags=tags_list) }}">
-        <!--View all {% for tag in page.related_tags %}#{{tag.name}}{% if not loop.last %}, {% endif %}{% endfor %} posts-->
         View all related posts
     </a>
 

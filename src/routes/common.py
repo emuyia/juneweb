@@ -1,7 +1,7 @@
 from src import app, db
 from src.models import Album, Post, Tag, Page
 from src.routes.auth import admin_required
-from flask import redirect, url_for, render_template
+from flask import redirect, url_for, render_template, render_template_string
 from sqlalchemy import desc
 
 
@@ -33,7 +33,8 @@ def page(title):
     posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
     tags_list = ','.join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
-    return render_template('page.html', page=page, posts=posts, tags_list=tags_list, albums=albums)
+    content = render_template_string(page.content, posts=posts, tags_list=tags_list, albums=albums)
+    return render_template('page.html', page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
 
 
 @app.route('/page_list')
