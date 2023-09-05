@@ -98,7 +98,7 @@ class PageModelView(AdminModelView):
     form_columns = ('title', 'content', 'related_tags')
 
 
-admin = flask_admin.Admin(app, name='junesroom', template_mode='bootstrap4')
+admin = flask_admin.Admin(app, name='junesroom', template_mode='bootstrap4', base_template='admin_base.html')
 admin.add_view(PageModelView(Page, db.session))
 admin.add_view(AdminModelView(Post, db.session))
 admin.add_view(AdminModelView(Tag, db.session))

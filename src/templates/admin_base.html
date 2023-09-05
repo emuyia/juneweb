@@ -1,0 +1,6 @@
+<!-- templates/admin_base.html -->
+{% extends 'admin/base.html' %}
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}

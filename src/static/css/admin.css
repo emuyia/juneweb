@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css?family=Inter');
+
+/* Variables */
+:root {
+    --bg-color: #212529;
+    --bg-color-hover: #1b1f22;
+    --text-color: #c3c3c3;
+}
+
+body {
+    font-family: 'Inter', fallback, sans-serif;
+    background-color: var(--bg-color);
+}
+
+body, table, tr:hover, .badge, .dropdown-menu > li > a {
+    color: var(--text-color) !important;
+}
+
+table, table tr, table tr td {
+    border: 1px solid var(--text-color) !important; /* not working? */
+}
+
+tr:hover {
+    background-color: var(--bg-color-hover) !important;
+}
