@@ -5,9 +5,10 @@ from werkzeug.security import generate_password_hash
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.model.form import InlineFormAdmin
 import flask_admin
-from flask import redirect, url_for, request, flash, session
+from flask import redirect, url_for, request, flash
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
+from flask_login import UserMixin, current_user
 
 # association tables
 post_tags = db.Table('post_tags',
@@ -76,7 +77,7 @@ class Track(db.Model):
     track_number = db.Column(db.Integer)
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
@@ -88,22 +89,11 @@ class User(db.Model):
 
 class AdminModelView(ModelView):
     def is_accessible(self):
-        if 'user_id' in session:
-            user = User.query.get(session['user_id'])
-            return user.is_admin if user else False
-        return False
+        return current_user.is_authenticated and current_user.is_admin
 
     def inaccessible_callback(self, name, **kwargs):
         flash('You do not have access to this page.', 'error')
         return redirect(url_for('login', next=request.url))
-
-
-class PageModelView(AdminModelView):
-    form_columns = ('title', 'content', 'related_tags')
-
-
-class TrackInlineModelView(InlineFormAdmin):
-    form_columns = ('id', 'track_number', 'name', 'duration')
 
 
 class CKTextAreaWidget(TextArea):
@@ -119,13 +109,21 @@ class CKTextAreaField(TextAreaField):
     widget = CKTextAreaWidget()
 
 
-class PostModelView(ModelView):
+class PageModelView(AdminModelView):
+    form_columns = ('title', 'content', 'related_tags')
+
+
+class TrackInlineModelView(InlineFormAdmin):
+    form_columns = ('id', 'track_number', 'name', 'duration')
+
+
+class PostModelView(AdminModelView):
     form_overrides = {
         'content': CKTextAreaField
     }
 
 
-class AlbumModelView(ModelView):
+class AlbumModelView(AdminModelView):
     inline_models = (TrackInlineModelView(Track), )
     form_overrides = {
         'content': CKTextAreaField

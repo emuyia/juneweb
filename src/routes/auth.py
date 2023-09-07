@@ -4,73 +4,47 @@ from src.forms import LoginForm
 from flask import render_template, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
 from functools import wraps
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
-@app.context_processor
-def context_processor():
-    user = None
-    is_admin = False
-
-    if "user_id" in session:
-        user = User.query.get(session["user_id"])
-        if user:
-            is_admin = user.is_admin
-
-    return {"user": user, "check_if_admin": lambda: is_admin}
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
-@app.route("/login", methods=["GET", "POST"])
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin:
+            flash("You need to login as an admin first.", "error")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
-            session["user_id"] = user.id
-            flash("Logged in successfully.", "success")
+            login_user(user)
+            # flash("Logged in successfully.", "success")
             return redirect(url_for('blog'))
         else:
             flash("Invalid username or password.", "error")
     return render_template("login.html", form=form)
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            flash("You need to login first.", "error")
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            flash("You need to login first.", "error")
-            return redirect(url_for("login"))
-        user = User.query.get(session["user_id"])
-        if not user.is_admin:
-            flash("You do not have access to this page.", "error")
-            return redirect(url_for("blog"))
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
-def check_if_admin():
-    if 'user' in session:
-        user = User.query.get(session['user_id'])
-        return user.is_admin
-    return False
-
-
-@app.route("/logout")
+@app.route('/logout')
+@login_required
 def logout():
-    session.pop("user_id", None)
+    logout_user()
     flash("You have been logged out.", "success")
-    return redirect(url_for("login"))
+    return redirect(url_for('login'))
 
 
 @app.cli.command("createadmin")

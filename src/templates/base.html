@@ -46,14 +46,14 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
-                    {% if user %}
-                    <li class="nav-item px-1">
-                        <div class="nav-link">{{ user.username }}</div>
-                    </li>
-                    <li class="nav-item px-1">
-                        <a class="nav-link" href="{{ url_for('logout') }}">logout</a>
-                    </li>
-                {% endif %}
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item px-1">
+                            <div class="nav-link">{{ current_user.username }}</div>
+                        </li>
+                        <li class="nav-item px-1">
+                            <a class="nav-link" href="{{ url_for('logout') }}">logout</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
           </div>

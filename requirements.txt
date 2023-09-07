@@ -12,3 +12,4 @@ WTForms_SQLAlchemy==0.3
 flask-session==0.5.0
 python-dotenv==1.0.0
 flask-admin==1.6.1
+flask-login==0.6.2

@@ -1,26 +1,30 @@
 from src import app, db
 from src.models import Album, Post, Tag, Page
-from src.routes.auth import admin_required
-from flask import redirect, url_for, render_template, render_template_string
-from sqlalchemy import desc
-from datetime import datetime
+from flask import render_template, render_template_string, request, redirect, url_for
+from sqlalchemy import desc, func
+from src.forms import SearchForm
 
 
-@app.route("/delete_item/<item_type>/<int:item_id>", methods=["POST"])
-@admin_required
-def delete_item(item_type, item_id):
-    print(f"delete_item({item_type}, {item_id}")
-    item = None
-    if item_type == 'post':
-        item = Post.query.get(item_id)
-    elif item_type == 'album':
-        item = Album.query.get(item_id)
-    if item:
-        db.session.delete(item)
-        db.session.commit()
-    else:
-        return redirect(url_for('blog'))
-    return redirect(url_for('blog'))
+@app.route('/', methods=['GET', 'POST'])
+def blog():
+    selected_tags = request.args.get('tags')
+    posts = Post.query
+
+    if selected_tags:
+        selected_tags = selected_tags.split(',')
+        subquery = db.session.query(Post.id).join(Post.tags).filter(Tag.name.in_(selected_tags))\
+            .group_by(Post.id).having(func.count(Tag.id) == len(selected_tags)).subquery()
+        posts = posts.filter(Post.id.in_(subquery))
+
+    posts = posts.order_by(Post.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+
+    search_form = SearchForm()
+    if search_form.validate_on_submit():
+        return redirect(url_for('search_results', query=search_form.query.data))
+
+    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [],
+                           search_form=search_form)
 
 
 @app.route("/about")
