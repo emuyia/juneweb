@@ -6,6 +6,8 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.model.form import InlineFormAdmin
 import flask_admin
 from flask import redirect, url_for, request, flash, session
+from wtforms import TextAreaField
+from wtforms.widgets import TextArea
 
 # association tables
 post_tags = db.Table('post_tags',
@@ -104,14 +106,36 @@ class TrackInlineModelView(InlineFormAdmin):
     form_columns = ('id', 'track_number', 'name', 'duration')
 
 
+class CKTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get("class"):
+            kwargs["class"] += " ckeditor"
+        else:
+            kwargs.setdefault("class", "ckeditor")
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+
+class CKTextAreaField(TextAreaField):
+    widget = CKTextAreaWidget()
+
+
+class PostModelView(ModelView):
+    form_overrides = {
+        'content': CKTextAreaField
+    }
+
+
 class AlbumModelView(ModelView):
     inline_models = (TrackInlineModelView(Track), )
+    form_overrides = {
+        'content': CKTextAreaField
+    }
 
 
 admin = flask_admin.Admin(app, name='junesroom', template_mode='bootstrap4', base_template='admin_base.html')
 
 admin.add_view(PageModelView(Page, db.session))
-admin.add_view(AdminModelView(Post, db.session))
+admin.add_view(PostModelView(Post, db.session))
 admin.add_view(AdminModelView(Tag, db.session))
 admin.add_view(AlbumModelView(Album, db.session))
 admin.add_view(AdminModelView(Track, db.session))

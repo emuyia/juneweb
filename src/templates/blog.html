@@ -2,14 +2,7 @@
 
 {% block content %}
 
-
 <div class="d-flex mb-1">
-    {% if check_if_admin() %}
-    <div class="ps-0">
-        <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post') }}">Add</a>
-    </div>
-    {% endif %}
-
     <div class="ms-auto d-flex">
         {% for tag_name in selected_tags %}
             <div class="d-flex m-1">

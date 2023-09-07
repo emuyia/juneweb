@@ -3,4 +3,11 @@
 {% block head_css %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <script src="//cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            CKEDITOR.replaceAll('ckeditor');
+        });
+    </script>
 {% endblock %}

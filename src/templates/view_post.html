@@ -2,12 +2,6 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between">
-    {% if check_if_admin() %}
-        <a class="btn btn-primary btn-sm" href="{{ url_for('manage_post', post_id=post.id) }}">Edit</a>
-    {% endif %}
-</div>
-
 <div class="pt-2">
     <div class="panel-a p-4 rounded" style="font-size:0.8em;">
         <p class="post-title mt-0">{{ post.title }}</p>
