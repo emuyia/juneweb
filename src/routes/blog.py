@@ -1,6 +1,5 @@
 from src import app
 from src.models import Post, Tag
-from src.forms import SearchForm
 from flask import render_template
 from sqlalchemy import or_
 
@@ -10,10 +9,11 @@ def view_post(post_id):
     post = Post.query.get(post_id)
     return render_template("view_post.html", post=post)
 
-
+'''
 @app.context_processor
 def inject_search_form():
     return dict(search_form=SearchForm())
+'''
 
 
 @app.route('/search/<query>', methods=['GET'])

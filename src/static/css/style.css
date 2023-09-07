@@ -137,6 +137,10 @@ ul {
     border: var(--border-size-b) solid var(--border-color-sub);
 }
 
+td {
+    padding: 5px;
+}
+
 
 
 /* Components */

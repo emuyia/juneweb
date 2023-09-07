@@ -2,7 +2,6 @@ from src import app, db
 from src.models import Album, Post, Tag, Page
 from flask import render_template, render_template_string, request, redirect, url_for
 from sqlalchemy import desc, func
-from src.forms import SearchForm
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -19,12 +18,15 @@ def blog():
     posts = posts.order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
 
+    '''
     search_form = SearchForm()
     if search_form.validate_on_submit():
         return redirect(url_for('search_results', query=search_form.query.data))
+    '''
 
-    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [],
-                           search_form=search_form)
+    # return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [],
+    #                        search_form=search_form)
+    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
 
 
 @app.route("/about")

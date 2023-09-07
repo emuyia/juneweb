@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p class="page-title">dashboard</p>
+
+{% if current_user.is_admin %}
+    <p class="">Username: <span class="author">{{ current_user.username }}</span>*</p>
+{% else %}
+    <p class="">Username: <span class="author">{{ current_user.username }}</span></p>
+{% endif %}
+
+<div class="panel-a p-3 rounded mt-4">
+    <form method="POST">
+        <input type="text" id="username" name="username" class="form-control mb-3" placeholder="New Username">
+        <input type="password" id="password" name="password" class="form-control mb-3" placeholder="New Password">
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+</div>
+
+{% endblock %}

@@ -1,10 +1,11 @@
 from src import app, db, config
 from src.models import User
-from src.forms import LoginForm
-from flask import render_template, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
 from functools import wraps
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import render_template, request, flash, redirect, url_for
+from werkzeug.security import generate_password_hash
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -27,24 +28,53 @@ def admin_required(f):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user)
-            # flash("Logged in successfully.", "success")
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        submit_type = request.form.get('submit')
+
+        if submit_type == 'Login':
+            user = User.query.filter_by(username=username).first()
+            if user and check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for('blog'))
+            else:
+                flash("Invalid username or password.", "error")
+        elif submit_type == 'Register':
+            hashed_password = generate_password_hash(password)
+            new_user = User(username=username, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
             return redirect(url_for('blog'))
-        else:
-            flash("Invalid username or password.", "error")
-    return render_template("login.html", form=form)
+
+    return render_template("login.html")
 
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out.", "success")
-    return redirect(url_for('login'))
+    return redirect(url_for('blog'))
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    if request.method == 'POST':
+        new_username = request.form.get('username')
+        new_password = request.form.get('password')
+
+        if new_username:
+            current_user.username = new_username
+
+        if new_password:
+            current_user.password = generate_password_hash(new_password)
+
+        db.session.commit()
+        flash("Changes saved.", "success")
+
+    return render_template("dashboard.html")
 
 
 @app.cli.command("createadmin")
