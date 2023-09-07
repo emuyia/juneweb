@@ -2,18 +2,7 @@
 
 {% block content %}
 
-
-{% if check_if_admin() %}
-  <div class="d-flex pb-3">
-      <div class="ps-1">
-        <a class="btn btn-primary btn-sm" href="{{ url_for('manage_album') }}">Add</a>
-      </div>
-  </div>
-{% endif %}
-
-
 <p class="page-title">my discography</p>
-
 
 <div class="panel-a p-3 rounded mt-4 pb-0">
   <div class="row">

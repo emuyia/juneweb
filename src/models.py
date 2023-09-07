@@ -3,6 +3,7 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.model.form import InlineFormAdmin
 import flask_admin
 from flask import redirect, url_for, request, flash, session
 
@@ -36,7 +37,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     date_created = db.Column(DateTime)
     date_posted = db.Column(DateTime, nullable=False)
-    date_updated = db.Column(DateTime, nullable=False)
+    date_updated = db.Column(DateTime)
     author = db.Column(db.String(50), nullable=False)
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
 
@@ -56,7 +57,7 @@ class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     artist = db.Column(db.String(80), nullable=False)
-    release_date = db.Column(db.String(80), nullable=False)
+    release_date = db.Column(DateTime, nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
     tracks = relationship('Track',
                           cascade="all,delete",
@@ -70,6 +71,7 @@ class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     duration = db.Column(db.String(50))
+    track_number = db.Column(db.Integer)
 
 
 class User(db.Model):
@@ -98,10 +100,19 @@ class PageModelView(AdminModelView):
     form_columns = ('title', 'content', 'related_tags')
 
 
+class TrackInlineModelView(InlineFormAdmin):
+    form_columns = ('id', 'track_number', 'name', 'duration')
+
+
+class AlbumModelView(ModelView):
+    inline_models = (TrackInlineModelView(Track), )
+
+
 admin = flask_admin.Admin(app, name='junesroom', template_mode='bootstrap4', base_template='admin_base.html')
+
 admin.add_view(PageModelView(Page, db.session))
 admin.add_view(AdminModelView(Post, db.session))
 admin.add_view(AdminModelView(Tag, db.session))
-admin.add_view(AdminModelView(Album, db.session))
+admin.add_view(AlbumModelView(Album, db.session))
 admin.add_view(AdminModelView(Track, db.session))
 admin.add_view(AdminModelView(User, db.session))

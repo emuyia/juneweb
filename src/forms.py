@@ -1,10 +1,6 @@
-from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, DateField
-from wtforms.validators import DataRequired, Email
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, DateField
+from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
-from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms_sqlalchemy.fields import QuerySelectMultipleField
-from src.models import Tag
-from datetime import datetime
 
 
 class LoginForm(FlaskForm):
