@@ -1,13 +1,19 @@
-<!-- templates/admin_base.html -->
 {% extends 'admin/base.html' %}
 {% block head_css %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 
-    <script src="//cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+    <script src="{{ url_for('static', filename='js/ckeditor.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" type="text/css">
+
     <script type="text/javascript">
-        $(document).ready(function() {
-            CKEDITOR.replaceAll('ckeditor');
-        });
-    </script>
+    document.addEventListener( 'DOMContentLoaded', function () {
+        const editorElement = document.querySelector( 'textarea.ckeditor' );
+        ClassicEditor
+            .create( editorElement )
+            .catch( error => {
+                console.error( error );
+            } );
+    } );
+</script>
 {% endblock %}

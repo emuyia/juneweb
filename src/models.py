@@ -109,12 +109,29 @@ class CKTextAreaField(TextAreaField):
     widget = CKTextAreaWidget()
 
 
-class PageModelView(AdminModelView):
-    form_columns = ('title', 'content', 'related_tags')
+class MonospaceTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get("class"):
+            kwargs["class"] += " monospace"
+        else:
+            kwargs.setdefault("class", "monospace")
+        return super(MonospaceTextAreaWidget, self).__call__(field, **kwargs)
+
+
+class MonospaceTextAreaField(TextAreaField):
+    widget = MonospaceTextAreaWidget()
 
 
 class TrackInlineModelView(InlineFormAdmin):
     form_columns = ('id', 'track_number', 'name', 'duration')
+
+
+class PageModelView(AdminModelView):
+    form_columns = ('title', 'content', 'related_tags')
+    form_overrides = {
+        # 'content': MonospaceTextAreaField
+        'content': CKTextAreaField
+    }
 
 
 class PostModelView(AdminModelView):

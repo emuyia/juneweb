@@ -34,7 +34,7 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/<title>")
+@app.route("/<path:title>")
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
     posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
@@ -48,12 +48,6 @@ def page(title):
 def page_list():
     pages = Page.query.order_by(Page.title).all()
     return render_template('page_list.html', pages=pages)
-
-
-@app.route('/music/discog')
-def discog():
-    albums = Album.query.order_by(desc(Album.release_date)).all()
-    return render_template('discog.html', albums=albums)
 
 
 @app.route("/music/album/<int:album_id>")
