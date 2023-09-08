@@ -16,14 +16,8 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
-app.config['MAIL_SERVER'] = config.MAIL_SERVER
-app.config['MAIL_PORT'] = config.MAIL_PORT
-app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
-app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
-app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
-app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
-app.config['MAIL_DEFAULT_SENDER'] = config.MAIL_DEFAULT_SENDER
-
-mail = Mail(app)
+app.config['MAILCHIMP_DATACENTER'] = config.MAILCHIMP_DATACENTER
+app.config['MAILCHIMP_API_KEY'] = config.MAILCHIMP_API_KEY
+app.config['MAILCHIMP_LIST_ID'] = config.MAILCHIMP_LIST_ID
 
 from src import routes, models

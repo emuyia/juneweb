@@ -6,13 +6,9 @@ SECRET_KEY = "example"
 basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'example.db')
 
-MAIL_SERVER = "smtp.gmail.com"
-MAIL_PORT = 465
-MAIL_USERNAME = "email"
-MAIL_PASSWORD = "password"
-MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_DEFAULT_SENDER = "email"
+MAILCHIMP_DATACENTER = 'usX'
+MAILCHIMP_API_KEY = 'your_api_key'
+MAILCHIMP_LIST_ID = 'your_list_id'
 
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "123"
