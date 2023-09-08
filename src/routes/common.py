@@ -1,6 +1,6 @@
 from src import app, db
-from src.models import Album, Post, Tag, Page
-from flask import render_template, render_template_string, request, redirect, url_for
+from src.models import Album, Post, Tag, Page, User
+from flask import render_template, render_template_string, request, redirect, url_for, flash
 from sqlalchemy import desc, func
 
 
@@ -29,12 +29,12 @@ def blog():
     return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
 
 
-@app.route("/about")
+@app.route('/about')
 def about():
     return render_template('about.html')
 
 
-@app.route("/<path:title>")
+@app.route('/<path:title>')
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
     posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
@@ -50,9 +50,20 @@ def page_list():
     return render_template('page_list.html', pages=pages)
 
 
-@app.route("/music/album/<int:album_id>")
+@app.route('/music/album/<int:album_id>')
 def view_album(album_id):
     album = Album.query.get(album_id)
-    formatted_release_date = album.release_date.strftime("%d-%m-%Y")
+    formatted_release_date = album.release_date.strftime('%d-%m-%Y')
     album.tracks.sort(key=lambda track: track.track_number)  # Sort tracks by track_number
-    return render_template("view_album.html", album=album, release_date=formatted_release_date)
+    return render_template('view_album.html', album=album, release_date=formatted_release_date)
+
+
+@app.route('/user/<username>')
+def view_user(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        # Handle case where no user with the provided username exists
+        flash('User not found.', 'error')
+        return redirect(url_for('blog'))
+    return render_template('view_user.html', user=user)
+

@@ -11,7 +11,7 @@
 
     <div class="info d-flex justify-content-between p-3">
         <div class="text-left">
-            <p>posted by <span class="author">{{ post.author }}</span></p>
+            <p>posted by <a class="author" href="{{ url_for('view_user', username=post.author.username) }}">{{ post.author.username }}</a></p>
             <p class="mt-1" style="color:gray;">originally written {{ post.date_created.strftime('%d-%m-%Y') if post.date_created else 'on an unspecified date' }}</p>
         </div>
         <div class="text-end">

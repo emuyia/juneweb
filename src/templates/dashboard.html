@@ -6,13 +6,15 @@
 
 {% if current_user.is_admin %}
     <div class="d-flex justify-content-end">
-        <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin</a>
+        <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin Portal</a>
     </div>
 {% endif %}
 
-<p class="">Username: <span class="author">{{ current_user.username }}</span></p>
+<div class="panel-a p-4 rounded mt-3">
+    <p>Username: <span class="author">{{ current_user.username }}</span></p>
+</div>
 
-<div class="panel-a p-3 rounded mt-4">
+<div class="panel-a p-3 rounded mt-3">
     <form method="POST">
         <input type="text" id="username" name="username" class="form-control mb-3" placeholder="New Username">
         <input type="password" id="password" name="password" class="form-control mb-3" placeholder="New Password">

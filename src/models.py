@@ -42,7 +42,8 @@ class Post(db.Model):
     date_created = db.Column(DateTime)
     date_posted = db.Column(DateTime, nullable=False)
     date_updated = db.Column(DateTime)
-    author = db.Column(db.String(50), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
+    author = db.relationship('User')
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
 
     def get_tags(self):

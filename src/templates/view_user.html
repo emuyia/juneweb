@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p class="page-title">user page</p>
+
+<div class="panel-a p-4 rounded">
+    <p>Username: <span class="author">{{ user.username }}</span>{% if user.is_admin %} (Admin){% endif %}</p>
+</div>
+
+{% endblock %}
