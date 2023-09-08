@@ -55,7 +55,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('blog'))
+    flash("Successfully logged out.", "success")
+    return redirect(url_for('login'))
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])

@@ -4,11 +4,12 @@
 
 <p class="page-title">dashboard</p>
 
-{% if current_user.is_admin %}
-    <div class="d-flex justify-content-end">
+<div class="d-flex justify-content-end">
+    <a class="btn btn-sm me-2" href="{{ url_for('view_user', username=current_user.username) }}">View User Page</a>
+    {% if current_user.is_admin %}
         <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin Portal</a>
-    </div>
-{% endif %}
+    {% endif %}
+</div>
 
 <div class="panel-a p-4 rounded mt-3">
     <p>Username: <span class="author">{{ current_user.username }}</span></p>
