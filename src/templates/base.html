@@ -31,12 +31,12 @@
                         <a class="nav-link px-2" href="{{ url_for('page', title='dev') }}">dev</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link px-2">other</a>
+                        <a class="nav-link px-2" href="{{ url_for('page_list') }}">other</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{{ url_for('page', title='art') }}">art</a>
                             <a class="dropdown-item" href="{{ url_for('page', title='writing') }}">writing</a>
                             <a class="dropdown-item" href="{{ url_for('page', title='speedruns') }}">speedruns</a>
-                            <a class="dropdown-item" style="color:var(--link-color)" href="{{ url_for('page_list') }}">more pages...</a>
+                            <a class="dropdown-item" style="color:var(--link-color)" href="{{ url_for('page_list') }}">page list</a>
                         </div>
                     </li>
                     <li class="nav-item">
