@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.model.form import InlineFormAdmin
 import flask_admin
+from flask_admin import AdminIndexView, expose
 from flask import redirect, url_for, request, flash
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
@@ -96,19 +97,6 @@ class AdminModelView(ModelView):
         return redirect(url_for('login', next=request.url))
 
 
-class CKTextAreaWidget(TextArea):
-    def __call__(self, field, **kwargs):
-        if kwargs.get("class"):
-            kwargs["class"] += " ckeditor"
-        else:
-            kwargs.setdefault("class", "ckeditor")
-        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
-
-
-class CKTextAreaField(TextAreaField):
-    widget = CKTextAreaWidget()
-
-
 class MonospaceTextAreaWidget(TextArea):
     def __call__(self, field, **kwargs):
         if kwargs.get("class"):
@@ -120,6 +108,19 @@ class MonospaceTextAreaWidget(TextArea):
 
 class MonospaceTextAreaField(TextAreaField):
     widget = MonospaceTextAreaWidget()
+
+
+class CKTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get("class"):
+            kwargs["class"] += " ckeditor"
+        else:
+            kwargs.setdefault("class", "ckeditor")
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+
+class CKTextAreaField(TextAreaField):
+    widget = CKTextAreaWidget()
 
 
 class TrackInlineModelView(InlineFormAdmin):
@@ -147,7 +148,17 @@ class AlbumModelView(AdminModelView):
     }
 
 
-admin = flask_admin.Admin(app, name='junesroom', template_mode='bootstrap4', base_template='admin_base.html')
+class AdminHomeView(AdminIndexView):
+    @expose('/')
+    def index(self):
+        return self.render('admin_home.html')
+
+
+admin = flask_admin.Admin(app,
+                          name='junesroom',
+                          template_mode='bootstrap4',
+                          base_template='admin_base.html',
+                          index_view=AdminHomeView())
 
 admin.add_view(PageModelView(Page, db.session))
 admin.add_view(PostModelView(Post, db.session))

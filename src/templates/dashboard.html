@@ -5,10 +5,12 @@
 <p class="page-title">dashboard</p>
 
 {% if current_user.is_admin %}
-    <p class="">Username: <span class="author">{{ current_user.username }}</span>*</p>
-{% else %}
-    <p class="">Username: <span class="author">{{ current_user.username }}</span></p>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin</a>
+    </div>
 {% endif %}
+
+<p class="">Username: <span class="author">{{ current_user.username }}</span></p>
 
 <div class="panel-a p-3 rounded mt-4">
     <form method="POST">

@@ -2,15 +2,15 @@
 
 /* Variables */
 :root {
-    --bg-color: #212529;
-    --bg-color-hover: #1b1f22;
+    --bg-color-a: #1b1f22;
+    --bg-color-b: #212529;
     --text-color: #c3c3c3;
 }
 
 
 body {
     font-family: 'Inter', fallback, sans-serif;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color-a);
 }
 
 body, table, tr:hover, .badge, .dropdown-menu > li > a {
@@ -21,8 +21,8 @@ table, table tr, table tr td {
     border: 1px solid var(--text-color) !important; /* not working? */
 }
 
-tr:hover {
-    background-color: var(--bg-color-hover) !important;
+tr:hover, .card {
+    background-color: var(--bg-color-b) !important;
 }
 
 textarea.monospace {
@@ -32,7 +32,7 @@ textarea.monospace {
 
 /* CKEditor Customisation */
 :root {
-    --ck-color-base-background: var(--bg-color);
+    --ck-color-base-background: var(--bg-color-b);
 
     /* Overrides the border radius setting in the theme. */
     --ck-border-radius: 4px;
