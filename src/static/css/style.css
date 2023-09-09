@@ -64,7 +64,7 @@ body {
 }
 
 .btn-unsubscribe:hover {
-    background-color: var(--unsubscribe-hover) !important;
+    /*background-color: var(--unsubscribe-hover) !important;*/
     color: white !important;
 }
 

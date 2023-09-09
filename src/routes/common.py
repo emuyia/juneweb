@@ -52,3 +52,8 @@ def view_user(username):
         flash('User not found.', 'error')
         return redirect(url_for('blog'))
     return render_template('view_user.html', user=user)
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
