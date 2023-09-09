@@ -3,63 +3,20 @@
 {% block content %}
 
 <div class="panel-a p-3 rounded mt-4">
-  <p class="mt-2 mb-2">Subscribe:</p>
-    <div id="mlb2-7622064" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-7622064">
-      <div class="ml-form-align-center ">
-        <div class="ml-form-embedWrapper embedForm">
-          <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
-            <div class="ml-form-embedContent" style="margin-bottom: 0px; ">
-            </div>
-            <form class="ml-block-form" action="https://assets.mailerlite.com/jsonp/592152/forms/98852859005633597/subscribe" data-code="" method="post" target="_blank">
-              <div class="ml-form-formContent">
-                  <div class="ml-form-fieldRow ml-last-item">
-                    <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
-                      <input aria-label="email" aria-required="true" type="email" class="form-control" data-inputmask="" name="fields[email]" placeholder="Email" autocomplete="email">
-                    </div>
-                  </div>
-              </div>
-              <input type="hidden" name="ml-submit" value="1">
-              <div class="ml-form-embedSubmit mt-2">
-                  <button type="submit" class="primary btn btn-subscribe btn-sm">Confirm</button>
-                <button disabled="disabled" style="display: none;" type="button" class="loading btn btn-sm">
-                  <div class="ml-form-embedSubmitLoad"></div>
-                  <span class="sr-only">Loading...</span>
-                </button>
-              </div>
-              <input type="hidden" name="anticsrf" value="true">
-            </form>
-          </div>
-          <div class="ml-form-successBody row-success" style="display: none">
-            <div class="ml-form-successContent">
-                <h4>Thank you!</h4>
-                <p>You have successfully joined the subscriber list.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <p class="mt-2 mb-2">Subscribe:</p>
+    <form method="post" action="{{ url_for('subscribe') }}">
+        <input type="email" class="form-control" id="email_subscribe" name="email" placeholder="Email" required>
+        <input type="submit" class="btn btn-sm btn-subscribe mt-2" name="subscribe" value="Confirm">
+    </form>
 
-  <script>
-    function ml_webform_success_7622064() {
-      var $ = ml_jQuery || jQuery;
-      $('.ml-subscribe-form-7622064 .row-success').show();
-      $('.ml-subscribe-form-7622064 .row-form').hide();
-    }
-  </script>
+    <div class="mt-4"></div>
+    <hr>
 
-  <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v1f25ee4b05f240a833e02c19975434a4" type="text/javascript"></script>
-  <script>
-    fetch("https://assets.mailerlite.com/jsonp/592152/forms/98852859005633597/takel")
-  </script>
-
-  <div class="mt-4"></div>
-  <hr>
-
-  <p class="mt-4 mb-2">Unsubscribe:</p>
-  <form method="post" action="{{ url_for('subscribe') }}">
+    <p class="mt-4 mb-2">Unsubscribe:</p>
+    <form method="post" action="{{ url_for('subscribe') }}">
         <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
         <input type="submit" class="btn btn-sm mt-2" name="unsubscribe" value="Confirm">
-  </form>
+    </form>
 </div>
 
 {% with messages = get_flashed_messages() %}
