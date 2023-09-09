@@ -1,6 +1,6 @@
 from src import app
 from src.models import Post, Tag
-from flask import render_template, request, flash, jsonify
+from flask import render_template, request, flash, jsonify, redirect, url_for
 import requests
 import json
 
@@ -13,24 +13,25 @@ def view_post(post_id):
 
 @app.route('/subscribe', methods=['GET', 'POST'])
 def subscribe():
-    if request.method == 'POST':
-        data = request.get_json()
-        if data.get('action') == 'Unsubscribe':
-            email_to_unsubscribe = data.get('EMAIL')
-            api_key = app.config["MAILCHIMP_API_KEY"]
-            list_id = app.config["MAILCHIMP_LIST_ID"]
-            server = app.config["MAILCHIMP_DATACENTER"]
-            endpoint = f"https://{server}.api.mailchimp.com/3.0/lists/{list_id}/members/{email_to_unsubscribe}"
-            headers = {
-                'Authorization': f'Bearer {api_key}',
-                'Content-Type': 'application/json'
-            }
-            payload = {'status': 'unsubscribed'}
-            response = requests.patch(endpoint, headers=headers, data=json.dumps(payload))
-            if response.status_code == 200:
-                return jsonify({"message": "Successfully unsubscribed."}), 200
+    if request.method == 'POST' and 'unsubscribe' in request.form:
+        email = request.form['email']
+        api_key = app.config['MAIL_API_KEY']
+        headers = {
+            'Content-Type': 'application/json',
+            'X-MailerLite-ApiKey': api_key,
+        }
+        response = requests.get(f'https://api.mailerlite.com/api/v2/subscribers/{email}', headers=headers)
+        if response.status_code == 200:
+            subscriber_id = response.json()['id']
+            group_id = app.config['MAIL_GROUP_ID']
+            response = requests.delete(f'https://api.mailerlite.com/api/v2/groups/{group_id}/subscribers/{subscriber_id}', headers=headers)
+            if response.status_code == 200 or response.status_code == 204:
+                flash('Unsubscribed successfully')
+                return redirect(url_for('subscribe'))
             else:
-                return jsonify({"message": "Failed to unsubscribe."}), 400
+                flash('Error unsubscribing')
+                print(f"Unsubscribe failed with status {response.status_code}: {response.content}")
         else:
-            return jsonify({"message": "Invalid action."}), 400
+            flash('Error finding subscriber')
+            print(f"Subscriber retrieval failed with status {response.status_code}: {response.content}")
     return render_template('subscribe.html')

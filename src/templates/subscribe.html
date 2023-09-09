@@ -2,67 +2,74 @@
 
 {% block content %}
 
-<p class="page-title">subscribe</p>
-
 <div class="panel-a p-3 rounded mt-4">
-    <div id="mc_embed_shell">
-        <div id="mc_embed_signup">
-            <form action="https://gmail.us21.list-manage.com/subscribe/post?u=f3668a330ff7c9934cadb1f73&amp;id=4ab73f244e&amp;f_id=00e0e6e6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
-                <div class="mc-field-group">
-                    <input type="email" name="EMAIL" class="required email form-control mb-3" placeholder="Email" id="mce-EMAIL" required="" value="">
-                    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
-                </div>
-                <div id="mce-responses" class="clear foot">
-                    <div class="response" id="mce-error-response" style="display: none;"></div>
-                    <div class="response" id="mce-success-response" style="display: none;"></div>
-                </div>
-                <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                    <input type="text" name="b_f3668a330ff7c9934cadb1f73_4ab73f244e" tabindex="-1" value="">
-                </div>
-                <div class="optionalParent">
-                    <div class="clear foot">
-                        <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-subscribe btn-sm" value="Subscribe">
-                        <button id="unsubscribe" class="btn btn-primary btn-sm">Unsubscribe</button>
+  <p class="mt-2 mb-2">Subscribe:</p>
+    <div id="mlb2-7622064" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-7622064">
+      <div class="ml-form-align-center ">
+        <div class="ml-form-embedWrapper embedForm">
+          <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
+            <div class="ml-form-embedContent" style="margin-bottom: 0px; ">
+            </div>
+            <form class="ml-block-form" action="https://assets.mailerlite.com/jsonp/592152/forms/98852859005633597/subscribe" data-code="" method="post" target="_blank">
+              <div class="ml-form-formContent">
+                  <div class="ml-form-fieldRow ml-last-item">
+                    <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+                      <input aria-label="email" aria-required="true" type="email" class="form-control" data-inputmask="" name="fields[email]" placeholder="Email" autocomplete="email">
                     </div>
-                </div>
+                  </div>
+              </div>
+              <input type="hidden" name="ml-submit" value="1">
+              <div class="ml-form-embedSubmit mt-2">
+                  <button type="submit" class="primary btn btn-subscribe btn-sm">Confirm</button>
+                <button disabled="disabled" style="display: none;" type="button" class="loading btn btn-sm">
+                  <div class="ml-form-embedSubmitLoad"></div>
+                  <span class="sr-only">Loading...</span>
+                </button>
+              </div>
+              <input type="hidden" name="anticsrf" value="true">
             </form>
+          </div>
+          <div class="ml-form-successBody row-success" style="display: none">
+            <div class="ml-form-successContent">
+                <h4>Thank you!</h4>
+                <p>You have successfully joined the subscriber list.</p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+
+  <script>
+    function ml_webform_success_7622064() {
+      var $ = ml_jQuery || jQuery;
+      $('.ml-subscribe-form-7622064 .row-success').show();
+      $('.ml-subscribe-form-7622064 .row-form').hide();
+    }
+  </script>
+
+  <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v1f25ee4b05f240a833e02c19975434a4" type="text/javascript"></script>
+  <script>
+    fetch("https://assets.mailerlite.com/jsonp/592152/forms/98852859005633597/takel")
+  </script>
+
+  <div class="mt-4"></div>
+  <hr>
+
+  <p class="mt-4 mb-2">Unsubscribe:</p>
+  <form method="post" action="{{ url_for('subscribe') }}">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+        <input type="submit" class="btn btn-sm mt-2" name="unsubscribe" value="Confirm">
+  </form>
 </div>
 
-<p id="message" class="ms-3 mt-3"></p>
-
-<script>
-    document.getElementById('unsubscribe').addEventListener('click', function(e) {
-        e.preventDefault();
-        var email = document.getElementById('mce-EMAIL').value;
-        fetch('/subscribe', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({'action': 'Unsubscribe', 'EMAIL': email}),
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("HTTP error " + response.status);
-          }
-          return response.json();
-        })
-        .then(json => {
-          var messageElement = document.getElementById('message');
-          messageElement.textContent = json.message;
-          setTimeout(function() {
-            messageElement.textContent = '';
-          }, 5000);
-        })
-        .catch(function() {
-          var messageElement = document.getElementById('message');
-          messageElement.textContent = 'An error occurred while trying to unsubscribe.';
-          setTimeout(function() {
-            messageElement.textContent = '';
-          }, 5000);
-        });
-        this.blur();
-    });
-</script>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+                <p class="mt-3">{{ message }}</p>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 
 {% endblock %}

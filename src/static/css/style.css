@@ -25,6 +25,7 @@
     --miniature-height: 150px;
     --miniature-font-size: 0.65em;
     --subscribe-hover: #ff8000;
+    --unsubscribe-hover: #ff3838;
     --donate-hover: #50da3b;
     --contact-hover: #0ab1ff;
 }
@@ -55,10 +56,11 @@ body {
 
 .btn-subscribe:hover {
     background-color: var(--subscribe-hover) !important;
+    color: white !important;
 }
 
-.btn-subscribe {
-    color: white !important;
+.unsubscribe:hover {
+    color: var(--unsubscribe-hover) !important;
 }
 
 .donate:hover {
@@ -66,7 +68,7 @@ body {
 }
 
 .contact:hover {
-    color: var(--contact-hover) !important;
+    color: var(--link-color-hover) !important;
 }
 
 .btn-xsm, .btn-xsm:hover {

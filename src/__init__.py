@@ -16,9 +16,7 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
-app.config['MAILCHIMP_DATACENTER'] = config.MAILCHIMP_DATACENTER
-app.config['MAILCHIMP_API_KEY'] = config.MAILCHIMP_API_KEY
-app.config['MAILCHIMP_LIST_ID'] = config.MAILCHIMP_LIST_ID
-app.config['MAILCHIMP_CAMPAIGN_ID'] = config.MAILCHIMP_CAMPAIGN_ID
+app.config['MAIL_API_KEY'] = config.MAIL_API_KEY
+app.config['MAIL_GROUP_ID'] = config.MAIL_GROUP_ID
 
 from src import routes, models
