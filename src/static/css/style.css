@@ -63,6 +63,11 @@ body {
     color: var(--unsubscribe-hover) !important;
 }
 
+.btn-unsubscribe:hover {
+    background-color: var(--unsubscribe-hover) !important;
+    color: white !important;
+}
+
 .donate:hover {
     color: var(--donate-hover) !important;
 }

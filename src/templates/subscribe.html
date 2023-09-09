@@ -2,20 +2,15 @@
 
 {% block content %}
 
+<p class="page-title">subscribe</p>
+
 <div class="panel-a p-3 rounded mt-4">
-    <p class="mt-2 mb-2">Subscribe:</p>
-    <form method="post" action="{{ url_for('subscribe') }}">
-        <input type="email" class="form-control" id="email_subscribe" name="email" placeholder="Email" required>
-        <input type="submit" class="btn btn-sm btn-subscribe mt-2" name="subscribe" value="Confirm">
-    </form>
-
-    <div class="mt-4"></div>
-    <hr>
-
-    <p class="mt-4 mb-2">Unsubscribe:</p>
     <form method="post" action="{{ url_for('subscribe') }}">
         <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-        <input type="submit" class="btn btn-sm mt-2" name="unsubscribe" value="Confirm">
+        <div class="d-flex justify-content-start mt-2">
+            <input type="submit" class="btn btn-sm btn-subscribe me-1" name="subscribe" value="Subscribe">
+            <input type="submit" class="btn btn-sm btn-unsubscribe me-1" name="unsubscribe" value="Unsubscribe">
+        </div>
     </form>
 </div>
 
