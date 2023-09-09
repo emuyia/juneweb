@@ -212,6 +212,7 @@ td {
 .nav-link:hover,
 .nav-link:active {
     background-color: var(--nav-color-hover);
+    color: white;
 }
 
 /* --- cards --- */
@@ -262,6 +263,7 @@ td {
 .dropdown-item:focus,
 .dropdown-item:hover {
     background-color: var(--nav-color-hover);
+    color: white;
 }
 
 /* --- badges --- */
