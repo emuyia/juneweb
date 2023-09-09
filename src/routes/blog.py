@@ -1,7 +1,9 @@
 from src import app
 from src.models import Post
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, Response
 import requests
+from feedgen.feed import FeedGenerator
+import pytz
 
 
 @app.route("/post/<int:post_id>")
@@ -46,3 +48,23 @@ def subscribe():
                 flash('Error subscribing')
                 print(f"Subscribe failed with status {response.status_code}: {response.content}")
     return render_template('subscribe.html')
+
+
+@app.route('/feed')
+def feed():
+    fg = FeedGenerator()
+    fg.title(app.config['SITE_NAME'])
+    fg.link(href=request.url_root)
+    fg.description(app.config['SITE_DESC'])
+
+    posts = Post.query.order_by(Post.date_posted.desc()).all()
+    for post in posts:
+        fe = fg.add_entry()
+        fe.title(post.title)
+        fe.link(href=f"{request.url_root}post/{post.id}")
+        fe.description(post.content)
+        fe.pubDate(post.date_posted.replace(tzinfo=pytz.timezone('Europe/London')))
+        fe.author(name=post.author.username)
+
+    response = fg.rss_str(pretty=True)
+    return Response(response, mimetype='application/rss+xml')

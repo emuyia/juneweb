@@ -1,5 +1,8 @@
 import os
 
+SITE_NAME = 'website'
+SITE_DESC = 'description'
+
 SESSION_TYPE = "filesystem"
 SECRET_KEY = "example"
 

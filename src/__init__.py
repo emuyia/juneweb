@@ -7,6 +7,9 @@ from src import config
 
 app = Flask(__name__)
 
+app.config['SITE_NAME'] = config.SITE_NAME
+app.config['SITE_DESC'] = config.SITE_DESC
+
 app.config["SESSION_TYPE"] = config.SESSION_TYPE
 app.config["SECRET_KEY"] = config.SECRET_KEY
 Session(app)
