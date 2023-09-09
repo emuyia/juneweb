@@ -24,6 +24,7 @@
     --nav-color-hover: #7e3b4f;
     --miniature-height: 150px;
     --miniature-font-size: 0.65em;
+    --subscribe-hover: #cf863d;
 }
 
 
@@ -44,6 +45,10 @@ body {
 
 .info {
     font-size: var(--font-size-sub);
+}
+
+.subscribe:hover {
+    background-color: var(--subscribe-hover) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
