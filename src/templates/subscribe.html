@@ -5,20 +5,64 @@
 <p class="page-title">subscribe</p>
 
 <div class="panel-a p-3 rounded mt-4">
-    <form method="POST">
-        <input class="form-control mb-3" placeholder="Email" type="email" id="email" name="email" required>
-        <input type="submit" name="submit" value="Subscribe" class="btn btn-primary">
-    </form>
+    <div id="mc_embed_shell">
+        <div id="mc_embed_signup">
+            <form action="https://gmail.us21.list-manage.com/subscribe/post?u=f3668a330ff7c9934cadb1f73&amp;id=4ab73f244e&amp;f_id=00e0e6e6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
+                <div class="mc-field-group">
+                    <input type="email" name="EMAIL" class="required email form-control mb-3" placeholder="Email" id="mce-EMAIL" required="" value="">
+                    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+                </div>
+                <div id="mce-responses" class="clear foot">
+                    <div class="response" id="mce-error-response" style="display: none;"></div>
+                    <div class="response" id="mce-success-response" style="display: none;"></div>
+                </div>
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="b_f3668a330ff7c9934cadb1f73_4ab73f244e" tabindex="-1" value="">
+                </div>
+                <div class="optionalParent">
+                    <div class="clear foot">
+                        <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-primary btn-sm" value="Subscribe">
+                        <button id="unsubscribe" class="btn btn-primary btn-sm">Unsubscribe</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <p class="mt-3">{{ message }}</p>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+<p id="message" class="ms-3 mt-3"></p>
+
+<script>
+    document.getElementById('unsubscribe').addEventListener('click', function(e) {
+        e.preventDefault();
+        var email = document.getElementById('mce-EMAIL').value;
+        fetch('/subscribe', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({'action': 'Unsubscribe', 'EMAIL': email}),
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("HTTP error " + response.status);
+          }
+          return response.json();
+        })
+        .then(json => {
+          var messageElement = document.getElementById('message');
+          messageElement.textContent = json.message;
+          setTimeout(function() {
+            messageElement.textContent = '';
+          }, 5000);
+        })
+        .catch(function() {
+          var messageElement = document.getElementById('message');
+          messageElement.textContent = 'An error occurred while trying to unsubscribe.';
+          setTimeout(function() {
+            messageElement.textContent = '';
+          }, 5000);
+        });
+        this.blur();
+    });
+</script>
 
 {% endblock %}
