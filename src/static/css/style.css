@@ -24,7 +24,9 @@
     --nav-color-hover: #7e3b4f;
     --miniature-height: 150px;
     --miniature-font-size: 0.65em;
-    --subscribe-hover: #cf863d;
+    --subscribe-hover: #ff8000;
+    --donate-hover: #50da3b;
+    --contact-hover: #0ab1ff;
 }
 
 
@@ -48,7 +50,30 @@ body {
 }
 
 .subscribe:hover {
+    color: var(--subscribe-hover) !important;
+}
+
+.btn-subscribe:hover {
     background-color: var(--subscribe-hover) !important;
+}
+
+.btn-subscribe {
+    color: white !important;
+}
+
+.donate:hover {
+    color: var(--donate-hover) !important;
+}
+
+.contact:hover {
+    color: var(--contact-hover) !important;
+}
+
+.btn-xsm, .btn-xsm:hover {
+    font-size: var(--miniature-font-size) !important;
+    padding: 0.25em;
+    border: 0;
+    background-color: transparent !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
