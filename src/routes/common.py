@@ -17,21 +17,7 @@ def blog():
 
     posts = posts.order_by(Post.date_posted.desc()).all()
     tags = Tag.query.order_by(Tag.name).all()
-
-    '''
-    search_form = SearchForm()
-    if search_form.validate_on_submit():
-        return redirect(url_for('search_results', query=search_form.query.data))
-    '''
-
-    # return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [],
-    #                        search_form=search_form)
     return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 
 @app.route('/<path:title>')
@@ -66,4 +52,3 @@ def view_user(username):
         flash('User not found.', 'error')
         return redirect(url_for('blog'))
     return render_template('view_user.html', user=user)
-

@@ -6,7 +6,7 @@
     <div class="ms-auto d-flex">
         {% for tag_name in selected_tags %}
             <div class="d-flex m-1">
-                <span class="badge bg-primary">#{{ tag_name }}</span>
+                <span class="badge bg-primary" style="cursor: pointer;">#{{ tag_name }}</span>
             </div>
         {% endfor %}
         <div class="dropdown ps-1">
@@ -44,6 +44,16 @@ function filterPostsByTags() {
     let selectedTags = Array.from(document.querySelectorAll('#tag-select input:checked')).map(input => input.value);
     window.location.href = `?tags=${selectedTags.join(',')}`;
 }
+</script>
+
+<script>
+    document.querySelectorAll('.badge').forEach(badge => {
+        badge.addEventListener('click', function() {
+            let selectedTags = window.location.href.split('=')[1] ? window.location.href.split('=')[1].split(',') : [];
+            selectedTags = selectedTags.filter(tag => tag !== this.textContent.slice(1)); // slice(1) to remove the '#' from the badge text
+            window.location.href = `?tags=${selectedTags.join(',')}`;
+        });
+    });
 </script>
 
 {% if posts %}

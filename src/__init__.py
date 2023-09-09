@@ -19,5 +19,6 @@ migrate = Migrate(app, db)
 app.config['MAILCHIMP_DATACENTER'] = config.MAILCHIMP_DATACENTER
 app.config['MAILCHIMP_API_KEY'] = config.MAILCHIMP_API_KEY
 app.config['MAILCHIMP_LIST_ID'] = config.MAILCHIMP_LIST_ID
+app.config['MAILCHIMP_CAMPAIGN_ID'] = config.MAILCHIMP_CAMPAIGN_ID
 
 from src import routes, models
