@@ -23,6 +23,7 @@
     --link-color-hover: #FF69B4;
     --nav-color-hover: #7e3b4f;
     --miniature-height: 150px;
+    --card-body-height: 200px;
     --miniature-font-size: 0.65em;
     --subscribe-hover: #ff8000;
     --unsubscribe-hover: #ff3838;
@@ -216,6 +217,16 @@ td {
 }
 
 /* --- cards --- */
+.card {
+    display: flex;
+    height: 100%;
+    max-height: none;
+}
+
+.card-body {
+    max-height: var(--card-body-height);
+}
+
 .card-footer {
     border: none;
     border-radius: var(--border-radius) !important;
@@ -223,14 +234,15 @@ td {
 
 .miniature-view {
     max-width: 100%;
-    height: var(--miniature-height);
-    overflow: hidden;
+    min-height: var(--miniature-height);
+    max-height: var(--miniature-height);
     font-size: var(--miniature-font-size);
+    overflow: hidden;
 }
 
 .miniature-view img {
-    max-width: 50%;
-    height: auto;
+    width: 50% !important;
+    height: 50% !important;
 }
 
 /* --- buttons --- */
