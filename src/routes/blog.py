@@ -1,6 +1,6 @@
 from src import app, db
 from src.models import Post, Comment
-from flask import render_template, request, flash, redirect, url_for, Response
+from flask import render_template, request, flash, redirect, url_for, Response, abort
 import requests
 from feedgen.feed import FeedGenerator
 import pytz
@@ -22,6 +22,19 @@ def submit_comment():
     new_comment = Comment(content=content, post_id=post_id, author_id=current_user.id, date_posted=datetime.now())
     db.session.add(new_comment)
     db.session.commit()
+    return redirect(url_for('view_post', post_id=post_id))
+
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    post_id = comment.post_id
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Your comment has been deleted!', 'success')
     return redirect(url_for('view_post', post_id=post_id))
 
 
