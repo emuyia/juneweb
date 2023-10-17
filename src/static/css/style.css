@@ -29,6 +29,7 @@
     --unsubscribe-hover: #ff3838;
     --donate-hover: #50da3b;
     --contact-hover: #0ab1ff;
+    --danger-hover: red;
 }
 
 
@@ -75,6 +76,10 @@ body {
 
 .contact:hover {
     color: var(--link-color-hover) !important;
+}
+
+.danger:hover {
+    color: var(--danger-hover) !important;
 }
 
 .btn-xsm, .btn-xsm:hover {
