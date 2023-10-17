@@ -10,6 +10,7 @@ from flask import redirect, url_for, request, flash
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 from flask_login import UserMixin, current_user
+from sqlalchemy.orm import backref
 
 # association tables
 post_tags = db.Table('post_tags',
@@ -45,6 +46,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
     author = db.relationship('User')
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
+    comments = db.relationship('Comment', backref='parent_post', lazy=True)
 
     def get_tags(self):
         return ', '.join(tag.name for tag in self.tags)
@@ -56,6 +58,15 @@ class Tag(db.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', name='fk_post_id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(DateTime, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
+    author = db.relationship('User')
 
 
 class Album(db.Model):
@@ -164,6 +175,7 @@ admin = flask_admin.Admin(app,
 admin.add_view(PageModelView(Page, db.session))
 admin.add_view(PostModelView(Post, db.session))
 admin.add_view(AdminModelView(Tag, db.session))
+admin.add_view(AdminModelView(Comment, db.session))
 admin.add_view(AlbumModelView(Album, db.session))
 admin.add_view(AdminModelView(Track, db.session))
 admin.add_view(AdminModelView(User, db.session))
