@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p class="page-title">search posts</p>
+
+<div class="panel-a p-3 rounded mt-4">
+    <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="q" class="form-control mb-3" placeholder="Search..." value="{{ request.args.get('q') }}">
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+
+{% if query %}
+    <div class="panel-a p-3 rounded mt-4">
+        {% if posts %}
+            <div class="row ps-2 pe-2">
+                {% for post in posts %}
+                    {% include 'item_post.html' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="ms-5">No results found.</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}

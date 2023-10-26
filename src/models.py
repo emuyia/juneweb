@@ -51,6 +51,10 @@ class Post(db.Model):
     def get_tags(self):
         return ', '.join(tag.name for tag in self.tags)
 
+    @staticmethod
+    def get_posts_by_ids(ids):
+        return Post.query.filter(Post.id.in_(ids)).all()
+
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -151,6 +155,7 @@ class PostModelView(AdminModelView):
     form_overrides = {
         'content': CKTextAreaField
     }
+    inline_models = (Comment,)
 
 
 class AlbumModelView(AdminModelView):

@@ -6,12 +6,104 @@ from feedgen.feed import FeedGenerator
 import pytz
 from flask_login import login_required, current_user
 from datetime import datetime
+from whoosh.index import create_in
+from whoosh.fields import *
+from whoosh.qparser import MultifieldParser, OrGroup
+from sqlalchemy import event
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
     post = Post.query.get(post_id)
+    if post.date_updated is None:
+        post.date_updated = post.date_posted
     return render_template("view_post.html", post=post)
+
+
+schema = Schema(
+    id=ID(stored=True),
+    title=TEXT(stored=True),
+    content=TEXT(stored=True),
+    date_posted=DATETIME(stored=True, sortable=True),
+    tags=KEYWORD(stored=True, commas=True)
+)
+
+index_dir = 'whoosh_index'
+index = create_in(index_dir, schema)
+
+
+def index_posts():
+    writer = index.writer()
+    for post in Post.query.all():
+        writer.add_document(
+            id=str(post.id),
+            title=post.title,
+            content=post.content,
+            date_posted=post.date_posted,
+            tags=post.get_tags()
+        )
+    writer.commit()
+
+
+with app.app_context():
+    index_posts()
+
+
+def add_to_index(mapper, connection, post):
+    writer = index.writer()
+    writer.add_document(
+        id=str(post.id),
+        title=post.title,
+        content=post.content,
+        date_posted=post.date_posted,
+        tags=post.get_tags()
+    )
+    writer.commit()
+
+
+def remove_from_index(mapper, connection, post):
+    writer = index.writer()
+    writer.delete_by_term('id', str(post.id))
+    writer.commit()
+
+
+def update_index(mapper, connection, post):
+    remove_from_index(mapper, connection, post)
+    add_to_index(mapper, connection, post)
+
+
+event.listen(Post, 'after_insert', add_to_index)
+event.listen(Post, 'after_update', update_index)
+event.listen(Post, 'after_delete', remove_from_index)
+
+
+searcher = index.searcher()
+
+
+def refresh_searcher():
+    global searcher
+    searcher = searcher.refresh()
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(refresh_searcher, 'interval', minutes=1)
+scheduler.start()
+
+
+@app.route("/search")
+def search():
+    query = request.args.get('q', '')
+    post_ids = []
+    if query:
+        global searcher
+        og = OrGroup.factory(0.9)
+        query = MultifieldParser(["title", "content", "tags"], index.schema, group=og).parse(query)
+        results = searcher.search(query)
+        for hit in results:
+            post_ids.append(hit['id'])
+    posts = Post.get_posts_by_ids(post_ids)
+    return render_template('search.html', posts=posts, query=query)
 
 
 @app.route('/submit_comment', methods=['POST'])
