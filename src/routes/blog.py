@@ -5,7 +5,7 @@ import requests
 from feedgen.feed import FeedGenerator
 import pytz
 from flask_login import login_required, current_user
-from datetime import datetime
+from datetime import datetime as dt
 from whoosh.index import create_in
 from whoosh.fields import *
 from whoosh.qparser import MultifieldParser, OrGroup
@@ -111,7 +111,7 @@ def search():
 def submit_comment():
     post_id = request.form.get('post_id')
     content = request.form.get('content')
-    new_comment = Comment(content=content, post_id=post_id, author_id=current_user.id, date_posted=datetime.now())
+    new_comment = Comment(content=content, post_id=post_id, author_id=current_user.id, date_posted=dt.now())
     db.session.add(new_comment)
     db.session.commit()
     return redirect(url_for('view_post', post_id=post_id))
@@ -126,7 +126,7 @@ def delete_comment(comment_id):
     post_id = comment.post_id
     db.session.delete(comment)
     db.session.commit()
-    flash('Your comment has been deleted!', 'success')
+    # flash('Your comment has been deleted!', 'success')
     return redirect(url_for('view_post', post_id=post_id))
 
 

@@ -23,11 +23,13 @@ def blog():
 @app.route('/<path:title>')
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
-    posts = Post.query.join(Post.tags).filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all()
+    posts = (Post.query.join(Post.tags)
+             .filter(Tag.id.in_([tag.id for tag in page.related_tags])).order_by(Post.date_posted.desc()).all())
     tags_list = ','.join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
     content = render_template_string(page.content, posts=posts, tags_list=tags_list, albums=albums)
-    return render_template('page.html', page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
+    return render_template('page.html',
+                           page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
 
 
 @app.route('/page_list')
@@ -49,6 +51,6 @@ def view_user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
         # Handle case where no user with the provided username exists
-        flash('User not found.', 'error')
+        # flash('User not found.', 'error')
         return redirect(url_for('blog'))
     return render_template('view_user.html', user=user)

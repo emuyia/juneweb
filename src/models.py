@@ -10,7 +10,6 @@ from flask import redirect, url_for, request, flash
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 from flask_login import UserMixin, current_user
-from sqlalchemy.orm import backref
 
 # association tables
 post_tags = db.Table('post_tags',
