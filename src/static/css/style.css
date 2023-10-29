@@ -78,6 +78,14 @@ body {
     color: var(--link-color-hover) !important;
 }
 
+.link {
+    color: var(--link-color) !important;
+}
+
+.link:hover {
+    color: var(--link-color-hover) !important;
+}
+
 .danger:hover {
     color: var(--danger-hover) !important;
 }
