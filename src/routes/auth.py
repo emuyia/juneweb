@@ -41,6 +41,19 @@ def login():
             else:
                 flash("Invalid username or password.", "error")
         elif submit_type == 'Register':
+            if not username.isalnum():
+                flash("Username should be alphanumeric.", "error")
+                return render_template("login.html")
+
+            existing_user = User.query.filter_by(username=username).first()
+            if existing_user is not None:
+                flash("Username is already taken.", "error")
+                return render_template("login.html")
+
+            if not password or len(password) <= 3:
+                flash("Password should be longer than 3 characters.", "error")
+                return render_template("login.html")
+
             hashed_password = generate_password_hash(password)
             new_user = User(username=username, password=hashed_password)
             db.session.add(new_user)

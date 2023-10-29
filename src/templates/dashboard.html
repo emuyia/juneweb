@@ -23,4 +23,14 @@
     </form>
 </div>
 
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+                <p class="mt-3">{{ message }}</p>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
 {% endblock %}
