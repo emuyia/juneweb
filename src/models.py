@@ -34,6 +34,9 @@ class Page(db.Model):
     content = db.Column(db.Text, nullable=False)
     related_tags = db.relationship('Tag', secondary=page_tags, backref=db.backref('pages', lazy='dynamic'))
 
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.title[:50])
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +58,9 @@ class Post(db.Model):
     def get_posts_by_ids(ids):
         return Post.query.filter(Post.id.in_(ids)).all()
 
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.title[:50])
+
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,6 +68,9 @@ class Tag(db.Model):
 
     def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.name[:50])
 
 
 class Comment(db.Model):
@@ -71,6 +80,9 @@ class Comment(db.Model):
     date_posted = db.Column(DateTime, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
     author = db.relationship('User')
+
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.content[:50])
 
 
 class Album(db.Model):
@@ -86,12 +98,18 @@ class Album(db.Model):
     embed = db.Column(db.Text)
     content = db.Column(db.Text)
 
+    def __repr__(self):
+        return '({}) {} - {}'.format(self.id, self.artist[:50], self.title[:50])
+
 
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     duration = db.Column(db.String(50))
     track_number = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.name[:50])
 
 
 class User(UserMixin, db.Model):
@@ -102,6 +120,9 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
+
+    def __repr__(self):
+        return '({}) {}'.format(self.id, self.username)
 
 
 class AdminModelView(ModelView):
