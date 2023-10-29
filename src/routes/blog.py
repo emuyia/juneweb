@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import Post, Comment
+from src.models import Post, Comment, User
 from flask import render_template, request, flash, redirect, url_for, Response, abort
 import requests
 from feedgen.feed import FeedGenerator
@@ -18,7 +18,27 @@ def view_post(post_id):
     post = Post.query.get(post_id)
     if post.date_updated is None:
         post.date_updated = post.date_posted
+    for comment in post.comments:
+        comment.content = linkify_usernames(comment.content)
     return render_template("view_post.html", post=post)
+
+
+def linkify_usernames(comment_text):
+    # matches @ followed by one or more alphanumeric characters or underscores,
+    # but not if preceded by a backslash.
+    pattern = r"(?<!\\)@(\w+)"
+
+    # For each match, replace @username with a link to the user's profile page if user exists,
+    # otherwise replace with just the username.
+    def replace_username_with_link(match):
+        username = match.group(1)
+        user = User.query.filter_by(username=username).first()
+        if user is not None:
+            return f'<a href="{url_for("view_user", username=username)}">@{username}</a>'
+        else:
+            return f'@{username}'
+
+    return re.sub(pattern, replace_username_with_link, comment_text)
 
 
 schema = Schema(

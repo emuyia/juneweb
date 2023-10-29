@@ -50,7 +50,5 @@ def view_album(album_id):
 def view_user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        # Handle case where no user with the provided username exists
-        # flash('User not found.', 'error')
         return redirect(url_for('blog'))
     return render_template('view_user.html', user=user)
