@@ -11,6 +11,8 @@ from whoosh.fields import *
 from whoosh.qparser import MultifieldParser, OrGroup
 from sqlalchemy import event
 from apscheduler.schedulers.background import BackgroundScheduler
+from bleach import clean, linkify
+from bs4 import BeautifulSoup
 
 
 @app.route("/post/<int:post_id>")
@@ -19,26 +21,41 @@ def view_post(post_id):
     if post.date_updated is None:
         post.date_updated = post.date_posted
     for comment in post.comments:
-        comment.content = linkify_usernames(comment.content)
+        comment.content = process_comment(comment.content)
     return render_template("view_post.html", post=post)
 
 
-def linkify_usernames(comment_text):
-    # matches @ followed by one or more alphanumeric characters or underscores,
-    # but not if preceded by a backslash.
+def process_comment(comment_text):
+    # Remove all HTML tags
+    sanitized_text = clean(comment_text, tags=[], strip=True)
+
+    # Linkify URLs
+    comment_text = linkify(sanitized_text)
+
+    # Add target="_blank" to <a> tags
+    soup = BeautifulSoup(comment_text, features="html.parser")
+    for a in soup.findAll('a'):
+        a['target'] = '_blank'
+    comment_text = str(soup)
+
+    # matches @ followed by one or more characters or underscores, except if preceded by backslash
     pattern = r"(?<!\\)@(\w+)"
 
-    # For each match, replace @username with a link to the user's profile page if user exists,
-    # otherwise replace with just the username.
+    # replace @username with link to user's profile page if user exists
     def replace_username_with_link(match):
         username = match.group(1)
         user = User.query.filter_by(username=username).first()
         if user is not None:
-            return f'<a href="{url_for("view_user", username=username)}">@{username}</a>'
+            return f'<a href="{url_for("view_user", username=username)}" target="_blank">@{username}</a>'
         else:
             return f'@{username}'
 
-    return re.sub(pattern, replace_username_with_link, comment_text)
+    comment_text = re.sub(pattern, replace_username_with_link, comment_text)
+
+    # Remove backslashes preceding a @
+    comment_text = re.sub(r"\\@", "@", comment_text)
+
+    return comment_text
 
 
 schema = Schema(
