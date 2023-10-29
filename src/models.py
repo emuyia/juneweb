@@ -45,7 +45,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
     author = db.relationship('User')
     tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
-    comments = db.relationship('Comment', backref='parent_post', lazy=True)
+    comments = db.relationship('Comment', backref='post', lazy=True)
     comments_enabled = db.Column(db.Boolean, nullable=False, default=True)
 
     def get_tags(self):

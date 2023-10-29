@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel-a rounded p-3" style="font-size:0.8em;">
+    <p class="sub-title mb-3">Edit comment...</p>
+    <form method="POST" action="{{ url_for('submit_edited_comment', comment_id=comment.id) }}">
+        <input type="hidden" name="post_id" value="{{ comment.post.id }}">
+        <textarea name="content" class="form-control mb-2" placeholder="Edit your comment...">{{comment.content}}</textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

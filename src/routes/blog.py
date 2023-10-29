@@ -58,6 +58,52 @@ def process_comment(comment_text):
     return comment_text
 
 
+@app.route('/submit_comment', methods=['POST'])
+@login_required
+def submit_comment():
+    post_id = request.form.get('post_id')
+    content = request.form.get('content')
+    new_comment = Comment(content=content, post_id=post_id, author_id=current_user.id, date_posted=dt.now())
+    db.session.add(new_comment)
+    db.session.commit()
+    return redirect(url_for('view_post', post_id=post_id))
+
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    post_id = comment.post_id
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('view_post', post_id=post_id))
+
+
+@app.route("/comment/edit/<int:comment_id>", methods=["GET"])
+@login_required
+def edit_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.author.id != current_user.id:
+        flash("You cannot edit someone else's comment.")
+        return redirect(url_for("view_post", post_id=comment.post.id))
+    return render_template("edit_comment.html", comment=comment)
+
+
+@app.route("/comment/edit/<int:comment_id>", methods=["POST"])
+@login_required
+def submit_edited_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment.author.id != current_user.id:
+        flash("You cannot edit someone else's comment.")
+        return redirect(url_for("view_post", post_id=comment.post.id))
+    comment.content = request.form["content"]
+    db.session.commit()
+    flash("Your comment has been updated.")
+    return redirect(url_for("view_post", post_id=comment.post.id))
+
+
 schema = Schema(
     id=ID(stored=True),
     title=TEXT(stored=True),
@@ -141,30 +187,6 @@ def search():
             post_ids.append(hit['id'])
     posts = Post.get_posts_by_ids(post_ids)
     return render_template('search.html', posts=posts, query=query)
-
-
-@app.route('/submit_comment', methods=['POST'])
-@login_required
-def submit_comment():
-    post_id = request.form.get('post_id')
-    content = request.form.get('content')
-    new_comment = Comment(content=content, post_id=post_id, author_id=current_user.id, date_posted=dt.now())
-    db.session.add(new_comment)
-    db.session.commit()
-    return redirect(url_for('view_post', post_id=post_id))
-
-
-@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
-@login_required
-def delete_comment(comment_id):
-    comment = Comment.query.get(comment_id)
-    if comment.author != current_user:
-        abort(403)
-    post_id = comment.post_id
-    db.session.delete(comment)
-    db.session.commit()
-    # flash('Your comment has been deleted!', 'success')
-    return redirect(url_for('view_post', post_id=post_id))
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
