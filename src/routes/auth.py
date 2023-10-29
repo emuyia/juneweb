@@ -85,6 +85,11 @@ def dashboard():
         if new_password:
             current_user.password = generate_password_hash(new_password)
 
+        new_picture_url = request.form.get('profile_picture')
+
+        if new_picture_url:
+            current_user.profile_picture = new_picture_url
+
         db.session.commit()
         flash("Changes saved.", "success")
 

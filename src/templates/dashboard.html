@@ -13,12 +13,14 @@
 
 <div class="panel-a p-4 rounded mt-3">
     <p>Username: <span class="author">{{ current_user.username }}</span></p>
+    <img src="{{ current_user.profile_picture }}" class="profile_picture mt-3">
 </div>
 
 <div class="panel-a p-3 rounded mt-3">
     <form method="POST">
         <input type="text" id="username" name="username" class="form-control mb-3" placeholder="New Username">
         <input type="password" id="password" name="password" class="form-control mb-3" placeholder="New Password">
+        <input type="url" id="profile_picture" name="profile_picture" class="form-control mb-3" placeholder="New Profile Picture URL">
         <input type="submit" value="Save" class="btn btn-primary">
     </form>
 </div>

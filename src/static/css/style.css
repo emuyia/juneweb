@@ -195,6 +195,12 @@ td {
 
 
 /* Components */
+.profile_picture {
+    border: 1px solid gray;
+    height: 100px;
+    width: 100px;
+}
+
 /* --- navbar --- */
 .navbar.bg-dark {
     background-color: transparent !important;

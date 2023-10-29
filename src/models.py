@@ -117,6 +117,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    profile_picture = db.Column(db.String(500))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
