@@ -30,46 +30,43 @@
         </div>
     </div>
 
-    <hr>
-
-    <div class="panel-a rounded p-3" style="font-size:0.8em;">
-        {% for comment in post.comments %}
-            <div class="comment panel-b p-2 ps-4 mb-2 rounded">
-
-
-
-
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="mb-2 info">
-                        {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}
-                        (<a class="author" href="{{ url_for('view_user', username=comment.author.username) }}">
-                            {{ comment.author.username }}
-                        </a>)
-                    </p>
+    {% if post.comments_enabled %}
+        <hr>
+        <div class="panel-a rounded p-3" style="font-size:0.8em;">
+            {% for comment in post.comments %}
+                <div class="comment panel-b p-2 ps-4 mb-2 rounded">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="mb-2 info">
+                            {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}
+                            (<a class="author" href="{{ url_for('view_user', username=comment.author.username) }}">
+                                {{ comment.author.username }}
+                            </a>)
+                        </p>
+                        </div>
+                        <div>
+                            {% if current_user.is_authenticated and current_user.id == comment.author.id %}
+                            <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
+                                <button type="submit" class="btn btn-danger btn-xsm danger pt-0 pe-2">Delete</button>
+                            </form>
+                        {% endif %}
+                        </div>
                     </div>
-                    <div>
-                        {% if current_user.is_authenticated and current_user.id == comment.author.id %}
-                        <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST">
-                            <button type="submit" class="btn btn-danger btn-xsm danger pt-0 pe-2">Delete</button>
-                        </form>
-                    {% endif %}
-                    </div>
+
+                    <p>{{ comment.content }}</p>
+
                 </div>
+            {% endfor %}
 
-                <p>{{ comment.content }}</p>
-
+            <div class="pt-3">
+                <form method="POST" action="{{ url_for('submit_comment') }}">
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <textarea name="content" class="form-control mb-2" placeholder="Write a comment..."></textarea>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
-        {% endfor %}
-
-    <div class="pt-3">
-        <form method="POST" action="{{ url_for('submit_comment') }}">
-            <input type="hidden" name="post_id" value="{{ post.id }}">
-            <textarea name="content" class="form-control mb-2" placeholder="Write a comment..."></textarea>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-</div>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}
