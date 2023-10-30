@@ -96,11 +96,9 @@ def edit_comment(comment_id):
 def submit_edited_comment(comment_id):
     comment = Comment.query.get(comment_id)
     if comment.author.id != current_user.id:
-        flash("You cannot edit someone else's comment.")
         return redirect(url_for("view_post", post_id=comment.post.id))
     comment.content = request.form["content"]
     db.session.commit()
-    flash("Your comment has been updated.")
     return redirect(url_for("view_post", post_id=comment.post.id))
 
 
