@@ -13,6 +13,7 @@ from sqlalchemy import event
 from apscheduler.schedulers.background import BackgroundScheduler
 from bleach import clean, linkify
 from bs4 import BeautifulSoup
+import os
 
 
 @app.route("/post/<int:post_id>")
@@ -111,6 +112,10 @@ schema = Schema(
 )
 
 index_dir = 'whoosh_index'
+
+if not os.path.exists(index_dir):
+    os.makedirs(index_dir)
+
 index = create_in(index_dir, schema)
 
 
