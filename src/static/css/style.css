@@ -30,6 +30,8 @@
     --donate-hover: #50da3b;
     --contact-hover: #0ab1ff;
     --danger-hover: red;
+    --pfp-size: 100px;
+    --pfp-comment-size: 30px;
 }
 
 
@@ -195,10 +197,16 @@ td {
 
 
 /* Components */
-.profile_picture {
-    border: 1px solid gray;
-    height: 100px;
-    width: 100px;
+.pfp {
+    border: 1px solid var(--border-color-sub);
+    height: var(--pfp-size);
+    width: var(--pfp-size);
+}
+
+.pfp-comment {
+    border: 1px solid var(--border-color-sub);
+    height: var(--pfp-comment-size);
+    width: var(--pfp-comment-size);
 }
 
 /* --- navbar --- */
