@@ -12,7 +12,7 @@
         <div class="container">
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded p-1">
             <div class="container-fluid">
-              <a class="navbar-brand {{'active' if request.path == url_for('blog') else ''}} brand" href="{{ url_for('blog') }}">june's room</a>
+              <a class="navbar-brand {{'active' if request.path == url_for('home') else ''}} brand" href="{{ url_for('home') }}">june's room</a>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,12 +32,11 @@
                         <a class="nav-link px-2" href="{{ url_for('page', title='dev') }}">dev</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link px-2" href="{{ url_for('page_list') }}">other</a>
+                        <a class="nav-link px-2">other</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{{ url_for('page', title='art') }}">art</a>
                             <a class="dropdown-item" href="{{ url_for('page', title='writing') }}">writing</a>
                             <a class="dropdown-item" href="{{ url_for('page', title='speedruns') }}">speedruns</a>
-                            <a class="dropdown-item" style="color:var(--link-color)" href="{{ url_for('page_list') }}">more pages</a>
                         </div>
                     </li>
                 </ul>

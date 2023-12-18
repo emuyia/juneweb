@@ -37,7 +37,7 @@ def login():
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password, password):
                 login_user(user)
-                return redirect(url_for('blog'))
+                return redirect(url_for('home'))
             else:
                 flash("Invalid username or password.", "error")
         elif submit_type == 'Register':
@@ -59,7 +59,7 @@ def login():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
-            return redirect(url_for('blog'))
+            return redirect(url_for('home'))
 
     return render_template("login.html")
 

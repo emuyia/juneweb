@@ -1,23 +1,13 @@
-from src import app, db
+from src import app
 from src.models import Album, Post, Tag, Page, User
-from flask import render_template, render_template_string, request, redirect, url_for, flash
-from sqlalchemy import desc, func
+from flask import render_template, render_template_string, redirect, url_for
+from sqlalchemy import desc
 
 
 @app.route('/', methods=['GET', 'POST'])
-def blog():
-    selected_tags = request.args.get('tags')
-    posts = Post.query
-
-    if selected_tags:
-        selected_tags = selected_tags.split(',')
-        subquery = db.session.query(Post.id).join(Post.tags).filter(Tag.name.in_(selected_tags))\
-            .group_by(Post.id).having(func.count(Tag.id) == len(selected_tags)).subquery()
-        posts = posts.filter(Post.id.in_(subquery))
-
-    posts = posts.order_by(Post.date_posted.desc()).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
+def home():
+    pages = Page.query.order_by(Page.title).all()
+    return render_template("index.html", pages=pages)
 
 
 @app.route('/<path:title>')
@@ -32,12 +22,6 @@ def page(title):
                            page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
 
 
-@app.route('/page_list')
-def page_list():
-    pages = Page.query.order_by(Page.title).all()
-    return render_template('page_list.html', pages=pages)
-
-
 @app.route('/music/album/<int:album_id>')
 def view_album(album_id):
     album = Album.query.get(album_id)
@@ -50,5 +34,5 @@ def view_album(album_id):
 def view_user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        return redirect(url_for('blog'))
+        return redirect(url_for('home'))
     return render_template('view_user.html', user=user)

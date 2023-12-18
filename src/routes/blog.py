@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import Post, Comment, User
+from src.models import Post, Comment, User, Tag
 from flask import render_template, request, flash, redirect, url_for, Response, abort
 import requests
 from feedgen.feed import FeedGenerator
@@ -9,12 +9,27 @@ from datetime import datetime as dt
 from whoosh.index import create_in
 from whoosh.fields import *
 from whoosh.qparser import MultifieldParser, OrGroup
-from sqlalchemy import event
+from sqlalchemy import event, func
 from apscheduler.schedulers.background import BackgroundScheduler
 from bleach import clean, linkify
 from bs4 import BeautifulSoup
 import os
 
+
+@app.route('/posts', methods=['GET', 'POST'])
+def blog():
+    selected_tags = request.args.get('tags')
+    posts = Post.query
+
+    if selected_tags:
+        selected_tags = selected_tags.split(',')
+        subquery = db.session.query(Post.id).join(Post.tags).filter(Tag.name.in_(selected_tags))\
+            .group_by(Post.id).having(func.count(Tag.id) == len(selected_tags)).subquery()
+        posts = posts.filter(Post.id.in_(subquery))
+
+    posts = posts.order_by(Post.date_posted.desc()).all()
+    tags = Tag.query.order_by(Tag.name).all()
+    return render_template("blog.html", posts=posts, tags=tags, selected_tags=selected_tags or [])
 
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
