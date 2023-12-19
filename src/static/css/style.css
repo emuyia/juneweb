@@ -1,27 +1,38 @@
 @import url('https://fonts.googleapis.com/css?family=Inter');
+@import url('https://fonts.googleapis.com/css?family=Silkscreen');
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+@import url('https://fonts.googleapis.com/css?family=VT323');
+@import url('https://fonts.googleapis.com/css?family=Pixelify+Sans');
+
+@font-face {
+    font-family: 'Perfect DOS VGA 437';
+    src: url('/static/fonts/Perfect DOS VGA 437.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 /* Variables */
 :root {
-    --bg-color: #212529;
-    --panel-color: #111415;
-    --text-color: #c3c3c3;
+    --bg-color: #fff9e9;
+    --panel-color: transparent;
+    --text-color: #fff9e9;
     --border-color: #868686;
     --border-color-sub: #666666;
-    --panel-color-a: #0b0c0d;
-    --panel-color-b: #090a0b;
-    --border-radius: 25px;
-    --border-radius-main: 50px;
-    --border-radius-item: 15px;
-    --border-size-main: 7px;
-    --border-size-a: 2px;
-    --border-size-b: 1px;
+    --panel-color-a: #000000;
+    --panel-color-b: #000000;
+    --border-radius: 0px;
+    --border-radius-main: 0px;
+    --border-radius-item: 0px;
+    --border-size-main: 0px;
+    --border-size-a: 0px;
+    --border-size-b: 0px;
     --font-size-sub: 12px;
     --font-size-list: 13px;
     --font-size-title: 30px;
     --font-size-subtitle: 18px;
-    --link-color: #ff78a1;
-    --link-color-hover: #FF69B4;
-    --nav-color-hover: #7e3b4f;
+    --link-color: #fff9e1;
+    --link-color-hover: #e2dcc7;
+    --nav-color-hover: transparent;
     --miniature-height: 150px;
     --card-body-height: 200px;
     --miniature-font-size: 0.65em;
@@ -39,11 +50,17 @@
 /* Typography */
 .brand,
 .nav-text,
-body {
-    font-family: 'Inter', fallback, sans-serif;
+.card-title {
+    font-family: 'Perfect DOS VGA 437', fallback, sans-serif;
+    text-transform: uppercase;
+}
+
+.upper {
+    text-transform: uppercase;
 }
 
 body {
+    font-family: 'Perfect DOS VGA 437', fallback, sans-serif;
     margin: 0;
     padding: 0;
     color: var(--text-color);
@@ -194,6 +211,10 @@ td {
     padding: 5px;
 }
 
+.bg-dark {
+    background-color: #000000 !important;
+}
+
 
 
 /* Components */
@@ -211,7 +232,7 @@ td {
 
 /* --- navbar --- */
 .navbar.bg-dark {
-    background-color: transparent !important;
+    background-color: #000000 !important;
 }
 
 .navbar.rounded {

@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 import os
 
 
-@app.route('/posts', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def blog():
     selected_tags = request.args.get('tags')
     posts = Post.query

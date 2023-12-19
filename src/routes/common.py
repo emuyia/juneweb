@@ -4,10 +4,10 @@ from flask import render_template, render_template_string, redirect, url_for
 from sqlalchemy import desc
 
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    pages = Page.query.order_by(Page.title).all()
-    return render_template("index.html", pages=pages)
+#@app.route('/', methods=['GET', 'POST'])
+#def home():
+#    pages = Page.query.order_by(Page.title).all()
+#    return render_template("blog.html", pages=pages)
 
 
 @app.route('/<path:title>')
