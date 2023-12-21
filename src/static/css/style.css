@@ -14,8 +14,9 @@
 /* Variables */
 :root {
     --bg-color: #fff9e9;
-    --panel-color: transparent;
+    --panel-color: #ebe5d5;
     --text-color: #fff9e9;
+    --text-color-light: #1c1c1a;
     --border-color: #868686;
     --border-color-sub: #666666;
     --panel-color-a: #000000;

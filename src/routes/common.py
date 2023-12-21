@@ -4,12 +4,6 @@ from flask import render_template, render_template_string, redirect, url_for
 from sqlalchemy import desc
 
 
-#@app.route('/', methods=['GET', 'POST'])
-#def home():
-#    pages = Page.query.order_by(Page.title).all()
-#    return render_template("blog.html", pages=pages)
-
-
 @app.route('/<path:title>')
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
@@ -34,5 +28,5 @@ def view_album(album_id):
 def view_user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        return redirect(url_for('home'))
+        return redirect(url_for('blog'))
     return render_template('view_user.html', user=user)
