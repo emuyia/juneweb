@@ -5,6 +5,7 @@ from functools import wraps
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask import render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
+from sqlalchemy import func
 
 
 login_manager = LoginManager()
@@ -29,12 +30,12 @@ def admin_required(f):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').lower()
         password = request.form.get('password')
         submit_type = request.form.get('submit')
 
         if submit_type == 'Login':
-            user = User.query.filter_by(username=username).first()
+            user = User.query.filter(func.lower(User.username) == func.lower(username)).first()
             if user and check_password_hash(user.password, password):
                 login_user(user)
                 return redirect(url_for('blog'))
@@ -45,13 +46,17 @@ def login():
                 flash("Username should be alphanumeric.", "error")
                 return render_template("login.html")
 
-            existing_user = User.query.filter_by(username=username).first()
+            existing_user = User.query.filter(func.lower(User.username) == func.lower(username)).first()
             if existing_user is not None:
                 flash("Username is already taken.", "error")
                 return render_template("login.html")
 
             if not password or len(password) <= 3:
                 flash("Password should be longer than 3 characters.", "error")
+                return render_template("login.html")
+
+            if not username or len(username) <= 3:
+                flash("Username should be longer than 3 characters.", "error")
                 return render_template("login.html")
 
             hashed_password = generate_password_hash(password)
