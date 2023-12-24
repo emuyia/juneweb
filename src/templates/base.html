@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="dark">
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -10,58 +10,35 @@
     </head>
     <body>
         <div class="container">
-          <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded p-1 m-1">
-            <div class="container-fluid">
 
-
-              <!--<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>-->
-
-              <div class="collapse navbar-collapse nav-text" id="navbarNav">
-
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link px-2" href="{{ url_for('page', title='music') }}">music</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ url_for('page', title='music/discog') }}">discography</a>
-                            <a class="dropdown-item" href="{{ url_for('page', title='music/live') }}">live</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-2" href="{{ url_for('page', title='dev') }}">dev</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link px-2">other</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ url_for('page', title='art') }}">art</a>
-                            <a class="dropdown-item" href="{{ url_for('page', title='writing') }}">writing</a>
-                            <a class="dropdown-item" href="{{ url_for('page', title='speedruns') }}">speedruns</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <a class="navbar-brand {{'active' if request.path == url_for('blog') else ''}} brand ms-auto" href="{{ url_for('blog') }}">june's website</a>
-
-                <ul class="navbar-nav ms-auto">
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item px-1">
-                            <a class="nav-link" href="{{ url_for('dashboard') }}">{{ current_user.username }}</a>
-                        </li>
-                        <li class="nav-item px-1">
-                            <a class="nav-link" href="{{ url_for('logout') }}">logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item px-1">
-                            <a class="nav-link" href="{{ url_for('login') }}">login</a>
-                        </li>
-                    {% endif %}
-                </ul>
+            <div class="d-flex justify-content-end upper">
+                {% if current_user.is_authenticated %}
+                    <a class="nav-link p-1" href="{{ url_for('dashboard') }}">{{ current_user.username }}</a>
+                    <a class="nav-link p-1 ms-4" href="{{ url_for('logout') }}">logout</a>
+                {% else %}
+                    <a class="nav-link p-1" href="{{ url_for('login') }}">login</a>
+                {% endif %}
             </div>
-          </div>
-          </nav>
 
-            <div class="p-3 panel-main">
+            <div class="brand">
+                <a class="{{'active' if request.path == url_for('blog') else ''}}" href="{{ url_for('blog') }}">june's website</a>
+            </div>
+
+            <div class="p-0 mt-2">
+                {% if pages %}
+                    <div class="row g-4">
+                        {% for page in pages %}
+                            <div class="col ms-2 me-2">
+                                <div class="d-flex flex-column justify-content-center text-center">
+                                    <a href="{{ url_for('page', title=page.title) }}" class="upper m-0">{{ page.title }}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="p-3 mt-5 panel-main">
                 {% block content %}{% endblock %}
             </div>
 

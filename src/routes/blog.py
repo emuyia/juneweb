@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import Post, Comment, User, Tag
+from src.models import Post, Comment, User, Tag, Page
 from flask import render_template, request, flash, redirect, url_for, Response, abort
 import requests
 from feedgen.feed import FeedGenerator

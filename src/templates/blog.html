@@ -3,32 +3,35 @@
 {% block content %}
 
 <div class="d-flex mb-1">
-    <div class="ms-auto d-flex panel-a">
+    <form action="{{ url_for('search') }}" method="get" class="d-flex">
+        <input type="text" name="q" class="form-control form-control-sm ms-3 bg-dark" placeholder="Search" style="width: 120px;">
+        <button type="submit" class="btn btn-sm ms-1 bg-dark"><i class="fa fa-arrow-right"></i></button>
+    </form>
+    <div class="ms-auto d-flex me-3">
         {% for tag_name in selected_tags %}
             <div class="d-flex m-1">
                 <span class="badge bg-primary" style="cursor: pointer;">#{{ tag_name }}</span>
             </div>
         {% endfor %}
-        <div class="dropdown ps-1">
-          <button class="btn btn-primary dropdown-toggle btn-sm fs-7" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
-          <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
-            {% for tag in tags %}
-              {% if tag.name %}
-                  <li>
-                    <a class="dropdown-item fs-7" id="{{tag.name}}">
-                        <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
-                        <label class="form-check-label">#{{tag.name}}</label>
-                    </a>
-                  </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+        <div class="dropdown">
+          <div class="panel-a">
+            <button class="btn btn-primary dropdown-toggle btn-sm fs-7 pe-1" type="button" id="tagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter</button>
+              <ul class="dropdown-menu dropdown-menu-end" id="tag-select" aria-labelledby="tagDropdown">
+                {% for tag in tags %}
+                  {% if tag.name %}
+                      <li>
+                        <a class="dropdown-item fs-7" id="{{tag.name}}">
+                            <input class="form-check-input" type="checkbox" value="{{tag.name}}" {% if tag.name in selected_tags %}checked{% endif %}>
+                            <label class="form-check-label">#{{tag.name}}</label>
+                        </a>
+                      </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+          </div>
         </div>
     </div>
-    <form action="{{ url_for('search') }}" method="get" class="d-flex">
-        <input type="text" name="q" class="form-control form-control-sm ms-3 bg-dark" placeholder="Search" style="width: 120px;">
-        <button type="submit" class="btn btn-sm ms-1 bg-dark"><i class="fa fa-arrow-right"></i></button>
-    </form>
+
 </div>
 
 <script>
@@ -67,7 +70,7 @@ function filterPostsByTags() {
         {% endfor %}
     </div>
 {% else %}
-    <p class="ms-5">No posts found.</p>
+    <!--<p class="ms-5">No posts found.</p>-->
 {% endif %}
 
 {% endblock %}

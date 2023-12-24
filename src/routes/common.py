@@ -4,6 +4,13 @@ from flask import render_template, render_template_string, redirect, url_for
 from sqlalchemy import desc
 
 
+@app.context_processor
+def context_processor():
+    excluded_titles = {'about', 'contact', 'subscribe', 'donate', 'rss', 'home'}
+    pages = Page.query.filter(~Page.title.in_(excluded_titles)).order_by(Page.title).all()
+    return dict(pages=pages)
+
+
 @app.route('/<path:title>')
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
@@ -12,8 +19,7 @@ def page(title):
     tags_list = ','.join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
     content = render_template_string(page.content, posts=posts, tags_list=tags_list, albums=albums)
-    return render_template('page.html',
-                           page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
+    return render_template('page.html', page=page, posts=posts, tags_list=tags_list, albums=albums, content=content)
 
 
 @app.route('/music/album/<int:album_id>')

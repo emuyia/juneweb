@@ -1,8 +1,10 @@
+
 @import url('https://fonts.googleapis.com/css?family=Inter');
 @import url('https://fonts.googleapis.com/css?family=Silkscreen');
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
 @import url('https://fonts.googleapis.com/css?family=VT323');
 @import url('https://fonts.googleapis.com/css?family=Pixelify+Sans');
+
 
 @font-face {
     font-family: 'Perfect DOS VGA 437';
@@ -13,35 +15,43 @@
 
 /* Variables */
 :root {
-    --bg-color: #fff9e9;
-    --panel-color: #ebe5d5;
-    --text-color: #fff9e9;
-    --text-color-light: #1c1c1a;
+    /* bg & panel colours */
+    --bg-color: #080808;
+    --panel-color: #181818;
+    --panel-color-a: #181818;
+    --panel-color-b: #111111;
+
+    /* panel detail colours */
     --border-color: #868686;
     --border-color-sub: #666666;
-    --panel-color-a: #000000;
-    --panel-color-b: #000000;
+    --nav-color-hover: #464646;
+
+    /* container shapes & sizes */
     --border-radius: 0px;
     --border-radius-main: 0px;
     --border-radius-item: 0px;
     --border-size-main: 0px;
     --border-size-a: 0px;
     --border-size-b: 0px;
-    --font-size-sub: 12px;
-    --font-size-list: 13px;
-    --font-size-title: 30px;
-    --font-size-subtitle: 18px;
-    --link-color: #fff9e1;
-    --link-color-hover: #e2dcc7;
-    --nav-color-hover: transparent;
     --miniature-height: 150px;
     --card-body-height: 200px;
-    --miniature-font-size: 0.65em;
+
+    /* txt colours */
+    --text-color: #cecece;
+    --link-color: #ceccab;
+    --link-color-hover: #464646;
     --subscribe-hover: #ff8000;
     --unsubscribe-hover: #ff3838;
     --donate-hover: #50da3b;
     --contact-hover: #0ab1ff;
     --danger-hover: red;
+
+    /* txt & icon sizes */
+    --font-size-sub: 10px;
+    --font-size-list: 13px;
+    --font-size-title: 30px;
+    --font-size-subtitle: 18px;
+    --miniature-font-size: 0.8em;
     --pfp-size: 100px;
     --pfp-comment-size: 30px;
 }
@@ -54,6 +64,15 @@
 .card-title {
     font-family: 'Perfect DOS VGA 437', fallback, sans-serif;
     text-transform: uppercase;
+}
+
+.brand {
+    text-align: center !important;
+    font-size: var(--font-size-title);
+}
+
+.card-title {
+    font-size: var(--font-size-subtitle);
 }
 
 .upper {
@@ -112,9 +131,16 @@ body {
 
 .btn-xsm, .btn-xsm:hover {
     font-size: var(--miniature-font-size) !important;
+    font-family: 'Silkscreen', fallback, sans-serif;
+    color: var(--text-color) !important;
+    text-transform: uppercase;
     padding: 0.25em;
     border: 0;
     background-color: transparent !important;
+}
+
+.text-muted {
+    font-family: 'Silkscreen', fallback, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -133,6 +159,7 @@ a,
 .author {
     color: var(--link-color);
     text-decoration: none;
+    text-transform: uppercase;
 }
 
 a:hover {
@@ -144,6 +171,7 @@ a:hover {
     font-size: var(--font-size-title);
     padding-top: .25rem;
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
 }
 
 .page-title {
@@ -189,8 +217,13 @@ ul {
     margin: auto;
 }
 
+*, *::before, *::after {
+    border-radius: 0 !important;
+    border: none !important;
+}
+
 .panel-main {
-    background-color: var(--panel-color);
+    /*background-color: var(--panel-color);*/
     border-radius: var(--border-radius-main) !important;
     border: var(--border-size-main) solid var(--border-color);
     color: var(--textcolor) !important;
@@ -212,10 +245,6 @@ td {
     padding: 5px;
 }
 
-.bg-dark {
-    background-color: #000000 !important;
-}
-
 
 
 /* Components */
@@ -232,10 +261,6 @@ td {
 }
 
 /* --- navbar --- */
-.navbar.bg-dark {
-    background-color: #000000 !important;
-}
-
 .navbar.rounded {
     border-radius: var(--border-radius) !important;
 }
@@ -270,6 +295,7 @@ td {
     display: flex;
     height: 100%;
     max-height: none;
+    background-color: var(--panel-color-b);
 }
 
 .card-body {
@@ -330,9 +356,9 @@ td {
 /* --- badges --- */
 .badge,
 .bg-primary {
-    border-color: var(--border-color-sub) !important;
-    border-radius: var(--border-radius) !important;
-    background-color: var(--nav-color-hover) !important;
+    background-color: #bdbeab !important;
+    color: #1d1d1a;
+    text-transform: uppercase;
 }
 
 
