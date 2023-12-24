@@ -25,3 +25,4 @@ dist/
 ._*
 src/config.py
 whoosh_index/
+/node_modules/

@@ -12,30 +12,35 @@ from wtforms.widgets import TextArea
 from flask_login import UserMixin, current_user
 
 # association tables
-post_tags = db.Table('post_tags',
-                     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-                     )
+post_tags = db.Table(
+    "post_tags",
+    db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id")),
+)
 
-page_tags = db.Table('page_tags',
-                     db.Column('page_id', db.Integer, db.ForeignKey('page.id')),
-                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-                     )
+page_tags = db.Table(
+    "page_tags",
+    db.Column("page_id", db.Integer, db.ForeignKey("page.id")),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id")),
+)
 
-album_tracks = db.Table('album_tracks',
-                        db.Column('album_id', db.Integer, db.ForeignKey('album.id')),
-                        db.Column('track_id', db.Integer, db.ForeignKey('track.id'))
-                        )
+album_tracks = db.Table(
+    "album_tracks",
+    db.Column("album_id", db.Integer, db.ForeignKey("album.id")),
+    db.Column("track_id", db.Integer, db.ForeignKey("track.id")),
+)
 
 
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    related_tags = db.relationship('Tag', secondary=page_tags, backref=db.backref('pages', lazy='dynamic'))
+    related_tags = db.relationship(
+        "Tag", secondary=page_tags, backref=db.backref("pages", lazy="dynamic")
+    )
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.title[:50])
+        return "({}) {}".format(self.id, self.title[:50])
 
 
 class Post(db.Model):
@@ -45,21 +50,23 @@ class Post(db.Model):
     date_created = db.Column(DateTime)
     date_posted = db.Column(DateTime, nullable=False)
     date_updated = db.Column(DateTime)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
-    author = db.relationship('User')
-    tags = relationship('Tag', secondary=post_tags, backref=db.backref('posts'))
-    comments = db.relationship('Comment', backref='post', lazy=True)
+    author_id = db.Column(
+        db.Integer, db.ForeignKey("user.id", name="fk_author_id"), nullable=False
+    )
+    author = db.relationship("User")
+    tags = relationship("Tag", secondary=post_tags, backref=db.backref("posts"))
+    comments = db.relationship("Comment", backref="post", lazy=True)
     comments_enabled = db.Column(db.Boolean, nullable=False, default=True)
 
     def get_tags(self):
-        return ', '.join(tag.name for tag in self.tags)
+        return ", ".join(tag.name for tag in self.tags)
 
     @staticmethod
     def get_posts_by_ids(ids):
         return Post.query.filter(Post.id.in_(ids)).all()
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.title[:50])
+        return "({}) {}".format(self.id, self.title[:50])
 
 
 class Tag(db.Model):
@@ -70,19 +77,23 @@ class Tag(db.Model):
         return self.name
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.name[:50])
+        return "({}) {}".format(self.id, self.name[:50])
 
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', name='fk_post_id'), nullable=False)
+    post_id = db.Column(
+        db.Integer, db.ForeignKey("post.id", name="fk_post_id"), nullable=False
+    )
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(DateTime, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_author_id'), nullable=False)
-    author = db.relationship('User')
+    author_id = db.Column(
+        db.Integer, db.ForeignKey("user.id", name="fk_author_id"), nullable=False
+    )
+    author = db.relationship("User")
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.content[:50])
+        return "({}) {}".format(self.id, self.content[:50])
 
 
 class Album(db.Model):
@@ -91,15 +102,17 @@ class Album(db.Model):
     artist = db.Column(db.String(80), nullable=False)
     release_date = db.Column(DateTime, nullable=False)
     cover_image = db.Column(db.String(120), nullable=True)
-    tracks = relationship('Track',
-                          cascade="all,delete",
-                          secondary=album_tracks,
-                          backref=db.backref('albums', cascade="all,delete"))
+    tracks = relationship(
+        "Track",
+        cascade="all,delete",
+        secondary=album_tracks,
+        backref=db.backref("albums", cascade="all,delete"),
+    )
     embed = db.Column(db.Text)
     content = db.Column(db.Text)
 
     def __repr__(self):
-        return '({}) {} - {}'.format(self.id, self.artist[:50], self.title[:50])
+        return "({}) {} - {}".format(self.id, self.artist[:50], self.title[:50])
 
 
 class Track(db.Model):
@@ -109,7 +122,7 @@ class Track(db.Model):
     track_number = db.Column(db.Integer)
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.name[:50])
+        return "({}) {}".format(self.id, self.name[:50])
 
 
 class User(UserMixin, db.Model):
@@ -123,7 +136,7 @@ class User(UserMixin, db.Model):
         self.password = generate_password_hash(password)
 
     def __repr__(self):
-        return '({}) {}'.format(self.id, self.username)
+        return "({}) {}".format(self.id, self.username)
 
 
 class AdminModelView(ModelView):
@@ -131,8 +144,8 @@ class AdminModelView(ModelView):
         return current_user.is_authenticated and current_user.is_admin
 
     def inaccessible_callback(self, name, **kwargs):
-        flash('You do not have access to this page.', 'error')
-        return redirect(url_for('login', next=request.url))
+        flash("You do not have access to this page.", "error")
+        return redirect(url_for("login", next=request.url))
 
 
 class MonospaceTextAreaWidget(TextArea):
@@ -162,42 +175,40 @@ class CKTextAreaField(TextAreaField):
 
 
 class TrackInlineModelView(InlineFormAdmin):
-    form_columns = ('id', 'track_number', 'name', 'duration')
+    form_columns = ("id", "track_number", "name", "duration")
 
 
 class PageModelView(AdminModelView):
-    form_columns = ('title', 'content', 'related_tags')
+    form_columns = ("title", "content", "related_tags")
     form_overrides = {
         # 'content': MonospaceTextAreaField
-        'content': CKTextAreaField
+        "content": CKTextAreaField
     }
 
 
 class PostModelView(AdminModelView):
-    form_overrides = {
-        'content': CKTextAreaField
-    }
+    form_overrides = {"content": CKTextAreaField}
     inline_models = (Comment,)
 
 
 class AlbumModelView(AdminModelView):
-    inline_models = (TrackInlineModelView(Track), )
-    form_overrides = {
-        'content': CKTextAreaField
-    }
+    inline_models = (TrackInlineModelView(Track),)
+    form_overrides = {"content": CKTextAreaField}
 
 
 class AdminHomeView(AdminIndexView):
-    @expose('/')
+    @expose("/")
     def index(self):
-        return self.render('admin_home.html')
+        return self.render("admin_home.html")
 
 
-admin = flask_admin.Admin(app,
-                          name='junesroom',
-                          template_mode='bootstrap4',
-                          base_template='admin_base.html',
-                          index_view=AdminHomeView())
+admin = flask_admin.Admin(
+    app,
+    name="junesroom",
+    template_mode="bootstrap4",
+    base_template="admin_base.html",
+    index_view=AdminHomeView(),
+)
 
 admin.add_view(PageModelView(Page, db.session))
 admin.add_view(PostModelView(Post, db.session))

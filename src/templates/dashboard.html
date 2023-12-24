@@ -1,38 +1,58 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <p class="page-title">dashboard</p>
 
-<p class="page-title">dashboard</p>
-
-<div class="d-flex justify-content-end">
-    <a class="btn btn-sm me-2" href="{{ url_for('view_user', username=current_user.username) }}">View User Page</a>
+  <div class="d-flex justify-content-end">
+    <a
+      class="btn btn-sm me-2"
+      href="{{ url_for('view_user', username=current_user.username) }}"
+      >View User Page</a
+    >
     {% if current_user.is_admin %}
-        <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin Portal</a>
+      <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin Portal</a>
     {% endif %}
-</div>
+  </div>
 
-<div class="panel-a p-4 rounded mt-3">
+  <div class="panel-a p-4 rounded mt-3">
     <p>Username: <span class="author">{{ current_user.username }}</span></p>
-    <img src="{{ current_user.profile_picture }}" class="pfp mt-3">
-</div>
+    <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
+  </div>
 
-<div class="panel-a p-3 rounded mt-3">
+  <div class="panel-a p-3 rounded mt-3">
     <form method="POST">
-        <input type="text" id="username" name="username" class="form-control mb-3" placeholder="New Username">
-        <input type="password" id="password" name="password" class="form-control mb-3" placeholder="New Password">
-        <input type="url" id="profile_picture" name="profile_picture" class="form-control mb-3" placeholder="New Profile Picture URL">
-        <input type="submit" value="Save" class="btn btn-primary">
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-control mb-3"
+        placeholder="New Username"
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control mb-3"
+        placeholder="New Password"
+      />
+      <input
+        type="url"
+        id="profile_picture"
+        name="profile_picture"
+        class="form-control mb-3"
+        placeholder="New Profile Picture URL"
+      />
+      <input type="submit" value="Save" class="btn btn-primary" />
     </form>
-</div>
+  </div>
 
-{% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <p class="mt-3">{{ message }}</p>
-            {% endfor %}
-        </ul>
+      <ul class="flashes">
+        {% for message in messages %}
+          <p class="mt-3">{{ message }}</p>
+        {% endfor %}
+      </ul>
     {% endif %}
-{% endwith %}
-
+  {% endwith %}
 {% endblock %}

@@ -1,23 +1,29 @@
 <div class="col-md-4 col-lg-4 g-3">
-    <div class="card text-white panel-a">
-        <div class="card-body">
-            <h5 class="card-title">
-                <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
-            </h5>
-            <div class="miniature-view">
-              <p>{{ post.content | safe }}</p>
-            </div>
-        </div>
-        {% if post.tags %}
-        <div class="card-footer text-muted info d-flex justify-content-between">
-            <div>
-                {% for tag in post.tags %}
-                    {% if tag.name %}
-                        <a href="{{ url_for('blog', tags=tag.name) }}" class="text-end d-inline-block ms-1">#{{ tag.name }}</a>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
+  <div class="card text-white panel-a">
+    <div class="card-body">
+      <h5 class="card-title">
+        <a href="{{ url_for('view_post', post_id=post.id) }}"
+          >{{ post.title }}</a
+        >
+      </h5>
+      <div class="miniature-view">
+        <p>{{ post.content | safe }}</p>
+      </div>
     </div>
+    {% if post.tags %}
+      <div class="card-footer text-muted info d-flex justify-content-between">
+        <div>
+          {% for tag in post.tags %}
+            {% if tag.name %}
+              <a
+                href="{{ url_for('blog', tags=tag.name) }}"
+                class="text-end d-inline-block ms-1"
+                >#{{ tag.name }}</a
+              >
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </div>

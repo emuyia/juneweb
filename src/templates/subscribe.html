@@ -1,27 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <p class="page-title">subscribe</p>
 
-<p class="page-title">subscribe</p>
-
-<div class="panel-a p-3 rounded mt-4">
+  <div class="panel-a p-3 rounded mt-4">
     <form method="post" action="{{ url_for('subscribe') }}">
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-        <div class="d-flex justify-content-start mt-2">
-            <input type="submit" class="btn btn-sm btn-subscribe me-1" name="subscribe" value="Subscribe">
-            <input type="submit" class="btn btn-sm btn-unsubscribe me-1" name="unsubscribe" value="Unsubscribe">
-        </div>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Email"
+        required
+      />
+      <div class="d-flex justify-content-start mt-2">
+        <input
+          type="submit"
+          class="btn btn-sm btn-subscribe me-1"
+          name="subscribe"
+          value="Subscribe"
+        />
+        <input
+          type="submit"
+          class="btn btn-sm btn-unsubscribe me-1"
+          name="unsubscribe"
+          value="Unsubscribe"
+        />
+      </div>
     </form>
-</div>
+  </div>
 
-{% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <p class="mt-3">{{ message }}</p>
-            {% endfor %}
-        </ul>
+      <ul class="flashes">
+        {% for message in messages %}
+          <p class="mt-3">{{ message }}</p>
+        {% endfor %}
+      </ul>
     {% endif %}
-{% endwith %}
-
+  {% endwith %}
 {% endblock %}

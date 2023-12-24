@@ -1,27 +1,30 @@
 {% extends 'admin/base.html' %}
 
 {% block head_css %}
-    {{ super() }}
+  {{ super() }}
 
-    <script src="{{ url_for('static', filename='js/ckeditor.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ckeditor.js') }}"></script>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" type="text/css">
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/admin.css') }}"
+    type="text/css"
+  />
 
-    <script type="text/javascript">
-        document.addEventListener( 'DOMContentLoaded', function () {
-            const editorElement = document.querySelector( 'textarea.ckeditor' );
-            ClassicEditor
-                .create( editorElement )
-                .then( editor => {
-                    editor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
-                        if ( !value ) {
-                            editorElement.value = editor.getData();
-                        }
-                    });
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );
-        } );
-    </script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+      const editorElement = document.querySelector("textarea.ckeditor");
+      ClassicEditor.create(editorElement)
+        .then((editor) => {
+          editor.ui.focusTracker.on("change:isFocused", (evt, name, value) => {
+            if (!value) {
+              editorElement.value = editor.getData();
+            }
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  </script>
 {% endblock %}

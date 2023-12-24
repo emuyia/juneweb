@@ -2,14 +2,16 @@
 
 {% block content %}
 
-{{ content|safe }}
+  {{ content|safe }}
 
-{% if page.related_tags %}
+  {% if page.related_tags %}
     <div class="mt-4">
-        <a class="btn btn-secondary btn-sm mt-3" href="{{ url_for('blog', tags=tags_list) }}">
-            View related posts
-        </a>
+      <a
+        class="btn btn-secondary btn-sm mt-3"
+        href="{{ url_for('blog', tags=tags_list) }}"
+      >
+        View related posts
+      </a>
     </div>
-{% endif %}
-
+  {% endif %}
 {% endblock %}
