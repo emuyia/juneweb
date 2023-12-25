@@ -6,8 +6,9 @@
   <div class="panel-a p-4 rounded">
     <p>
       Username:
-      <span class="author">{{ user.username }}</span
-      >{% if user.is_admin %}(Admin){% endif %}
+      <span class="author">{{ user.username }}</span>{% if user.is_admin %}
+        (Admin)
+      {% endif %}
     </p>
     {% if user.profile_picture %}
       <img src="{{ user.profile_picture }}" class="pfp mt-3" />

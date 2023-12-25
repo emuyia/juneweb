@@ -1,8 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Inter");
-@import url("https://fonts.googleapis.com/css?family=Silkscreen");
-@import url("https://fonts.googleapis.com/css?family=Press+Start+2P");
-@import url("https://fonts.googleapis.com/css?family=VT323");
-@import url("https://fonts.googleapis.com/css?family=Pixelify+Sans");
 
 @font-face {
   font-family: "Perfect DOS VGA 437";
@@ -45,7 +41,7 @@
   --danger-hover: red;
 
   /* txt & icon sizes */
-  --font-size-sub: 10px;
+  --font-size-sub: 13px;
   --font-size-list: 13px;
   --font-size-title: 30px;
   --font-size-subtitle: 18px;
@@ -128,7 +124,7 @@ body {
 .btn-xsm,
 .btn-xsm:hover {
   font-size: var(--miniature-font-size) !important;
-  font-family: "Silkscreen", fallback, sans-serif;
+  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
   color: var(--text-color) !important;
   text-transform: uppercase;
   padding: 0.25em;
@@ -137,7 +133,7 @@ body {
 }
 
 .text-muted {
-  font-family: "Silkscreen", fallback, sans-serif;
+  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
 }
 
 h1,
@@ -210,18 +206,23 @@ ul {
 }
 
 /* Layout */
-.container {
+.container,
+footer {
   padding: 15px;
   max-width: 960px;
-  /*margin-left: 18%;*/
   margin: auto;
 }
 
-*,
+/**,
 *::before,
 *::after {
   border-radius: 0 !important;
   border: none !important;
+}*/
+
+hr {
+    border: 1px solid #ffffff !important;
+    margin: 10px 0;
 }
 
 .panel-main {
@@ -245,6 +246,17 @@ ul {
 
 td {
   padding: 5px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Use min-height instead of height to fill at least the viewport height */
+  margin: 0;
+}
+
+footer {
+  margin-top: auto;
 }
 
 /* Components */
@@ -322,12 +334,24 @@ td {
 
 /* --- buttons --- */
 .btn,
-.dropdown-menu {
+.dropdown-menu,
+.dropdown-item {
   border-color: var(--border-color-sub) !important;
+  border: 0 !important;
   border-radius: var(--border-radius) !important;
 }
 
-.btn {
+input,
+.form-control,
+form,
+.btn,
+.btn-primary {
+    border-radius: var(--border-radius) !important;
+    border: 0 !important;
+}
+
+.btn,
+.btn-primary {
   background-color: transparent;
 }
 
@@ -351,6 +375,7 @@ td {
 .dropdown-item:hover {
   background-color: var(--nav-color-hover);
   color: white;
+  border: 0 !important;
 }
 
 /* --- badges --- */
@@ -359,6 +384,7 @@ td {
   background-color: #bdbeab !important;
   color: #1d1d1a;
   text-transform: uppercase;
+  margin: auto;
 }
 
 /* Media Queries */
