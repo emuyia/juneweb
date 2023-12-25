@@ -8,7 +8,7 @@
 
     <div class="info d-flex justify-content-between p-3">
       <div class="text-left">
-        <p>
+        <p class="text-muted upper">
           posted by
           <a
             class="author"
@@ -16,7 +16,7 @@
             >{{ post.author.username }}</a
           >
         </p>
-        <p class="mt-1" style="color:gray;">
+        <p class="mt-1 text-muted upper">
           originally written
           {{ post.date_created.strftime('%d-%m-%Y') if post.date_created else 'on an unspecified date' }}
         </p>
@@ -34,13 +34,13 @@
           {% endif %}
         {% endfor %}
 
-        <p class="mt-1" style="color:gray;">
+        <p class="mt-1 text-muted upper">
           posted
           {{ post.date_posted.strftime('%d-%m-%Y at %H:%M') if post.date_posted else '' }}
         </p>
 
         {% if post.date_posted.replace(second=0, microsecond=0) != post.date_updated.replace(second=0, microsecond=0) %}
-          <p style="color:gray;">
+          <p class="text-muted upper">
             updated
             {{ post.date_updated.strftime('%d-%m-%Y at %H:%M') if post.date_updated else '' }}
           </p>
@@ -49,66 +49,90 @@
     </div>
 
     {% if post.comments_enabled %}
-      <hr />
-      <div class="panel-a rounded p-3" style="font-size:0.8em;">
+      <div class="panel-a rounded p-3 mt-5" style="font-size:0.9em;">
+        <p class="post-title mt-0" style="font-size:1.6em;">comments</p>
         {% for comment in post.comments %}
-          <div class="comment panel-b p-2 ps-4 mb-2 rounded">
-            <div class="d-flex">
-              <div class="me-2 mt-1">
-                {% if comment.author.profile_picture %}
-                  <img
-                    src="{{ comment.author.profile_picture }}"
-                    class="pfp-comment"
-                  />
-                {% endif %}
+          <div class="comment panel-b p-2 ps-4 mb-2 rounded text-muted">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex">
+                <div class="me-2 mt-1">
+                  {% if comment.author.profile_picture %}
+                    <a
+                      href="{{ url_for('view_user', username=comment.author.username) }}"
+                    >
+                      <img
+                        src="{{ comment.author.profile_picture }}"
+                        class="pfp-comment"
+                      />
+                    </a>
+                  {% else %}
+                    <a
+                      href="{{ url_for('view_user', username=comment.author.username) }}"
+                    >
+                      <svg
+                        class="pfp-comment"
+                        style="border:none;"
+                        width="30"
+                        height="30"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          width="100%"
+                          height="100%"
+                          fill="transparent"
+                        ></rect>
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <span class="mb-2 info upper">
+                        {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}
+                        (<a
+                          class="author"
+                          href="{{ url_for('view_user', username=comment.author.username) }}"
+                        >
+                          {{ comment.author.username }} </a
+                        >)
+                      </span>
+                    </div>
+                  </div>
+                  <p>{{ comment.content | safe }}</p>
+                </div>
               </div>
 
               <div>
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <span class="mb-2 info">
-                      {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}
-                      (<a
-                        class="author"
-                        href="{{ url_for('view_user', username=comment.author.username) }}"
+                {% if current_user.is_authenticated and current_user.id == comment.author.id %}
+                  <div class="d-flex align-items-start">
+                    <form
+                      action="{{ url_for('edit_comment', comment_id=comment.id) }}"
+                      method="GET"
+                      style="display:inline-block;"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-primary btn-xsm subscribe pt-0 pe-2"
                       >
-                        {{ comment.author.username }} </a
-                      >)
-                    </span>
+                        Edit
+                      </button>
+                    </form>
+                    <form
+                      action="{{ url_for('delete_comment', comment_id=comment.id) }}"
+                      method="POST"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-danger btn-xsm danger pt-0 pe-2"
+                      >
+                        Delete
+                      </button>
+                    </form>
                   </div>
-                </div>
-                <p>{{ comment.content | safe }}</p>
+                {% endif %}
               </div>
-            </div>
-
-            <div>
-              {% if current_user.is_authenticated and current_user.id == comment.author.id %}
-                <div class="d-flex justify-content-end">
-                  <form
-                    action="{{ url_for('edit_comment', comment_id=comment.id) }}"
-                    method="GET"
-                    style="display:inline-block;"
-                  >
-                    <button
-                      type="submit"
-                      class="btn btn-primary btn-xsm subscribe pt-0 pe-2"
-                    >
-                      Edit
-                    </button>
-                  </form>
-                  <form
-                    action="{{ url_for('delete_comment', comment_id=comment.id) }}"
-                    method="POST"
-                  >
-                    <button
-                      type="submit"
-                      class="btn btn-danger btn-xsm danger pt-0 pe-2"
-                    >
-                      Delete
-                    </button>
-                  </form>
-                </div>
-              {% endif %}
             </div>
           </div>
         {% endfor %}

@@ -101,5 +101,7 @@
         {% include 'item_post.html' %}
       {% endfor %}
     </div>
+  {% else %}
+    <p class="p-4">No posts found.</p>
   {% endif %}
 {% endblock %}

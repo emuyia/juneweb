@@ -18,7 +18,7 @@
   /* panel detail colours */
   --border-color: #868686;
   --border-color-sub: #666666;
-  --nav-color-hover: #464646;
+  --nav-color-hover: #383838;
 
   /* container shapes & sizes */
   --border-radius: 0px;
@@ -32,8 +32,9 @@
 
   /* txt colours */
   --text-color: #cecece;
-  --link-color: #ceccab;
-  --link-color-hover: #464646;
+  --text-muted-color: #909090;
+  --link-color: #eeeee0;
+  --link-color-hover: #bdbeab;
   --subscribe-hover: #ff8000;
   --unsubscribe-hover: #ff3838;
   --donate-hover: #50da3b;
@@ -121,11 +122,10 @@ body {
   color: var(--danger-hover) !important;
 }
 
-.btn-xsm,
-.btn-xsm:hover {
+.btn-xsm {
   font-size: var(--miniature-font-size) !important;
   font-family: "Perfect DOS VGA 437", fallback, sans-serif;
-  color: var(--text-color) !important;
+  color: var(--text-muted-color) !important;
   text-transform: uppercase;
   padding: 0.25em;
   border: 0;
@@ -134,6 +134,7 @@ body {
 
 .text-muted {
   font-family: "Perfect DOS VGA 437", fallback, sans-serif;
+  color: var(--text-muted-color) !important;
 }
 
 h1,
@@ -213,15 +214,8 @@ footer {
   margin: auto;
 }
 
-/**,
-*::before,
-*::after {
-  border-radius: 0 !important;
-  border: none !important;
-}*/
-
 hr {
-    border: 1px solid #ffffff !important;
+    border: 1px solid #888888 !important;
     margin: 10px 0;
 }
 
@@ -339,6 +333,8 @@ footer {
   border-color: var(--border-color-sub) !important;
   border: 0 !important;
   border-radius: var(--border-radius) !important;
+  text-transform: uppercase;
+  color: var(--text-color);
 }
 
 input,
@@ -350,9 +346,15 @@ form,
     border: 0 !important;
 }
 
+.form-control,
+.form-control:active {
+    background-color: var(--panel-color-b) !important;
+}
+
 .btn,
 .btn-primary {
   background-color: transparent;
+  text-transform: uppercase;
 }
 
 .dropdown-menu {
