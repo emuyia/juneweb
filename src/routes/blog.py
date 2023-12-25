@@ -68,10 +68,10 @@ def process_comment(comment_text):
 
     # replace @username with link to user's profile page if user exists
     def replace_username_with_link(match):
-        username = match.group(1)
-        user = User.query.filter_by(username=username).first()
+        username = match.group(1).lower()
+        user = User.query.filter(func.lower(User.username) == username.lower()).first()
         if user is not None:
-            return f'<a href="{url_for("view_user", username=username)}" target="_blank">@{username}</a>'
+            return f'<a href="{url_for("view_user", username=user.username)}" target="_blank">@{user.username}</a>'
         else:
             return f"@{username}"
 
