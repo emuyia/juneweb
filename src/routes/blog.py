@@ -19,6 +19,8 @@ import os
 @app.route("/", methods=["GET", "POST"])
 def blog():
     selected_tags = request.args.get("tags")
+    page = request.args.get("page", 1, type=int)
+    posts_per_page = 12  # Number of posts per page.
     posts = Post.query
 
     if selected_tags:
@@ -33,10 +35,13 @@ def blog():
         )
         posts = posts.filter(Post.id.in_(subquery))
 
-    posts = posts.order_by(Post.date_posted.desc()).all()
+    pagination = posts.order_by(Post.date_posted.desc()).paginate(
+        page=page, per_page=posts_per_page, error_out=False
+    )
+
     tags = Tag.query.order_by(Tag.name).all()
     return render_template(
-        "blog.html", posts=posts, tags=tags, selected_tags=selected_tags or []
+        "blog.html", pagination=pagination, tags=tags, selected_tags=selected_tags or []
     )
 
 
