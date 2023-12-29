@@ -380,6 +380,11 @@ form,
   border: 0 !important;
 }
 
+.active-page {
+  background-color: var(--nav-color-hover) !important;
+  color: white !important;
+}
+
 /* --- badges --- */
 .badge,
 .bg-primary {
