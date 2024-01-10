@@ -22,3 +22,4 @@ Flask-APScheduler==1.13.1
 bleach==6.1.0
 beautifulsoup4==4.12.2
 gunicorn==21.2.0
+psycopg2-binary==2.9.9
