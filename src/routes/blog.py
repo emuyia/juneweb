@@ -41,15 +41,11 @@ def blog():
 
     tags = Tag.query.order_by(Tag.name).all()
 
-    site_name = app.config["SITE_NAME"]
-    site_desc = app.config["SITE_DESC"]
     return render_template(
         "blog.html",
         pagination=pagination,
         tags=tags,
-        selected_tags=selected_tags or [],
-        site_name=site_name,
-        site_desc=site_desc,
+        selected_tags=selected_tags or []
     )
 
 
@@ -174,6 +170,7 @@ def index_posts():
     writer.commit()
 
 
+# for now only run when db created - needs workaround
 with app.app_context():
     index_posts()
 

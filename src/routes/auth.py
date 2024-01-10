@@ -115,9 +115,9 @@ def dashboard():
 
 @app.cli.command("createadmin")
 def create_admin_user():
-    admin = app.config("ADMIN_USERNAME")
-    admin.setpassword(app.config("ADMIN_PASSWORD"))
+    admin = User(username=app.config["ADMIN_USERNAME"])
+    admin.set_password(app.config["ADMIN_PASSWORD"])
     admin.is_admin = True
     db.session.add(admin)
     db.session.commit()
-    print(f"Admin user created with username: {admin}")
+    print(f"Admin user created with username: {admin.username}")
