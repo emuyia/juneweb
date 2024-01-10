@@ -1,10 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Inter");
 
 @font-face {
-  font-family: "Perfect DOS VGA 437";
-  src: url("/static/fonts/Perfect DOS VGA 437.ttf") format("truetype");
+  font-family: "CustomFont";
+  src: url("/static/fonts/PerfectDOSVGA437.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'AlternateFont';
+  src: url('https://fonts.googleapis.com/css?family=Inter');
 }
 
 /* Variables */
@@ -55,7 +60,7 @@
 .brand,
 .nav-text,
 .card-title {
-  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
+  font-family: "CustomFont", sans-serif;
   text-transform: uppercase;
 }
 
@@ -73,12 +78,16 @@
 }
 
 body {
-  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
+  font-family: "CustomFont", sans-serif;
   margin: 0;
   padding: 0;
   color: var(--text-color);
   background-color: var(--bg-color);
 }
+
+/*input[type="password"] {
+  font-family: "CustomFont", sans-serif;
+}*/
 
 .info {
   font-size: var(--font-size-sub);
@@ -124,7 +133,7 @@ body {
 
 .btn-xsm {
   font-size: var(--miniature-font-size) !important;
-  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
+  font-family: "CustomFont", sans-serif;
   color: var(--text-muted-color) !important;
   text-transform: uppercase;
   padding: 0.25em;
@@ -133,7 +142,7 @@ body {
 }
 
 .text-muted {
-  font-family: "Perfect DOS VGA 437", fallback, sans-serif;
+  font-family: "CustomFont", sans-serif;
   color: var(--text-muted-color) !important;
 }
 
