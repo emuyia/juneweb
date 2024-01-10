@@ -168,8 +168,8 @@ def index_posts():
 
 
 # for now only run when db created - needs workaround
-with app.app_context():
-    index_posts()
+#with app.app_context():
+#    index_posts()
 
 
 def add_to_index(mapper, connection, post):
