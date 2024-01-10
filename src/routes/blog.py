@@ -167,9 +167,9 @@ def index_posts():
     writer.commit()
 
 
-# for now only run when db created - needs workaround
-# with app.app_context():
-#    index_posts()
+# breaks db init. comment out when initialising. needs workaround
+with app.app_context():
+    index_posts()
 
 
 def add_to_index(mapper, connection, post):
