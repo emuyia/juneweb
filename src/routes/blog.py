@@ -42,10 +42,7 @@ def blog():
     tags = Tag.query.order_by(Tag.name).all()
 
     return render_template(
-        "blog.html",
-        pagination=pagination,
-        tags=tags,
-        selected_tags=selected_tags or []
+        "blog.html", pagination=pagination, tags=tags, selected_tags=selected_tags or []
     )
 
 
