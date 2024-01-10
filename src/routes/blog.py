@@ -168,7 +168,7 @@ def index_posts():
 
 
 # for now only run when db created - needs workaround
-#with app.app_context():
+# with app.app_context():
 #    index_posts()
 
 

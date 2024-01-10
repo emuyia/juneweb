@@ -17,9 +17,15 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
 Session(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "SQLALCHEMY_DATABASE_URI"
-) or "sqlite:///" + os.path.join(basedir, "database.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+uri = os.getenv("DATABASE_URL")
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = uri or "sqlite:///" + os.path.join(
+    basedir, "database.db"
+)
 db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
