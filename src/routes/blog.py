@@ -168,11 +168,6 @@ def index_posts():
         writer.commit()
 
 
-# breaks db init. comment out when initialising. needs workaround
-#with app.app_context():
-#    index_posts()
-
-
 def add_to_index(mapper, connection, post):
     writer = index.writer()
     writer.add_document(
