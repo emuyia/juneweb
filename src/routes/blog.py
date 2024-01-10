@@ -155,21 +155,22 @@ index = create_in(index_dir, schema)
 
 
 def index_posts():
-    writer = index.writer()
-    for post in Post.query.all():
-        writer.add_document(
-            id=str(post.id),
-            title=post.title,
-            content=post.content,
-            date_posted=post.date_posted,
-            tags=post.get_tags(),
-        )
-    writer.commit()
+    with app.app_context():
+        writer = index.writer()
+        for post in Post.query.all():
+            writer.add_document(
+                id=str(post.id),
+                title=post.title,
+                content=post.content,
+                date_posted=post.date_posted,
+                tags=post.get_tags(),
+            )
+        writer.commit()
 
 
 # breaks db init. comment out when initialising. needs workaround
-with app.app_context():
-    index_posts()
+#with app.app_context():
+#    index_posts()
 
 
 def add_to_index(mapper, connection, post):
