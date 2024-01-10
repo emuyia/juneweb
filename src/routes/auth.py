@@ -1,4 +1,4 @@
-from src import app, db, config
+from src import app, db
 from src.models import User
 from werkzeug.security import check_password_hash
 from functools import wraps
@@ -12,6 +12,7 @@ from flask_login import (
 from flask import render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
 from sqlalchemy import func
+import os
 
 
 login_manager = LoginManager()
@@ -114,9 +115,9 @@ def dashboard():
 
 @app.cli.command("createadmin")
 def create_admin_user():
-    admin = User(username=config.ADMIN_USERNAME)
-    admin.set_password(config.ADMIN_PASSWORD)
+    admin = app.config("ADMIN_USERNAME")
+    admin.setpassword(app.config("ADMIN_PASSWORD"))
     admin.is_admin = True
     db.session.add(admin)
     db.session.commit()
-    print(f"Admin user created with username: {config.ADMIN_USERNAME}")
+    print(f"Admin user created with username: {admin}")

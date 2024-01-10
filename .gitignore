@@ -23,6 +23,5 @@ dist/
 *.egg-info/
 .DS_Store
 ._*
-src/config.py
 whoosh_index/
 /node_modules/
