@@ -128,7 +128,7 @@ class Track(db.Model):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(512), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     profile_picture = db.Column(db.String(500))
 
