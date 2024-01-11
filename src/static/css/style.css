@@ -338,9 +338,14 @@ footer {
 /* --- buttons --- */
 .btn,
 .dropdown-menu,
-.dropdown-item {
+.dropdown-item,
+.page-link,
+.page-link:active,
+.pagination,
+.page-item,
+.page-item:active {
   border-color: var(--border-color-sub) !important;
-  border: 0 !important;
+  border: none !important;
   border-radius: var(--border-radius) !important;
   text-transform: uppercase;
   color: var(--text-color);
@@ -352,7 +357,7 @@ form,
 .btn,
 .btn-primary {
     border-radius: var(--border-radius) !important;
-    border: 0 !important;
+    border: none !important;
 }
 
 .form-control,
@@ -361,7 +366,12 @@ form,
 }
 
 .btn,
-.btn-primary {
+.btn-primary,
+.page-link,
+.page-link:active,
+.pagination,
+.page-item,
+.page-item:active {
   background-color: transparent;
   text-transform: uppercase;
 }
@@ -383,13 +393,20 @@ form,
 .btn-primary:active.show,
 .dropdown-item:active,
 .dropdown-item:focus,
-.dropdown-item:hover {
+.dropdown-item:hover,
+.page-link:hover,
+.page-link:active,
+.page-link:focus,
+.page-item:hover,
+.page-item:focus,
+.page-item:active {
   background-color: var(--nav-color-hover);
   color: white;
   border: 0 !important;
 }
 
-.active-page {
+.active-page,
+.page-item.active .page-link{
   background-color: var(--nav-color-hover) !important;
   color: white !important;
 }
