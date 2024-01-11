@@ -25,7 +25,7 @@ def page(title):
         .all()
     )
     tags_list = ",".join(tag.name for tag in page.related_tags)
-    albums = Album.query.order_by(desc(Album.release_date)).limit(4).all()
+    albums = Album.query.order_by(desc(Album.release_date)).all()
     content = render_template_string(
         page.content, posts=posts, tags_list=tags_list, albums=albums
     )
