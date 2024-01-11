@@ -426,3 +426,15 @@ form,
     display: block;
   }
 }
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.panel-main {
+    animation-name: fadeIn;
+    animation-duration: 0.75s;
+    animation-fill-mode: both;
+}
