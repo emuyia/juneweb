@@ -167,7 +167,7 @@ a,
 .author {
   color: var(--link-color);
   text-decoration: none;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
 }
 
 a:hover {
