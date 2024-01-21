@@ -9,7 +9,7 @@
       />
     </a>
     <div class="p-2" style="background-color:transparent;">
-      <span class="mb-1">{{ album.title }}</span>
+      <a href="{{ url_for('view_album', album_id=album.id) }}" class="mb-1">{{ album.title }}</a>
       <p class="small text-muted">{{ album.artist }}</p>
     </div>
   </div>
