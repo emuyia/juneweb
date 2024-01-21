@@ -325,9 +325,13 @@ footer {
 .miniature-view {
   max-width: 100%;
   min-height: var(--miniature-height);
-  max-height: var(--miniature-height);
+  max-height: 100%;
   font-size: var(--miniature-font-size);
   overflow: hidden;
+}
+
+.miniature-view.with-footer {
+  max-height: var(--miniature-height); /* Limit height to accommodate footer */
 }
 
 .miniature-view img {
