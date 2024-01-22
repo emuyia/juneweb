@@ -112,7 +112,9 @@
                       </span>
                     </div>
                   </div>
-                  <p>{{ comment.content|emotize|replace('\n', '<br>')|safe }}</p>
+                  <p>
+                    {{ comment.content|emotize|replace('\n', '<br>')|safe }}
+                  </p>
                 </div>
               </div>
 
