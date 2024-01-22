@@ -16,4 +16,13 @@
       </a>
     </div>
   {% endif %}
+  {% if current_user.is_admin %}
+    <div class="admin-btn-container">
+      <a
+        class="btn btn-sm admin-btn"
+        href="/admin/page/edit/?id={{ page.id|string }}"
+        >Edit</a
+      >
+    </div>
+  {% endif %}
 {% endblock %}

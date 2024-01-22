@@ -37,4 +37,13 @@
       </div>
     </div>
   </div>
+  {% if current_user.is_admin %}
+    <div class="admin-btn-container">
+      <a
+        class="btn btn-sm admin-btn"
+        href="/admin/album/edit/?id={{ album.id|string }}"
+        >Edit</a
+      >
+    </div>
+  {% endif %}
 {% endblock %}

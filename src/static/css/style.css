@@ -417,9 +417,19 @@ form,
 }
 
 .active-page,
-.page-item.active .page-link{
+.page-item.active .page-link {
   background-color: var(--nav-color-hover) !important;
   color: white !important;
+}
+
+.admin-btn-container {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.admin-btn {
+    color: orange !important;
 }
 
 /* --- badges --- */
