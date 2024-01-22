@@ -6,7 +6,7 @@
   <div class="pt-2">
     <div class="panel-a p-4 rounded">
       <p class="post-title mt-0">{{ post.title }}</p>
-      <p>{{ post.content | safe }}</p>
+      <p>{{ post.content|emotize|safe }}</p>
     </div>
 
     <div class="info d-flex justify-content-between p-3">
@@ -103,7 +103,7 @@
                       </span>
                     </div>
                   </div>
-                  <p>{{ comment.content | safe }}</p>
+                  <p>{{ comment.content|emotize|safe }}</p>
                 </div>
               </div>
 

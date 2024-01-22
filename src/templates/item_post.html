@@ -9,7 +9,7 @@
       <div
         class="miniature-view{{ ' with-footer' if post.tags or post.comments|length > 0 }}"
       >
-        <p>{{ post.content | safe }}</p>
+        <p>{{ post.content|emotize|safe }}</p>
       </div>
     </div>
     {% if post.tags or post.comments|length > 0 %}

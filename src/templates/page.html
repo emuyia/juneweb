@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  {{ content|safe }}
+  {{ content|emotize|safe }}
 
   {% if page.related_tags %}
     <div class="mt-4">

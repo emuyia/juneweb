@@ -331,12 +331,19 @@ footer {
 }
 
 .miniature-view.with-footer {
-  max-height: var(--miniature-height); /* Limit height to accommodate footer */
+  max-height: var(--miniature-height);
 }
 
-.miniature-view img {
-  width: 50% !important;
-  height: 50% !important;
+.miniature-view img:not(.emote) {
+  width: 50%;
+  height: 50%;
+}
+
+.miniature-view img.emote {
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
 }
 
 /* --- buttons --- */

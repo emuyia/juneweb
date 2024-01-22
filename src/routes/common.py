@@ -57,3 +57,69 @@ def view_user(username):
     if user is None:
         return redirect(url_for("blog"))
     return render_template("view_user.html", user=user)
+
+
+EMOTE_MAP = {
+    ":wah:": "big-c.gif",
+    ":eyebrows:": "eyebrows.gif",
+    ":hah:": "hah.gif",
+    ":loss:": "loss.gif",
+    ":shock:": "shock.gif",
+    ":laugh:": "big-laugh.gif",
+    ":fangs:": "fangs.gif",
+    ":happy:": "happy.gif",
+    ":monocle:": "monocle.gif",
+    ":smile:": "smile.gif",
+    ":bleh:": "bleh.gif",
+    ":fear:": "fear.gif",
+    ":happyb:": "happy-plz.gif",
+    ":nausea:": "nausea.gif",
+    ":sponge:": "sponge.gif",
+    ":concussed:": "concussed.gif",
+    ":flat-smile:": "flat-smile.gif",
+    ":shockb:": "harley-shock.gif",
+    ":nosebleed:": "nosebleed.gif",
+    ":super-smirk:": "super-smirk.gif",
+    ":confounded:": "confounded.gif",
+    ":flirty:": "flirty.gif",
+    ":horror:": "horror.gif",
+    ":not-impressed:": "not-impressed.gif",
+    ":sweat:": "sweat.gif",
+    ":confused:": "confused.gif",
+    ":frown:": "frown.gif",
+    ":icecream:": "jizz.gif",
+    ":ohh:": "ohh.gif",
+    ":intrigue:": "titty.gif",
+    ":cringe:": "cringe.gif",
+    ":gah:": "gah.gif",
+    ":jolly:": "jolly.gif",
+    ":snap:": "oh-snap.gif",
+    ":of-course:": "tohru-kun.gif",
+    ":disappoint:": "disappoint.gif",
+    ":glad:": "glad.gif",
+    ":joy:": "joy.gif",
+    ":duh:": "patrick.gif",
+    ":tongue:": "tongue.gif",
+    ":eat-nose:": "eat-nose.gif",
+    ":shockc:": "great-scott.gif",
+    ":kawaii:": "kawaii.gif",
+    ":rage:": "rage.gif",
+    ":vein:": "vein.gif",
+    ":egads:": "ee-gads.gif",
+    ":grin:": "grin.gif",
+    ":hehhh:": "konata.gif",
+    ":raspberry:": "raspberry.gif",
+    ":wut:": "wut.gif",
+}
+
+
+def replace_emotes(text):
+    for code, filename in EMOTE_MAP.items():
+        text = text.replace(
+            code,
+            f'<img src="{url_for("static", filename="emotes/" + filename)}" alt="{code}" class="emote">',
+        )
+    return text
+
+
+app.jinja_env.filters["emotize"] = replace_emotes
