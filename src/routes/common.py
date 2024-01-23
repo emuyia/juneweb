@@ -1,6 +1,6 @@
 from src import app
 from src.models import Album, Post, Tag, Page, User
-from flask import render_template, render_template_string, redirect, url_for
+from flask import render_template, render_template_string, redirect, url_for, jsonify
 from sqlalchemy import desc
 
 
@@ -123,3 +123,8 @@ def replace_emotes(text):
 
 
 app.jinja_env.filters["emotize"] = replace_emotes
+
+
+@app.route("/emotes.json")
+def emotes_json():
+    return jsonify(EMOTE_MAP)

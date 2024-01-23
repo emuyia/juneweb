@@ -262,6 +262,28 @@ footer {
   margin-top: auto;
 }
 
+#emote-legend table {
+    border-collapse: collapse;
+    table-layout: auto;
+    width: auto;
+    background-color: var(--panel-color-b);
+}
+
+#emote-legend td {
+    border: none;
+    padding: 0px;
+    vertical-align: middle;
+    text-align: left;
+}
+
+#emote-legend {
+    display: none;
+}
+
+.emote {
+    cursor: pointer;
+}
+
 /* Components */
 .pfp {
   border: 1px solid var(--border-color-sub);
