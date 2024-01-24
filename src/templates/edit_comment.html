@@ -9,20 +9,32 @@
     >
       <input type="hidden" name="post_id" value="{{ comment.post.id }}" />
       <textarea
-        id="comment-content"
+        id="content-box"
         name="content"
         class="form-control mb-2"
         placeholder="Edit your comment..."
       >
 {{ comment.content }}</textarea
       >
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button
+          type="button"
+          id="toggle-emote-legend"
+          class="btn btn-secondary"
+        >
+          Emotes
+        </button>
+      </div>
     </form>
+  </div>
+  <div id="emote-legend-container">
+    <div id="emote-legend" class="p-2"></div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      var textarea = document.getElementById("comment-content");
+      var textarea = document.getElementById("content-box");
       textarea.style.height = textarea.scrollHeight + "px";
     });
   </script>
