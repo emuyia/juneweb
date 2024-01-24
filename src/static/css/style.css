@@ -284,6 +284,11 @@ footer {
     cursor: pointer;
 }
 
+#emote-legend-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* Components */
 .pfp {
   border: 1px solid var(--border-color-sub);

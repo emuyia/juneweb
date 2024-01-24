@@ -173,15 +173,21 @@
               class="form-control mb-2"
               placeholder="Write a comment..."
             ></textarea>
-            <div class="btn-group" role="group">
+            <div class="d-flex justify-content-between">
               <button type="submit" class="btn btn-primary">Submit</button>
+              <button
+                type="button"
+                id="toggle-emote-legend"
+                class="btn btn-secondary"
+              >
+                Emotes
+              </button>
             </div>
           </form>
-          <button id="toggle-emote-legend" class="btn btn-secondary">
-            Emotes
-          </button>
         </div>
-        <div id="emote-legend" class="p-2"></div>
+        <div id="emote-legend-container">
+          <div id="emote-legend" class="p-2"></div>
+        </div>
       </div>
     {% endif %}
   </div>
