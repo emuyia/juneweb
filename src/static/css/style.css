@@ -45,6 +45,7 @@
   --donate-hover: #50da3b;
   --contact-hover: #0ab1ff;
   --danger-hover: red;
+  --debug-text-title: magenta;
 
   /* txt & icon sizes */
   --font-size-sub: 13px;
@@ -85,9 +86,13 @@ body {
   background-color: var(--bg-color);
 }
 
-/*input[type="password"] {
-  font-family: "CustomFont", sans-serif;
-}*/
+.serif {
+    font-family: "AlternateFont", sans-serif;
+}
+
+.debug-text-title {
+    color: var(--debug-text-title);
+}
 
 .info {
   font-size: var(--font-size-sub);

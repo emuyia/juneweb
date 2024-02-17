@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ super() }} - wd_langtable{% endblock %}
+
+{% block content %}
+  <p class="page-title">langtable lookup</p>
+  <div class="panel-a p-3 rounded mt-4">
+    <form action="/white-day/langtable-lookup" method="get">
+      <input
+        type="text"
+        name="search_id"
+        placeholder="Enter ID"
+        required
+        list="id_list"
+      />
+      <button type="submit">Search</button>
+    </form>
+    <br />
+    <p>
+      Source: <a href="{{ langtable_file }}" target="_blank">langtable.wdb</a>
+    </p>
+    {% if langtable_item %}
+      <hr />
+      <p><span class="debug-text-title">ID:</span> {{ langtable_item.id }}</p>
+      <hr />
+      <p>
+        <span class="debug-text-title">English:</span><br /><span class="serif"
+          >{{ langtable_item.english }}</span
+        >
+      </p>
+      <hr />
+      <p>
+        <span class="debug-text-title">한국어:</span><br /><span class="serif"
+          >{{ langtable_item.korean }}</span
+        >
+      </p>
+      <hr />
+    {% endif %}
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var searchInput = document.querySelector('[name="search_id"]');
+      searchInput.addEventListener("input", function () {
+        fetch("/langtable/ids")
+          .then((response) => response.json())
+          .then((ids) => {
+            var datalist = document.createElement("datalist");
+            datalist.id = "id_list";
+            ids.forEach(function (id) {
+              var option = document.createElement("option");
+              option.value = id;
+              datalist.appendChild(option);
+            });
+            document.body.appendChild(datalist);
+            searchInput.setAttribute("list", "id_list");
+          });
+      });
+    });
+  </script>
+{% endblock %}
