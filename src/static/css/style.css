@@ -46,6 +46,7 @@
   --contact-hover: #0ab1ff;
   --danger-hover: red;
   --debug-text-title: magenta;
+  --debug-text-selected: blue;
 
   /* txt & icon sizes */
   --font-size-sub: 13px;
@@ -92,6 +93,10 @@ body {
 
 .debug-text-title {
     color: var(--debug-text-title);
+}
+
+.debug-text-selected {
+    color: var(--debug-text-selected) !important;
 }
 
 .info {

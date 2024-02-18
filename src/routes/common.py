@@ -1,7 +1,14 @@
 from src import app
 from src.routes import wd_wdb
 from src.models import Album, Post, Tag, Page, User
-from flask import render_template, render_template_string, redirect, url_for, jsonify, request
+from flask import (
+    render_template,
+    render_template_string,
+    redirect,
+    url_for,
+    jsonify,
+    request,
+)
 from sqlalchemy import desc
 from markupsafe import Markup
 
@@ -17,17 +24,17 @@ def context_processor():
 @app.route("/<path:title>")
 def page(title):
     page = Page.query.filter_by(title=title).first_or_404()
-    langtable_item = None
-    langtable_file = wd_wdb.langtable_file
+    wd_langtable_item = None
+    wd_langtable_file = wd_wdb.langtable_file
+    wd_documents = None
 
-    # Check if the page requires langtable parsing
+    # Check for unique page features
     if title == "white-day/langtable-search":
         search_id = request.args.get("search_id")
         if search_id:
-            langtable_item = wd_wdb.get_langtable_item(search_id)
-            if langtable_item:
-                langtable_item["korean"] = Markup(wd_wdb.replace_special(langtable_item["korean"]))
-                langtable_item["english"] = Markup(wd_wdb.replace_special(langtable_item["english"]))
+            wd_langtable_item = wd_wdb.process_langtable_search(search_id)
+    if title == "white-day/documents":
+        wd_documents = wd_wdb.get_documents()
 
     posts = (
         Post.query.join(Post.tags)
@@ -38,8 +45,13 @@ def page(title):
     tags_list = ",".join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).all()
     content = render_template_string(
-        page.content, posts=posts, tags_list=tags_list, albums=albums,
-        langtable_item=langtable_item, langtable_file=langtable_file
+        page.content,
+        posts=posts,
+        tags_list=tags_list,
+        albums=albums,
+        langtable_item=wd_langtable_item,
+        langtable_file=wd_langtable_file,
+        documents=wd_documents,
     )
     return render_template(
         "page.html",
@@ -48,8 +60,9 @@ def page(title):
         tags_list=tags_list,
         albums=albums,
         content=content,
-        langtable_item=langtable_item,
-        langtable_file=langtable_file
+        langtable_item=wd_langtable_item,
+        langtable_file=wd_langtable_file,
+        documents=wd_documents,
     )
 
 
