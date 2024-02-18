@@ -92,7 +92,7 @@ body {
 }
 
 .debug-text-title {
-    color: var(--debug-text-title);
+    color: var(--debug-text-title) !important;
 }
 
 .debug-text-selected {
@@ -495,4 +495,12 @@ form,
     animation-name: fadeIn;
     animation-duration: 0.75s;
     animation-fill-mode: both;
+}
+
+.fade-content {
+  transition: opacity 0.5s ease;
+}
+
+.fade-content:not(:first-child) {
+  display: none; /* Hide all but the first content div initially */
 }
