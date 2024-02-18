@@ -41,27 +41,7 @@ def replace_special(text):
     return text
 
 
-@app.route("/white-day/langtable-lookup")
-def show_langtable():
-    search_id = request.args.get("search_id")
-    if search_id:
-        langtable_item = get_langtable_item(search_id)
-        # Apply character replacements if langtable_item is found
-        if langtable_item:
-            langtable_item["korean"] = Markup(replace_special(langtable_item["korean"]))
-            langtable_item["english"] = Markup(
-                replace_special(langtable_item["english"])
-            )
-        return render_template(
-            "wd_langtable.html",
-            langtable_item=langtable_item,
-            langtable_file=langtable_file,
-        )
-    else:
-        return render_template("wd_langtable.html")
-
-
-@app.route("/langtable/ids")
+@app.route("/white-day/langtable/ids")
 def langtable_ids():
     ids = [item["id"] for item in langtable_data]
     return jsonify(ids)
