@@ -71,7 +71,10 @@ def get_documents():
     for entry in data:
         if entry["id"].startswith("d_"):
             _, number = entry["id"].split("_")
-            if int(number) % 2 == 1:  # Odd numbers are titles
+            number = int(number)
+            if number > 110:  # Exclude document IDs beyond d_110
+                continue
+            if number % 2 == 1:  # Odd numbers are titles
                 documents.append(
                     {
                         "title_en": replace_special(entry["english"]),
