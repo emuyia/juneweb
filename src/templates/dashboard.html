@@ -12,7 +12,9 @@
       >View User Page</a
     >
     {% if current_user.is_admin %}
-      <a class="btn btn-sm" href="{{ url_for('admin.index') }}">Admin Portal</a>
+      <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
+        >Admin Portal</a
+      >
     {% endif %}
   </div>
 

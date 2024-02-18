@@ -2,11 +2,10 @@ from src import app
 from flask import request, render_template, jsonify
 from markupsafe import Markup
 import requests
+import re
 
 langtable_data = []
 langtable_file = "https://raw.githubusercontent.com/emuyia/wd-repackaged/master/nop/whiteday119/data/ini/langtable.wdb"
-
-import re
 
 
 def load_wdb_file(url):

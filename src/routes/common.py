@@ -6,10 +6,7 @@ from sqlalchemy import desc
 
 @app.context_processor
 def context_processor():
-    excluded_titles = {"about", "contact", "subscribe", "donate", "rss", "home"}
-    pages = (
-        Page.query.filter(~Page.title.in_(excluded_titles)).order_by(Page.title).all()
-    )
+    pages = Page.query.filter_by(hidden=False).order_by(Page.title).all()
     site_name = app.config["SITE_NAME"]
     site_desc = app.config["SITE_DESC"]
     return dict(pages=pages, site_name=site_name, site_desc=site_desc)

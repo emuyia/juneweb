@@ -38,6 +38,7 @@ class Page(db.Model):
     related_tags = db.relationship(
         "Tag", secondary=page_tags, backref=db.backref("pages", lazy="dynamic")
     )
+    hidden = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return "({}) {}".format(self.id, self.title[:50])
@@ -181,7 +182,7 @@ class TrackInlineModelView(InlineFormAdmin):
 
 
 class PageModelView(AdminModelView):
-    form_columns = ("title", "content", "related_tags")
+    form_columns = ("title", "content", "related_tags", "hidden")
     form_overrides = {
         # 'content': MonospaceTextAreaField
         "content": CKTextAreaField
