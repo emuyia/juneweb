@@ -20,6 +20,7 @@
 
   <div class="panel-a p-4 rounded mt-3">
     <p>Username: <span class="author">{{ current_user.username }}</span></p>
+    <p>Email: <span class="author">{{ current_user.email }}</span></p>
     <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
   </div>
 
@@ -31,6 +32,13 @@
         name="username"
         class="form-control mb-3"
         placeholder="New Username"
+      />
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="form-control mb-3"
+        placeholder="New Email"
       />
       <input
         type="password"

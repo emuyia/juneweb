@@ -118,10 +118,14 @@ def logout():
 def dashboard():
     if request.method == "POST":
         new_username = request.form.get("username")
+        new_email = request.form.get("email")
         new_password = request.form.get("password")
 
         if new_username:
             current_user.username = new_username
+
+        if new_email:
+            current_user.email = new_email
 
         if new_password:
             current_user.password = generate_password_hash(new_password)
