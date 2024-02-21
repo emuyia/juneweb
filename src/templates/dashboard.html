@@ -19,7 +19,7 @@
   </div>
 
   <div class="panel-a p-4 rounded mt-3">
-    <p>Username: <span class="author">{{ current_user.username }}</span></p>
+    <p>Username: <span class="author">{{ current_user.username.upper() }}</span></p>
     <p>Email: <span class="author">{{ current_user.email }}</span></p>
     <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
   </div>

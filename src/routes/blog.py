@@ -77,9 +77,9 @@ def process_comment(comment_text):
         username = match.group(1).lower()
         user = User.query.filter(func.lower(User.username) == username.lower()).first()
         if user is not None:
-            return f'<a href="{url_for("view_user", username=user.username)}" target="_blank">@{user.username}</a>'
+            return f'<a href="{url_for("view_user", username=user.username)}" target="_blank">@{user.username.upper()}</a>'
         else:
-            return f"@{username}"
+            return f"@{username}".upper()
 
     comment_text = re.sub(pattern, replace_username_with_link, comment_text)
 
