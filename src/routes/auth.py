@@ -13,6 +13,7 @@ from flask import render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
 from sqlalchemy import func
 from validate_email import validate_email
+import click
 
 
 login_manager = LoginManager()
@@ -38,21 +39,32 @@ def admin_required(f):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username").lower()
-        password = request.form.get("password")
         submit_type = request.form.get("submit")
-        email = request.form.get("email", None)  # Get email from form, default to None if not provided
 
         if submit_type == "Login":
-            user = User.query.filter(
-                func.lower(User.username) == func.lower(username)
-            ).first()
+            username = request.form.get("username")
+            email = request.form.get("email")
+            password = request.form.get("password")
+            user = None
+            if email:
+                # Attempt to log in by email
+                email = email.lower()
+                user = User.query.filter(func.lower(User.email) == email).first()
+            elif username:
+                # Attempt to log in by username
+                username = username.lower()
+                user = User.query.filter(func.lower(User.username) == username).first()
+
             if user and check_password_hash(user.password, password):
                 login_user(user)
                 return redirect(url_for("blog"))
             else:
-                flash("Invalid username or password.", "error")
+                flash("Invalid login credentials.", "error")
         elif submit_type == "Register":
+            username = request.form.get("username")
+            password = request.form.get("password")
+            email = request.form.get("email")
+
             if not username.isalnum():
                 flash("Username should be alphanumeric.", "error")
                 return render_template("login.html")
@@ -73,6 +85,7 @@ def login():
                 return render_template("login.html")
 
             if email:
+                email = email.lower()
                 if not validate_email(email):
                     flash("Invalid email address.", "error")
                     return render_template("login.html")
@@ -132,3 +145,21 @@ def create_admin_user():
     db.session.add(admin)
     db.session.commit()
     print(f"Admin user created with username: {admin.username}")
+
+
+@app.cli.command("reset-password")
+@click.argument("username")
+def reset_password(username):
+    # Reset a user's password.
+    user = User.query.filter_by(username=username).first()
+    if user:
+        # Prompt for a new password
+        new_password = click.prompt("Please enter a new password", hide_input=True,
+                                    confirmation_prompt=True)
+        # Use the set_password method of the User model
+        user.set_password(new_password)
+        # Update the user's password in the database
+        db.session.commit()
+        click.echo(f"Password for user {username} has been updated.")
+    else:
+        click.echo(f"User {username} not found.")
