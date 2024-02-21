@@ -14,6 +14,8 @@ from werkzeug.security import generate_password_hash
 from sqlalchemy import func
 from validate_email import validate_email
 import click
+from itsdangerous import URLSafeTimedSerializer
+import requests
 
 
 login_manager = LoginManager()
@@ -34,6 +36,72 @@ def admin_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+
+MAILERLITE_API_URL = 'https://api.mailerlite.com/api/v2/email'
+
+
+def send_confirmation_email(user):
+    token = generate_confirmation_token(user.email)
+    subject = "Please confirm your email"
+    template = "confirmation_email"
+    send_email(user.email, subject, template, user=user, token=token)
+
+
+def send_email(to, subject, template, **kwargs):
+    headers = {
+        'Content-Type': 'application/json',
+        'X-MailerLite-ApiKey': app.config['MAIL_API_KEY']
+    }
+
+    data = {
+        "subject": subject,
+        "from": {
+            "email": "jjunetune@gmail.com",
+            "name": "june"
+        },
+        "to": [
+            {
+                "email": to,
+                "name": kwargs.get('user', 'treasured individual').username
+            }
+        ],
+        "body": {
+            "html": render_template(template + '.html', **kwargs),
+            "plain": render_template(template + '.txt', **kwargs)
+        }
+    }
+
+    response = requests.post(MAILERLITE_API_URL, json=data, headers=headers)
+    return response
+
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'],
+            max_age=3600  # Token expires after 1 hour
+        )
+    except:
+        flash('The confirmation link is invalid or has expired.', 'error')
+        return redirect(url_for('unconfirmed'))
+
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.confirmed = True
+        # ... database commit logic to save the confirmed status ...
+
+    return redirect(url_for('login'))
 
 
 @app.route("/login", methods=["GET", "POST"])

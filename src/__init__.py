@@ -16,6 +16,8 @@ app.config["SESSION_TYPE"] = os.environ.get("SESSION_TYPE", "filesystem")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
 Session(app)
 
+app.config["SECURITY_PASSWORD_SALT"] = os.environ.get("SECURITY_PASSWORD_SALT", "default_salt")
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
