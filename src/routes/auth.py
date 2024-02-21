@@ -12,7 +12,7 @@ from flask_login import (
 from flask import render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
 from sqlalchemy import func
-import os
+from validate_email import validate_email
 
 
 login_manager = LoginManager()
@@ -41,6 +41,7 @@ def login():
         username = request.form.get("username").lower()
         password = request.form.get("password")
         submit_type = request.form.get("submit")
+        email = request.form.get("email", None)  # Get email from form, default to None if not provided
 
         if submit_type == "Login":
             user = User.query.filter(
@@ -71,8 +72,18 @@ def login():
                 flash("Username should be longer than 3 characters.", "error")
                 return render_template("login.html")
 
+            if email:
+                if not validate_email(email):
+                    flash("Invalid email address.", "error")
+                    return render_template("login.html")
+
+                existing_email = User.query.filter_by(email=email).first()
+                if existing_email:
+                    flash("Email is already in use.", "error")
+                    return render_template("login.html")
+
             hashed_password = generate_password_hash(password)
-            new_user = User(username=username, password=hashed_password)
+            new_user = User(username=username, password=hashed_password, email=email)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)

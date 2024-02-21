@@ -1,5 +1,5 @@
 from src import app
-from flask import request, render_template, jsonify
+from flask import jsonify
 from markupsafe import Markup
 import requests
 import re
