@@ -83,9 +83,9 @@ def send_confirmation_email(user):
 
         subject = f"[{domain}] - email confirmation"
         html_content = (
-            f"<p><a href='http://{domain}/confirm/{token}'>Confirm Email</a></p>"
+            f"<p><a href='https://www.{domain}/confirm/{token}'>Confirm Email</a></p>"
         )
-        text_content = f"Confirm Email: http://{domain}/confirm/{token}"
+        text_content = f"Confirm Email: https://www.{domain}/confirm/{token}"
 
         mail_body = {
             "from": mail_from,
