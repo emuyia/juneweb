@@ -299,15 +299,28 @@ footer {
     justify-content: flex-end;
 }
 
+.user-details-table {
+  /*width: 100%;*/
+  border-collapse: collapse;
+}
+
+.user-details-table .padding-cell {
+  padding: 0.5em;
+}
+
+.user-details-table .padding-cell:not(:last-child) {
+  padding-right: 1em;
+}
+
 /* Components */
 .pfp {
-  border: 1px solid var(--border-color-sub);
+  border: 0px solid var(--border-color-sub);
   height: var(--pfp-size);
   width: var(--pfp-size);
 }
 
 .pfp-comment {
-  border: 1px solid var(--border-color-sub);
+  border: 0px solid var(--border-color-sub);
   height: var(--pfp-comment-size);
   width: var(--pfp-comment-size);
 }

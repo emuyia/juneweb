@@ -19,40 +19,57 @@
   </div>
 
   <div class="panel-a p-4 rounded mt-3">
-    <p class="pb-1">
-      Nickname: <span class="author">{{ current_user.nickname.upper() }}</span>
-    </p>
-    <p class="pb-1 pt-1">
-      Username: <span class="author">{{ current_user.username.upper() }}</span>
-    </p>
-    {% if current_user.email %}
-      <p class="pb-1 pt-1">
-        Email:
-        <span class="author">{{ current_user.email.lower() }}</span>
-        ({%- if current_user.confirmed -%}
-          <span style="color: green;">Confirmed</span>
-        {%- else -%}
-          <a
-            title="Resend Confirmation Email"
-            href="{{ url_for('resend_confirmation_email') }}"
-            class="link"
-            style="color: crimson !important;"
-            >Unconfirmed</a
-          >
-        {%- endif -%})
-      </p>
-    {% endif %}
-    <p class="pb-1 pt-1">
-      Role:
-      {% if current_user.is_admin %}
-        <span class="author">ADMIN</span>
-      {% else %}
-        <span class="author">USER</span>
+    <table class="user-details-table">
+      <tr>
+        <td class="padding-cell">Nickname:</td>
+        <td class="padding-cell">
+          <span class="author">{{ current_user.nickname.upper() }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="padding-cell">Username:</td>
+        <td class="padding-cell">
+          <span class="author">{{ current_user.username.upper() }}</span>
+        </td>
+      </tr>
+      {% if current_user.email %}
+        <tr>
+          <td class="padding-cell">Email:</td>
+          <td class="padding-cell">
+            <span class="author">{{ current_user.email.lower() }}</span>
+            ({%- if current_user.confirmed -%}
+              <span style="color: green;">Confirmed</span>
+            {%- else -%}
+              <a
+                title="Resend Confirmation Email"
+                href="{{ url_for('resend_confirmation_email') }}"
+                class="link"
+                style="color: crimson !important;"
+                >Unconfirmed</a
+              >
+            {%- endif -%})
+          </td>
+        </tr>
       {% endif %}
-    </p>
-    {% if current_user.profile_picture %}
-      <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
-    {% endif %}
+      <tr>
+        <td class="padding-cell">Role:</td>
+        <td class="padding-cell">
+          {% if current_user.is_admin %}
+            <span class="author">ADMIN</span>
+          {% else %}
+            <span class="author">USER</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% if current_user.profile_picture %}
+        <tr>
+          <td>Avatar:</td>
+          <td colspan="2">
+            <img src="{{ current_user.profile_picture }}" class="pfp" />
+          </td>
+        </tr>
+      {% endif %}
+    </table>
   </div>
 
   <div class="panel-a p-3 rounded mt-3">
