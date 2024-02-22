@@ -253,7 +253,7 @@ def dashboard():
 
         if new_email:
             if validate_email_address(new_email):
-                if new_email.lower() != current_user.email.lower():
+                if new_email.lower() != (current_user.email or '').lower():
                     current_user.email = new_email
                     current_user.confirmed = False
                     send_confirmation_email(current_user)
