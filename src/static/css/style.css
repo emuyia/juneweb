@@ -386,7 +386,6 @@ footer {
 /* --- buttons --- */
 .btn,
 .dropdown-menu,
-.dropdown-item,
 .page-link,
 .page-link:active,
 .pagination,
@@ -396,6 +395,14 @@ footer {
   border: none !important;
   border-radius: var(--border-radius) !important;
   text-transform: uppercase;
+  color: var(--text-color);
+}
+
+.dropdown-item {
+  border-color: var(--border-color-sub) !important;
+  border: none !important;
+  border-radius: var(--border-radius) !important;
+  text-transform: lowercase !important;
   color: var(--text-color);
 }
 
@@ -474,7 +481,7 @@ form,
 .bg-primary {
   background-color: #bdbeab !important;
   color: #1d1d1a;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   margin: auto;
 }
 
