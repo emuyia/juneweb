@@ -304,6 +304,24 @@ def reset_password(username):
         click.echo(f"User {username} not found.")
 
 
+@app.cli.command("reset-username")
+@click.argument("username")
+def reset_username(username):
+    # Reset a user's username.
+    user = User.query.filter_by(username=username).first()
+    if user:
+        # Prompt for a new username
+        new_username = click.prompt(
+            "Please enter a new username", hide_input=False, confirmation_prompt=True
+        )
+        user.username = new_username
+        # Update the user's username in the database
+        db.session.commit()
+        click.echo(f"Username for user {username} has been changed to {user.username}.")
+    else:
+        click.echo(f"User {username} not found.")
+
+
 @app.route("/logout")
 @login_required
 def logout():
