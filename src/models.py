@@ -9,7 +9,7 @@ from flask_admin import AdminIndexView, expose
 from flask import redirect, url_for, request, flash
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin, current_user, AnonymousUserMixin
 
 # association tables
 post_tags = db.Table(
@@ -155,6 +155,11 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "({}) {}".format(self.id, self.username)
+
+
+class CustomAnonymousUser(AnonymousUserMixin):
+    def has_role(self, role_identifier):
+        return False
 
 
 class AdminModelView(ModelView):

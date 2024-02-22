@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import User, Role
+from src.models import User, Role, CustomAnonymousUser
 from werkzeug.security import check_password_hash
 from functools import wraps
 from flask_login import (
@@ -21,6 +21,7 @@ from wtforms.validators import Email, ValidationError
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.anonymous_user = CustomAnonymousUser
 
 MAILERSEND_API_URL = "https://api.mailersend.com/v1/email"
 
