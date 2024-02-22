@@ -54,7 +54,9 @@
       <tr>
         <td class="padding-cell">Role:</td>
         <td class="padding-cell">
-            <span class="author">{{ get_role_nick(current_user.role.name).upper() }}</span>
+          <span class="author"
+            >{{ get_role_nick(current_user.role.name).upper() }}</span
+          >
         </td>
       </tr>
       {% if current_user.profile_picture %}

@@ -25,9 +25,9 @@ login_manager.init_app(app)
 MAILERSEND_API_URL = "https://api.mailersend.com/v1/email"
 
 ROLE_DISPLAY_NAMES = {
-    'Admin': 'Admin',
-    'Moderator': 'Moderator',
-    'User': 'User',
+    "Admin": "Admin",
+    "Moderator": "Moderator",
+    "User": "User",
 }
 
 
@@ -39,7 +39,7 @@ def load_user(user_id):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or not current_user.has_role('Admin'):
+        if not current_user.is_authenticated or not current_user.has_role("Admin"):
             flash("You need to login as an admin first.", "error")
             return redirect(url_for("login"))
         return f(*args, **kwargs)
@@ -288,7 +288,7 @@ def dashboard():
 
 @app.cli.command("createadmin")
 def create_admin_user():
-    admin_role = Role.query.filter_by(name='Admin').first()
+    admin_role = Role.query.filter_by(name="Admin").first()
     if admin_role is None:
         print("Admin role does not exist. Please create it first.")
         return

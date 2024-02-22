@@ -133,7 +133,7 @@ class Role(db.Model):
     name = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
-        return '<Role {}>'.format(self.name)
+        return "<Role {}>".format(self.name)
 
 
 class User(UserMixin, db.Model):
@@ -144,8 +144,8 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(512), nullable=False)
     nickname = db.Column(db.String(50), nullable=False)
     profile_picture = db.Column(db.String(500))
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), default=1)
-    role = db.relationship('Role', backref=db.backref('users', lazy=True))
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), default=1)
+    role = db.relationship("Role", backref=db.backref("users", lazy=True))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -159,7 +159,7 @@ class User(UserMixin, db.Model):
 
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.has_role('Admin')
+        return current_user.is_authenticated and current_user.has_role("Admin")
 
     def inaccessible_callback(self, name, **kwargs):
         flash("You do not have access to this page.", "error")
