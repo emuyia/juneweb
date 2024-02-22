@@ -1,5 +1,5 @@
 from src import app, db
-from src.models import User
+from src.models import User, Role
 from werkzeug.security import check_password_hash
 from functools import wraps
 from flask_login import (
@@ -24,6 +24,12 @@ login_manager.init_app(app)
 
 MAILERSEND_API_URL = "https://api.mailersend.com/v1/email"
 
+ROLE_DISPLAY_NAMES = {
+    'Admin': 'Admin',
+    'Moderator': 'Moderator',
+    'User': 'User',
+}
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -33,12 +39,17 @@ def load_user(user_id):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or not current_user.is_admin:
+        if not current_user.is_authenticated or not current_user.has_role('Admin'):
             flash("You need to login as an admin first.", "error")
             return redirect(url_for("login"))
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+def get_role_nick(role_identifier):
+    # Returns the display name for a given role identifier
+    return ROLE_DISPLAY_NAMES.get(role_identifier, role_identifier)
 
 
 def generate_confirmation_token(email):
@@ -277,9 +288,14 @@ def dashboard():
 
 @app.cli.command("createadmin")
 def create_admin_user():
+    admin_role = Role.query.filter_by(name='Admin').first()
+    if admin_role is None:
+        print("Admin role does not exist. Please create it first.")
+        return
+
     admin = User(username=app.config["ADMIN_USERNAME"])
     admin.set_password(app.config["ADMIN_PASSWORD"])
-    admin.is_admin = True
+    admin.role = admin_role
     db.session.add(admin)
     db.session.commit()
     print(f"Admin user created with username: {admin.username}")

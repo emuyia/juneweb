@@ -16,7 +16,7 @@
       </a>
     </div>
   {% endif %}
-  {% if current_user.is_admin %}
+  {% if current_user.has_role('Admin') %}
     <div class="admin-btn-container">
       <a
         class="btn btn-sm admin-btn"

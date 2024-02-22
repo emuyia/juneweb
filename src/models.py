@@ -128,18 +128,30 @@ class Track(db.Model):
         return "({}) {}".format(self.id, self.name[:50])
 
 
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+    def __repr__(self):
+        return '<Role {}>'.format(self.name)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=True, unique=True)
     confirmed = db.Column(db.Boolean, default=False)
     password = db.Column(db.String(512), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
     nickname = db.Column(db.String(50), nullable=False)
     profile_picture = db.Column(db.String(500))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), default=1)
+    role = db.relationship('Role', backref=db.backref('users', lazy=True))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
+
+    def has_role(self, role_identifier):
+        return self.role is not None and self.role.name == role_identifier
 
     def __repr__(self):
         return "({}) {}".format(self.id, self.username)
@@ -147,7 +159,7 @@ class User(UserMixin, db.Model):
 
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin
+        return current_user.is_authenticated and current_user.has_role('Admin')
 
     def inaccessible_callback(self, name, **kwargs):
         flash("You do not have access to this page.", "error")

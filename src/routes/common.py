@@ -1,5 +1,5 @@
 from src import app
-from src.routes import wd_wdb
+from src.routes import wd_wdb, auth
 from src.models import Album, Post, Tag, Page, User
 from flask import (
     render_template,
@@ -10,7 +10,6 @@ from flask import (
     request,
 )
 from sqlalchemy import desc
-from markupsafe import Markup
 
 
 @app.context_processor
@@ -18,7 +17,7 @@ def context_processor():
     pages = Page.query.filter_by(hidden=False).order_by(Page.title).all()
     site_name = app.config["SITE_NAME"]
     site_desc = app.config["SITE_DESC"]
-    return dict(pages=pages, site_name=site_name, site_desc=site_desc)
+    return dict(pages=pages, site_name=site_name, site_desc=site_desc, get_role_nick=auth.get_role_nick)
 
 
 @app.route("/<path:title>")

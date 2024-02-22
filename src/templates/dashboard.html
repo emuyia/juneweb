@@ -11,7 +11,7 @@
       href="{{ url_for('view_user', username=current_user.username) }}"
       >View User Page</a
     >
-    {% if current_user.is_admin %}
+    {% if current_user.has_role('Admin') %}
       <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
         >Admin Portal</a
       >
@@ -54,11 +54,7 @@
       <tr>
         <td class="padding-cell">Role:</td>
         <td class="padding-cell">
-          {% if current_user.is_admin %}
-            <span class="author">ADMIN</span>
-          {% else %}
-            <span class="author">USER</span>
-          {% endif %}
+            <span class="author">{{ get_role_nick(current_user.role.name).upper() }}</span>
         </td>
       </tr>
       {% if current_user.profile_picture %}

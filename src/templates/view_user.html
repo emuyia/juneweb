@@ -22,11 +22,7 @@
       <tr>
         <td class="padding-cell">Role:</td>
         <td class="padding-cell">
-          {% if user.is_admin %}
-            <span class="author">ADMIN</span>
-          {% else %}
-            <span class="author">USER</span>
-          {% endif %}
+          <span class="author">{{ get_role_nick(user.role.name).upper() }}</span>
         </td>
       </tr>
       {% if user.profile_picture %}
