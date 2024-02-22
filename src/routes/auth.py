@@ -15,11 +15,14 @@ from sqlalchemy import func
 from validate_email import validate_email
 import click
 from itsdangerous import URLSafeTimedSerializer
-import requests
+from mailersend import emails
+from wtforms.validators import Email, ValidationError
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+MAILERSEND_API_URL = "https://api.mailersend.com/v1/email"
 
 
 @login_manager.user_loader
@@ -39,69 +42,99 @@ def admin_required(f):
 
 
 def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
-
-
-MAILERLITE_API_URL = 'https://api.mailerlite.com/api/v2/email'
+    serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    return serializer.dumps(email, salt=app.config["SECURITY_PASSWORD_SALT"])
 
 
 def send_confirmation_email(user):
-    token = generate_confirmation_token(user.email)
-    subject = "Please confirm your email"
-    template = "confirmation_email"
-    send_email(user.email, subject, template, user=user, token=token)
+    try:
+        mailer = emails.NewEmail(app.config["MAILERSEND_API_KEY"])
 
-
-def send_email(to, subject, template, **kwargs):
-    headers = {
-        'Content-Type': 'application/json',
-        'X-MailerLite-ApiKey': app.config['MAIL_API_KEY']
-    }
-
-    data = {
-        "subject": subject,
-        "from": {
-            "email": "jjunetune@gmail.com",
-            "name": "june"
-        },
-        "to": [
-            {
-                "email": to,
-                "name": kwargs.get('user', 'treasured individual').username
-            }
-        ],
-        "body": {
-            "html": render_template(template + '.html', **kwargs),
-            "plain": render_template(template + '.txt', **kwargs)
+        mail_from = {
+            "name": "admin",
+            "email": "admin@junes.website",
         }
-    }
 
-    response = requests.post(MAILERLITE_API_URL, json=data, headers=headers)
-    return response
+        recipients = [
+            {
+                "name": user.username,
+                "email": user.email,
+            }
+        ]
+
+        reply_to = {
+            "name": "admin",
+            "email": "admin@junes.website",
+        }
+
+        token = generate_confirmation_token(user.email)
+        domain = app.config["DOMAIN"]
+
+        subject = f"[{domain}] - email confirmation"
+        html_content = (
+            f"<p><a href='http://{domain}/confirm/{token}'>Confirm Email</a></p>"
+        )
+        text_content = f"Confirm Email: http://{domain}/confirm/{token}"
+
+        mail_body = {
+            "from": mail_from,
+            "to": recipients,
+            "subject": subject,
+            "html": html_content,
+            "text": text_content,
+            "reply_to": reply_to,
+        }
+
+        response = mailer.send(mail_body)
+        print(f"Email sent; response: {response}")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
-@app.route('/confirm/<token>')
+@app.route("/confirm/<token>")
 def confirm_email(token):
     try:
-        serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
         email = serializer.loads(
             token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
-            max_age=3600  # Token expires after 1 hour
+            salt=app.config["SECURITY_PASSWORD_SALT"],
+            max_age=3600,  # Token expires after 1 hour
         )
     except:
-        flash('The confirmation link is invalid or has expired.', 'error')
-        return redirect(url_for('unconfirmed'))
+        flash("The confirmation link is invalid or has expired.", "error")
+        return redirect(url_for("dashboard"))
 
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
-        flash('Account already confirmed. Please login.', 'success')
+        flash("Account already confirmed. Please login.", "success")
     else:
         user.confirmed = True
-        # ... database commit logic to save the confirmed status ...
+        db.session.commit()  # Commit the confirmed status to the database
+        flash("Your account has been confirmed.", "success")
 
-    return redirect(url_for('login'))
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/confirm/resend")
+@login_required
+def resend_confirmation_email():
+    if not current_user.confirmed:
+        send_confirmation_email(current_user)
+        flash("A new confirmation email has been sent.", "success")
+    else:
+        flash("Your account is already confirmed.", "info")
+    return redirect(url_for("dashboard"))
+
+
+def validate_email_address(email):
+    try:
+        # WTForms validators require form and field objects, so we create dummy ones
+        email_validator = Email(message="Invalid email")
+        email_validator(None, type('DummyField', (object,), {'data': email}))
+        return True
+    except ValidationError:
+        return False
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -164,21 +197,34 @@ def login():
                     return render_template("login.html")
 
             hashed_password = generate_password_hash(password)
-            new_user = User(username=username, password=hashed_password, email=email)
+
+            new_user = User(
+                username=username,
+                password=hashed_password,
+                email=email,
+                confirmed=False,
+            )
+
+            # Conditionally send confirmation email if an email is provided
+            if email:
+                if validate_email_address(email):
+                    send_confirmation_email(new_user)
+                    flash("A confirmation email has been sent.", "success")
+                else:
+                    flash("Invalid email address.", "danger")
+                    return render_template("login.html")
+
             db.session.add(new_user)
             db.session.commit()
+
+            # Log in the user automatically
             login_user(new_user)
-            return redirect(url_for("blog"))
+
+            flash("Account created successfully.", "success")
+
+            return redirect(url_for("dashboard"))
 
     return render_template("login.html")
-
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    flash("Successfully logged out.", "success")
-    return redirect(url_for("login"))
 
 
 @app.route("/dashboard", methods=["GET", "POST"])
@@ -186,14 +232,29 @@ def logout():
 def dashboard():
     if request.method == "POST":
         new_username = request.form.get("username")
-        new_email = request.form.get("email")
+        new_email = request.form.get("email").lower()  # Normalize email to lowercase
         new_password = request.form.get("password")
 
         if new_username:
             current_user.username = new_username
 
         if new_email:
-            current_user.email = new_email
+            if validate_email_address(new_email):
+                if new_email.lower() != current_user.email.lower():
+                    current_user.email = new_email
+                    current_user.confirmed = False
+                    send_confirmation_email(current_user)
+                    flash("A confirmation email has been sent.", "success")
+                elif new_email.lower() == current_user.email.lower() and not current_user.confirmed:
+                    send_confirmation_email(current_user)
+                    flash("A new confirmation email has been sent.", "success")
+                    return render_template("dashboard.html")
+                else:
+                    flash("You are already using this email address.", "danger")
+                    return render_template("dashboard.html")
+            else:
+                flash("Invalid email address.", "danger")
+                return render_template("dashboard.html")
 
         if new_password:
             current_user.password = generate_password_hash(new_password)
@@ -226,8 +287,9 @@ def reset_password(username):
     user = User.query.filter_by(username=username).first()
     if user:
         # Prompt for a new password
-        new_password = click.prompt("Please enter a new password", hide_input=True,
-                                    confirmation_prompt=True)
+        new_password = click.prompt(
+            "Please enter a new password", hide_input=True, confirmation_prompt=True
+        )
         # Use the set_password method of the User model
         user.set_password(new_password)
         # Update the user's password in the database
@@ -235,3 +297,11 @@ def reset_password(username):
         click.echo(f"Password for user {username} has been updated.")
     else:
         click.echo(f"User {username} not found.")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Successfully logged out.", "success")
+    return redirect(url_for("login"))

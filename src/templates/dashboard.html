@@ -19,9 +19,26 @@
   </div>
 
   <div class="panel-a p-4 rounded mt-3">
-    <p>Username: <span class="author">{{ current_user.username.upper() }}</span></p>
-    <p>Email: <span class="author">{{ current_user.email }}</span></p>
-    <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
+    <p>
+      Username: <span class="author">{{ current_user.username.upper() }}</span>
+    </p>
+    <p>
+      Email:
+      <span class="author">{{ current_user.email.lower() }}</span>
+      ({%- if current_user.confirmed -%}
+        <span style="color: green;">Confirmed</span>
+      {%- else -%}
+          <a title="Resend Confirmation Email"
+            href="{{ url_for('resend_confirmation_email') }}"
+            class="link"
+            style="color: crimson !important;"
+            >Unconfirmed</a
+          >
+      {%- endif -%})
+    </p>
+    {% if current_user.profile_picture %}
+      <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
+    {% endif %}
   </div>
 
   <div class="panel-a p-3 rounded mt-3">
@@ -31,28 +48,28 @@
         id="username"
         name="username"
         class="form-control mb-3"
-        placeholder="New Username"
-      />
-      <input
-        type="text"
-        id="email"
-        name="email"
-        class="form-control mb-3"
-        placeholder="New Email"
+        placeholder="{{ 'New' if current_user.username else 'Set' }} Username"
       />
       <input
         type="password"
         id="password"
         name="password"
         class="form-control mb-3"
-        placeholder="New Password"
+        placeholder="{{ 'New' if current_user.password else 'Set' }} Password"
+      />
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="form-control mb-3"
+        placeholder="{{ 'New' if current_user.email else 'Set' }} Email"
       />
       <input
         type="url"
         id="profile_picture"
         name="profile_picture"
         class="form-control mb-3"
-        placeholder="New Profile Picture URL"
+        placeholder="{{ 'New' if current_user.profile_picture else 'Set' }} Avatar (URL)"
       />
       <input type="submit" value="Save" class="btn btn-primary" />
     </form>
