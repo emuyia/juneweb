@@ -16,7 +16,8 @@
           <a
             class="author"
             href="{{ url_for('view_user', username=post.author.username) }}"
-            >{{ post.author.username }}</a
+            title="Username: {{ post.author.username.upper() }}"
+            >{{ post.author.nickname }}</a
           >
         </p>
         <p class="mt-1 text-muted upper">
@@ -102,13 +103,15 @@
                   <div class="d-flex justify-content-between">
                     <div>
                       <span class="mb-2 info upper">
-                        {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}
-                        (<a
-                          class="author"
-                          href="{{ url_for('view_user', username=comment.author.username) }}"
-                        >
-                          {{ comment.author.username }} </a
-                        >)
+                        {{ comment.date_posted.strftime('%d-%m-%Y at %H:%M') }}{% if comment.author.nickname %}
+                          (<a
+                            class="author"
+                            href="{{ url_for('view_user', username=comment.author.username) }}"
+                            title="Username: {{ comment.author.username.upper() }}"
+                          >
+                            {{- comment.author.nickname -}} </a
+                          >)
+                        {%- endif -%}
                       </span>
                     </div>
                   </div>

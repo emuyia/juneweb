@@ -45,7 +45,7 @@
         <div class="d-flex justify-content-end upper">
           {% if current_user.is_authenticated %}
             <a class="nav-link ps-2 pe-2" href="{{ url_for('dashboard') }}"
-              >{{ current_user.username }}</a
+              >{{ current_user.nickname }}</a
             >
             <a class="nav-link ps-2 pe-2 ms-4" href="{{ url_for('logout') }}"
               >logout</a

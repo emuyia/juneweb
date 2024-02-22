@@ -135,6 +135,7 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     password = db.Column(db.String(512), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    nickname = db.Column(db.String(50), nullable=False)
     profile_picture = db.Column(db.String(500))
 
     def set_password(self, password):

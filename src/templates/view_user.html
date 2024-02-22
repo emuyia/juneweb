@@ -6,11 +6,22 @@
   <p class="page-title">user page</p>
 
   <div class="panel-a p-4 rounded">
-    <p>
+    <p class="pb-1">
+      Nickname:
+      <span class="author"
+        >{{ user.nickname.upper() }}</span
+      >
+    </p>
+    <p class="pt-1 pb-1">
       Username:
-      <span class="author">{{ user.username.upper() }}</span
-      >{% if user.is_admin %}
-        (Admin)
+      <span class="author">{{ user.username.upper() }}</span>
+    </p>
+    <p class="pb-1 pt-1">
+      Role:
+      {% if user.is_admin %}
+        <span class="author">ADMIN</span>
+      {% else %}
+        <span class="author">USER</span>
       {% endif %}
     </p>
     {% if user.profile_picture %}

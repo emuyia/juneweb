@@ -19,22 +19,36 @@
   </div>
 
   <div class="panel-a p-4 rounded mt-3">
-    <p>
+    <p class="pb-1">
+      Nickname: <span class="author">{{ current_user.nickname.upper() }}</span>
+    </p>
+    <p class="pb-1 pt-1">
       Username: <span class="author">{{ current_user.username.upper() }}</span>
     </p>
-    <p>
-      Email:
-      <span class="author">{{ current_user.email.lower() }}</span>
-      ({%- if current_user.confirmed -%}
-        <span style="color: green;">Confirmed</span>
-      {%- else -%}
-          <a title="Resend Confirmation Email"
+    {% if current_user.email %}
+      <p class="pb-1 pt-1">
+        Email:
+        <span class="author">{{ current_user.email.lower() }}</span>
+        ({%- if current_user.confirmed -%}
+          <span style="color: green;">Confirmed</span>
+        {%- else -%}
+          <a
+            title="Resend Confirmation Email"
             href="{{ url_for('resend_confirmation_email') }}"
             class="link"
             style="color: crimson !important;"
             >Unconfirmed</a
           >
-      {%- endif -%})
+        {%- endif -%})
+      </p>
+    {% endif %}
+    <p class="pb-1 pt-1">
+      Role:
+      {% if current_user.is_admin %}
+        <span class="author">ADMIN</span>
+      {% else %}
+        <span class="author">USER</span>
+      {% endif %}
     </p>
     {% if current_user.profile_picture %}
       <img src="{{ current_user.profile_picture }}" class="pfp mt-3" />
@@ -45,10 +59,10 @@
     <form method="POST">
       <input
         type="text"
-        id="username"
-        name="username"
+        id="nickname"
+        name="nickname"
         class="form-control mb-3"
-        placeholder="{{ 'New' if current_user.username else 'Set' }} Username"
+        placeholder="{{ 'New' if current_user.nickname else 'Set' }} Nickname"
       />
       <input
         type="password"

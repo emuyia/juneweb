@@ -131,7 +131,7 @@ def validate_email_address(email):
     try:
         # WTForms validators require form and field objects, so we create dummy ones
         email_validator = Email(message="Invalid email")
-        email_validator(None, type('DummyField', (object,), {'data': email}))
+        email_validator(None, type("DummyField", (object,), {"data": email}))
         return True
     except ValidationError:
         return False
@@ -163,6 +163,7 @@ def login():
                 flash("Invalid login credentials.", "error")
         elif submit_type == "Register":
             username = request.form.get("username")
+            nickname = username
             password = request.form.get("password")
             email = request.form.get("email")
 
@@ -200,6 +201,7 @@ def login():
 
             new_user = User(
                 username=username,
+                nickname=nickname,
                 password=hashed_password,
                 email=email,
                 confirmed=False,
@@ -231,12 +233,12 @@ def login():
 @login_required
 def dashboard():
     if request.method == "POST":
-        new_username = request.form.get("username")
+        new_nickname = request.form.get("nickname")
         new_email = request.form.get("email").lower()  # Normalize email to lowercase
         new_password = request.form.get("password")
 
-        if new_username:
-            current_user.username = new_username
+        if new_nickname:
+            current_user.nickname = new_nickname
 
         if new_email:
             if validate_email_address(new_email):
@@ -245,7 +247,10 @@ def dashboard():
                     current_user.confirmed = False
                     send_confirmation_email(current_user)
                     flash("A confirmation email has been sent.", "success")
-                elif new_email.lower() == current_user.email.lower() and not current_user.confirmed:
+                elif (
+                    new_email.lower() == current_user.email.lower()
+                    and not current_user.confirmed
+                ):
                     send_confirmation_email(current_user)
                     flash("A new confirmation email has been sent.", "success")
                     return render_template("dashboard.html")
