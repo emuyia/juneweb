@@ -156,7 +156,7 @@ def login():
 
         if submit_type == "Login":
             username = request.form.get("username")
-            email = request.form.get("email")
+            email = request.form.get("email") or None
             password = request.form.get("password")
             user = None
             if email:
