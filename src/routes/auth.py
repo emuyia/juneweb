@@ -177,7 +177,7 @@ def login():
             username = request.form.get("username")
             nickname = username
             password = request.form.get("password")
-            email = request.form.get("email")
+            email = request.form.get("email") or None
 
             if not username.isalnum():
                 flash("Username should be alphanumeric.", "error")
