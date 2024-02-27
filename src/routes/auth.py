@@ -179,6 +179,11 @@ def login():
             password = request.form.get("password")
             email = request.form.get("email") or None
 
+            existing_email = User.query.filter(User.email == email).first() if email else None
+            if existing_email:
+                flash("Email is already in use.", "error")
+                return render_template("login.html")
+
             if not username.isalnum():
                 flash("Username should be alphanumeric.", "error")
                 return render_template("login.html")
