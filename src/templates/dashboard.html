@@ -67,6 +67,16 @@
           </td>
         </tr>
       {% endif %}
+      {% if current_user.about %}
+        <tr>
+          <td class="padding-cell">About:</td>
+          <td class="padding-cell">
+            <span>
+              {{ current_user.about }}
+            </span>
+          </td>
+        </tr>
+      {% endif %}
     </table>
   </div>
 
@@ -99,6 +109,14 @@
         name="profile_picture"
         class="form-control mb-3"
         placeholder="{{ 'New' if current_user.profile_picture else 'Set' }} Avatar (URL)"
+      />
+      <input
+        type="text"
+        id="about"
+        name="about"
+        class="form-control mb-3"
+        placeholder="About Me"
+        value="{{ current_user.about if current_user.about }}"
       />
       <input type="submit" value="Save" class="btn btn-primary" />
     </form>

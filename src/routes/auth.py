@@ -248,6 +248,7 @@ def dashboard():
         new_nickname = request.form.get("nickname")
         new_email = request.form.get("email").lower()  # Normalize email to lowercase
         new_password = request.form.get("password")
+        new_about = request.form.get("about")
 
         if new_nickname:
             current_user.nickname = new_nickname
@@ -280,6 +281,9 @@ def dashboard():
 
         if new_picture_url:
             current_user.profile_picture = new_picture_url
+
+        if new_about:
+            current_user.about = new_about
 
         db.session.commit()
         flash("Changes saved.", "success")

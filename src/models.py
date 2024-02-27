@@ -144,6 +144,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(512), nullable=False)
     nickname = db.Column(db.String(50), nullable=False)
     profile_picture = db.Column(db.String(500))
+    about = db.Column(db.Text, nullable=True)
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), default=1)
     role = db.relationship("Role", backref=db.backref("users", lazy=True))
 
