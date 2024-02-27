@@ -259,6 +259,7 @@ def dashboard():
             current_user.nickname = new_nickname
 
         if new_email:
+            existing_email = User.query.filter(User.email == new_email).first() if new_email else None
             if validate_email_address(new_email):
                 if new_email.lower() != (current_user.email or "").lower():
                     current_user.email = new_email
@@ -275,6 +276,9 @@ def dashboard():
                 else:
                     flash("You are already using this email address.", "danger")
                     return render_template("dashboard.html")
+            elif existing_email:
+                flash("Email is already in use.", "error")
+                return render_template("dashboard.html")
             else:
                 flash("Invalid email address.", "danger")
                 return render_template("dashboard.html")
