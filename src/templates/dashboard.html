@@ -4,123 +4,124 @@
 
 {% block content %}
   <p class="page-title">user dashboard</p>
-
-  <div class="d-flex justify-content-end">
-    <a
-      class="btn btn-sm me-2"
-      href="{{ url_for('view_user', username=current_user.username) }}"
-      >View User Page</a
-    >
-    {% if current_user.has_role('Admin') %}
-      <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
-        >Admin Portal</a
+  {% if current_user.is_authenticated %}
+    <div class="d-flex justify-content-end">
+      <a
+        class="btn btn-sm me-2"
+        href="{{ url_for('view_user', username=current_user.username) }}"
+        >View User Page</a
       >
-    {% endif %}
-  </div>
+      {% if current_user.has_role('Admin') %}
+        <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
+          >Admin Portal</a
+        >
+      {% endif %}
+    </div>
 
-  <div class="panel-a p-4 rounded mt-3">
-    <table class="user-details-table">
-      <tr>
-        <td class="padding-cell">Nickname:</td>
-        <td class="padding-cell">
-          <span class="author">{{ current_user.nickname.upper() }}</span>
-        </td>
-      </tr>
-      <tr>
-        <td class="padding-cell">Username:</td>
-        <td class="padding-cell">
-          <span class="author">{{ current_user.username.upper() }}</span>
-        </td>
-      </tr>
-      {% if current_user.email %}
+    <div class="panel-a p-4 rounded mt-3">
+      <table class="user-details-table">
         <tr>
-          <td class="padding-cell">Email:</td>
+          <td class="padding-cell">Nickname:</td>
           <td class="padding-cell">
-            <span class="author">{{ current_user.email.lower() }}</span>
-            ({%- if current_user.confirmed -%}
-              <span style="color: green;">Confirmed</span>
-            {%- else -%}
-              <a
-                title="Resend Confirmation Email"
-                href="{{ url_for('resend_confirmation_email') }}"
-                class="link"
-                style="color: crimson !important;"
-                >Unconfirmed</a
-              >
-            {%- endif -%})
+            <span class="author">{{ current_user.nickname.upper() }}</span>
           </td>
         </tr>
-      {% endif %}
-      <tr>
-        <td class="padding-cell">Role:</td>
-        <td class="padding-cell">
-          <span class="author"
-            >{{ get_role_nick(current_user.role.name).upper() }}</span
-          >
-        </td>
-      </tr>
-      {% if current_user.profile_picture %}
         <tr>
-          <td>Avatar:</td>
-          <td colspan="2">
-            <img src="{{ current_user.profile_picture }}" class="pfp" />
-          </td>
-        </tr>
-      {% endif %}
-      {% if current_user.about %}
-        <tr>
-          <td class="padding-cell">About:</td>
+          <td class="padding-cell">Username:</td>
           <td class="padding-cell">
-            <span>
-              {{ current_user.about }}
-            </span>
+            <span class="author">{{ current_user.username.upper() }}</span>
           </td>
         </tr>
-      {% endif %}
-    </table>
-  </div>
+        {% if current_user.email %}
+          <tr>
+            <td class="padding-cell">Email:</td>
+            <td class="padding-cell">
+              <span class="author">{{ current_user.email.lower() }}</span>
+              ({%- if current_user.confirmed -%}
+                <span style="color: green;">Confirmed</span>
+              {%- else -%}
+                <a
+                  title="Resend Confirmation Email"
+                  href="{{ url_for('resend_confirmation_email') }}"
+                  class="link"
+                  style="color: crimson !important;"
+                  >Unconfirmed</a
+                >
+              {%- endif -%})
+            </td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td class="padding-cell">Role:</td>
+          <td class="padding-cell">
+            <span class="author"
+              >{{ get_role_nick(current_user.role.name).upper() }}</span
+            >
+          </td>
+        </tr>
+        {% if current_user.profile_picture %}
+          <tr>
+            <td>Avatar:</td>
+            <td colspan="2">
+              <img src="{{ current_user.profile_picture }}" class="pfp" />
+            </td>
+          </tr>
+        {% endif %}
+        {% if current_user.about %}
+          <tr>
+            <td class="padding-cell">About:</td>
+            <td class="padding-cell">
+              <span>
+                {{ current_user.about }}
+              </span>
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
 
-  <div class="panel-a p-3 rounded mt-3">
-    <form method="POST">
-      <input
-        type="text"
-        id="nickname"
-        name="nickname"
-        class="form-control mb-3"
-        placeholder="{{ 'New' if current_user.nickname else 'Set' }} Nickname"
-      />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        class="form-control mb-3"
-        placeholder="{{ 'New' if current_user.password else 'Set' }} Password"
-      />
-      <input
-        type="text"
-        id="email"
-        name="email"
-        class="form-control mb-3"
-        placeholder="{{ 'New' if current_user.email else 'Set' }} Email"
-      />
-      <input
-        type="url"
-        id="profile_picture"
-        name="profile_picture"
-        class="form-control mb-3"
-        placeholder="{{ 'New' if current_user.profile_picture else 'Set' }} Avatar (URL)"
-      />
-      <input
-        type="text"
-        id="about"
-        name="about"
-        class="form-control mb-3"
-        placeholder="About Me"
-        value="{{ current_user.about if current_user.about }}"
-      />
-      <input type="submit" value="Save" class="btn btn-primary" />
-    </form>
-  </div>
+    <div class="panel-a p-3 rounded mt-3">
+      <form method="POST">
+        <input
+          type="text"
+          id="nickname"
+          name="nickname"
+          class="form-control mb-3"
+          placeholder="{{ 'New' if current_user.nickname else 'Set' }} Nickname"
+        />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control mb-3"
+          placeholder="{{ 'New' if current_user.password else 'Set' }} Password"
+        />
+        <input
+          type="text"
+          id="email"
+          name="email"
+          class="form-control mb-3"
+          placeholder="{{ 'New' if current_user.email else 'Set' }} Email"
+        />
+        <input
+          type="url"
+          id="profile_picture"
+          name="profile_picture"
+          class="form-control mb-3"
+          placeholder="{{ 'New' if current_user.profile_picture else 'Set' }} Avatar (URL)"
+        />
+        <input
+          type="text"
+          id="about"
+          name="about"
+          class="form-control mb-3"
+          placeholder="About Me"
+          value="{{ current_user.about if current_user.about }}"
+        />
+        <input type="submit" value="Save" class="btn btn-primary" />
+      </form>
+    </div>
+  {% endif %}
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}

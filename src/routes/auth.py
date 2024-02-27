@@ -247,8 +247,12 @@ def login():
 
 
 @app.route("/dashboard", methods=["GET", "POST"])
-@login_required
 def dashboard():
+    if not current_user.is_authenticated:
+        # Inform non-authenticated users that they need to log in
+        flash("You need to be logged in to view this page.", "warning")
+        return render_template("dashboard.html")
+
     if request.method == "POST":
         new_nickname = request.form.get("nickname")
         new_email = request.form.get("email").lower()  # Normalize email to lowercase
