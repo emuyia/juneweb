@@ -259,29 +259,31 @@ def dashboard():
             current_user.nickname = new_nickname
 
         if new_email:
-            existing_email = User.query.filter(User.email == new_email).first() if new_email else None
-            if validate_email_address(new_email):
-                if new_email.lower() != (current_user.email or "").lower():
-                    current_user.email = new_email
-                    current_user.confirmed = False
-                    send_confirmation_email(current_user)
-                    flash("A confirmation email has been sent.", "success")
-                elif (
-                    new_email.lower() == current_user.email.lower()
-                    and not current_user.confirmed
-                ):
-                    send_confirmation_email(current_user)
-                    flash("A new confirmation email has been sent.", "success")
-                    return render_template("dashboard.html")
-                else:
-                    flash("You are already using this email address.", "danger")
-                    return render_template("dashboard.html")
-            elif existing_email:
+            new_email = new_email.lower()  # Normalize email to lowercase
+
+            # Check if the new email is already in use by another user (not including the current user)
+            if User.query.filter(User.email == new_email, User.id != current_user.id).first():
                 flash("Email is already in use.", "error")
                 return render_template("dashboard.html")
-            else:
+
+            # Validate the new email address
+            if not validate_email_address(new_email):
                 flash("Invalid email address.", "danger")
                 return render_template("dashboard.html")
+
+            # Check if the new email is different from the current email
+            if new_email != (current_user.email or "").lower():
+                current_user.email = new_email
+                current_user.confirmed = False
+                send_confirmation_email(current_user)
+                flash("A confirmation email has been sent.", "success")
+            elif not current_user.confirmed:
+                # Email is the same but not confirmed, resend confirmation email
+                send_confirmation_email(current_user)
+                flash("A new confirmation email has been sent.", "success")
+            else:
+                # Email is the same and already confirmed, nothing to update
+                flash("You are already using this email address.", "success")
 
         if new_password:
             current_user.password = generate_password_hash(new_password)
