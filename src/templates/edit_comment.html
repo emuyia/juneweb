@@ -11,7 +11,7 @@
       <textarea
         id="content-box"
         name="content"
-        class="form-control mb-2"
+        class="form-control mb-2 resize-by-scroll"
         placeholder="Edit your comment..."
       >
 {{ comment.content }}</textarea
@@ -31,11 +31,4 @@
   <div id="emote-legend-container">
     <div id="emote-legend" class="p-2"></div>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var textarea = document.getElementById("content-box");
-      textarea.style.height = textarea.scrollHeight + "px";
-    });
-  </script>
 {% endblock %}
