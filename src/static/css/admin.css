@@ -1,34 +1,95 @@
 @import url("https://fonts.googleapis.com/css?family=Inter");
 
+@font-face {
+  font-family: "CustomFont";
+  src: url("/static/fonts/PerfectDOSVGA437.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AlternateFont';
+  src: url('https://fonts.googleapis.com/css?family=Inter');
+}
+
 /* Variables */
 :root {
-  --bg-color-a: #1b1f22;
-  --bg-color-b: #212529;
-  --text-color: #c3c3c3;
+  --bg-color-a: #080808;
+  --bg-color-b: #111111;
+  --text-color: #909090;
 }
 
 body {
-  font-family: "Inter", fallback, sans-serif;
+  font-family: "CustomFont", fallback, sans-serif;
   background-color: var(--bg-color-a);
+}
+
+.page-link {
+  font-family: "AlternateFont", fallback, sans-serif !important;
+}
+
+p {
+   margin: 0 !important;
 }
 
 body,
 table,
 tr:hover,
 .badge,
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+input,
+.select2-drop,
+.select2-drop-mask,
+.nav-item > active,
+.select2-container,
+.select2-choice,
+.select2-input,
+.select2-search,
+.active,
+.dropdown,
+textarea,
+.page-link,
+.model-list,
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active,
+.dropdown-menu:hover,
+li,
+.bg-dark {
+  color: var(--text-color) !important;
+}
+
+.glyphicon {
   color: var(--text-color) !important;
 }
 
 table,
 table tr,
-table tr td {
-  border: 1px solid var(--text-color) !important; /* not working? */
+table tr td,
+table tr th,
+.nav-tabs,
+.page-link {
+  border-color: var(--bg-color-b) !important;
 }
 
 tr:hover,
-.card {
+.card,
+input,
+form-control,
+.select2-drop,
+.select2-choices,
+.select2-drop-mask,
+.active,
+.select2-container,
+.select2-choice,
+.select2-input,
+.select2-search,
+textarea,
+.page-link,
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active,
+.dropdown-menu:hover,
+li,
+.bg-dark {
   background-color: var(--bg-color-b) !important;
+  border-color: var(--bg-color-b) !important;
 }
 
 textarea.monospace {
