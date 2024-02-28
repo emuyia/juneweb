@@ -12,7 +12,10 @@
         >View Public User Page</a
       >
       {% if current_user.has_role('Admin') %}
-        <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
+        <a
+          class="btn btn-sm"
+          href="{{ url_for('admin.index') }}"
+          target="_blank"
           >Admin Portal</a
         >
       {% endif %}
@@ -72,9 +75,7 @@
           <tr>
             <td class="padding-cell pt-3">Bio:</td>
             <td class="padding-cell pt-3">
-              <span>
-                {{ current_user.about }}
-              </span>
+              <span> {{ current_user.about }} </span>
             </td>
           </tr>
         {% endif %}
@@ -125,15 +126,17 @@
         />
         <label for="about">Bio:</label>
         <textarea
-        id="about"
-        name="about"
-        class="form-control mb-3"
-        placeholder="Write something..."
-        autocomplete="off">{{ current_user.about if current_user.about }}</textarea>
+          id="about"
+          name="about"
+          class="form-control mb-3"
+          placeholder="Write something..."
+          autocomplete="off"
+        >
+{{ current_user.about if current_user.about }}</textarea
+        >
         <input type="submit" value="Save" class="btn btn-primary" />
       </form>
     </div>
   {% endif %}
-
   {% include '_flash_messages.html' %}
 {% endblock %}
