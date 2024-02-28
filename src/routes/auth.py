@@ -261,8 +261,10 @@ def dashboard():
         new_password = request.form.get("password")
         new_about = request.form.get("about")
 
-        if new_nickname:
+        if new_nickname != "" and new_nickname is not None:
             current_user.nickname = new_nickname
+        else:
+            current_user.nickname = current_user.username
 
         if new_email:
             new_email = new_email.lower()  # Normalize email to lowercase
@@ -298,11 +300,15 @@ def dashboard():
 
         new_picture_url = request.form.get("profile_picture")
 
-        if new_picture_url:
+        if new_picture_url != "" and new_picture_url is not None:
             current_user.profile_picture = new_picture_url
+        else:
+            current_user.profile_picture = None
 
-        if new_about:
+        if new_about != "" and new_about is not None:
             current_user.about = new_about
+        else:
+            current_user.about = None
 
         db.session.commit()
         flash("Changes saved.", "success")

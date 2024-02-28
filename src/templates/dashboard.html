@@ -9,7 +9,7 @@
       <a
         class="btn btn-sm me-2"
         href="{{ url_for('view_user', username=current_user.username) }}"
-        >View User Page</a
+        >View Public User Page</a
       >
       {% if current_user.has_role('Admin') %}
         <a class="btn btn-sm" href="{{ url_for('admin.index') }}" target="_blank"
@@ -19,6 +19,7 @@
     </div>
 
     <div class="panel-a p-4 rounded mt-3">
+      <p class="post-title mt-0" style="font-size:1.6em;">user details</p>
       <table class="user-details-table">
         <tr>
           <td class="padding-cell">Nickname:</td>
@@ -69,8 +70,8 @@
         {% endif %}
         {% if current_user.about %}
           <tr>
-            <td class="padding-cell">About:</td>
-            <td class="padding-cell">
+            <td class="padding-cell pt-3">Bio:</td>
+            <td class="padding-cell pt-3">
               <span>
                 {{ current_user.about }}
               </span>
@@ -81,43 +82,54 @@
     </div>
 
     <div class="panel-a p-3 rounded mt-3">
+      <p class="post-title mt-0" style="font-size:1.6em;">edit user</p>
       <form method="POST">
+        <label for="nickname">Nickname:</label>
         <input
           type="text"
           id="nickname"
           name="nickname"
           class="form-control mb-3"
-          placeholder="{{ 'New' if current_user.nickname else 'Set' }} Nickname"
+          placeholder=""
+          value="{{ current_user.nickname.upper() if current_user.nickname != current_user.username }}"
+          autocomplete="off"
+          style="text-transform: uppercase;"
         />
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control mb-3"
-          placeholder="{{ 'New' if current_user.password else 'Set' }} Password"
-        />
+        <label for="email">Email:</label>
         <input
           type="text"
           id="email"
           name="email"
           class="form-control mb-3"
-          placeholder="{{ 'New' if current_user.email else 'Set' }} Email"
+          placeholder=""
+          autocomplete="off"
         />
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control mb-3"
+          placeholder=""
+          autocomplete="off"
+        />
+        <label for="profile_picture">Avatar:</label>
         <input
           type="url"
           id="profile_picture"
           name="profile_picture"
           class="form-control mb-3"
-          placeholder="{{ 'New' if current_user.profile_picture else 'Set' }} Avatar (URL)"
+          placeholder="URL"
+          value="{{ current_user.profile_picture if current_user.profile_picture }}"
+          autocomplete="off"
         />
-        <input
-          type="text"
-          id="about"
-          name="about"
-          class="form-control mb-3"
-          placeholder="About Me"
-          value="{{ current_user.about if current_user.about }}"
-        />
+        <label for="about">Bio:</label>
+        <textarea
+        id="about"
+        name="about"
+        class="form-control mb-3"
+        placeholder="Write something..."
+        autocomplete="off">{{ current_user.about if current_user.about }}</textarea>
         <input type="submit" value="Save" class="btn btn-primary" />
       </form>
     </div>
