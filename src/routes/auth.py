@@ -182,37 +182,37 @@ def login():
             existing_email = User.query.filter(User.email == email).first() if email else None
             if existing_email:
                 flash("Email is already in use.", "error")
-                return render_template("login.html")
+                return redirect(url_for("login"))
 
             if not username.isalnum():
                 flash("Username should be alphanumeric.", "error")
-                return render_template("login.html")
+                return redirect(url_for("login"))
 
             existing_user = User.query.filter(
                 func.lower(User.username) == func.lower(username)
             ).first()
             if existing_user is not None:
                 flash("Username is already taken.", "error")
-                return render_template("login.html")
+                return redirect(url_for("login"))
 
             if not password or len(password) <= 3:
                 flash("Password should be longer than 3 characters.", "error")
-                return render_template("login.html")
+                return redirect(url_for("login"))
 
             if not username or len(username) <= 3:
                 flash("Username should be longer than 3 characters.", "error")
-                return render_template("login.html")
+                return redirect(url_for("login"))
 
             if email:
                 email = email.lower()
                 if not validate_email(email):
                     flash("Invalid email address.", "error")
-                    return render_template("login.html")
+                    return redirect(url_for("login"))
 
                 existing_email = User.query.filter_by(email=email).first()
                 if existing_email:
                     flash("Email is already in use.", "error")
-                    return render_template("login.html")
+                    return redirect(url_for("login"))
 
             hashed_password = generate_password_hash(password)
 
@@ -231,7 +231,7 @@ def login():
                     flash("A confirmation email has been sent.", "success")
                 else:
                     flash("Invalid email address.", "danger")
-                    return render_template("login.html")
+                    return redirect(url_for("login"))
 
             db.session.add(new_user)
             db.session.commit()
@@ -268,12 +268,12 @@ def dashboard():
             # Check if the new email is already in use by another user (not including the current user)
             if User.query.filter(User.email == new_email, User.id != current_user.id).first():
                 flash("Email is already in use.", "error")
-                return render_template("dashboard.html")
+                return redirect(url_for('dashboard'))
 
             # Validate the new email address
             if not validate_email_address(new_email):
                 flash("Invalid email address.", "danger")
-                return render_template("dashboard.html")
+                return redirect(url_for('dashboard'))
 
             # Check if the new email is different from the current email
             if new_email != (current_user.email or "").lower():
@@ -302,6 +302,7 @@ def dashboard():
 
         db.session.commit()
         flash("Changes saved.", "success")
+        return redirect(url_for('dashboard'))
 
     return render_template("dashboard.html")
 
