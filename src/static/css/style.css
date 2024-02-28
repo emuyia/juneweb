@@ -532,7 +532,7 @@ form,
   display: none; /* Hide all but the first content div initially */
 }
 
-@keyframes shake {
+@keyframes shake-horizontal {
   0% { transform: translateX(0); }
   10%, 90% { transform: translateX(-3px); }
   20%, 80% { transform: translateX(3px); }
@@ -540,6 +540,18 @@ form,
   40%, 60% { transform: translateX(3px); }
 }
 
-.shake {
-  animation: shake 0.5s 0.25s;
+@keyframes shake-vertical {
+  0% { transform: translateY(0); }
+  10%, 90% { transform: translateY(-3px); }
+  20%, 80% { transform: translateY(3px); }
+  30%, 50%, 70% { transform: translateY(-3px); }
+  40%, 60% { transform: translateY(3px); }
+}
+
+.shake-horizontal, .shake {
+  animation: shake-horizontal 0.5s 0.25s;
+}
+
+.shake-vertical {
+  animation: shake-vertical 0.5s 0.25s;
 }

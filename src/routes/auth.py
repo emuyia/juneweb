@@ -293,7 +293,7 @@ def dashboard():
                 flash("A new confirmation email has been sent.", "success")
             else:
                 # Email is the same and already confirmed, nothing to update
-                flash("You are already using this email address.", "success")
+                flash("You are already using this email address.", "danger")
 
         if new_password:
             current_user.password = generate_password_hash(new_password)
