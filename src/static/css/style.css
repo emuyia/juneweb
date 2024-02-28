@@ -304,6 +304,10 @@ footer {
   border-collapse: collapse;
 }
 
+.user-details-table td, .user-details-table th {
+  vertical-align: top;
+}
+
 .user-details-table .padding-cell {
   padding: 0.5em;
 }

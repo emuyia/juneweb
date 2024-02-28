@@ -29,7 +29,7 @@
       </tr>
       {% if user.profile_picture %}
         <tr>
-          <td>Avatar:</td>
+          <td class="padding-cell">Avatar:</td>
           <td colspan="2">
             <img src="{{ user.profile_picture }}" class="pfp" />
           </td>
@@ -37,9 +37,13 @@
       {% endif %}
       {% if user.about %}
         <tr>
-          <td>Bio:</td>
-          <td class="padding-cell">{{ user.about }}</td>
-        </tr>
+            <td class="padding-cell pt-3">Bio:</td>
+            <td class="pt-3">
+              <div class="panel-b p-2" style="font-size:0.9em;">
+                {{ user.about }}
+              </div>
+            </td>
+          </tr>
       {% endif %}
     </table>
   </div>

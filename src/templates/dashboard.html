@@ -65,7 +65,7 @@
         </tr>
         {% if current_user.profile_picture %}
           <tr>
-            <td>Avatar:</td>
+            <td class="padding-cell">Avatar:</td>
             <td colspan="2">
               <img src="{{ current_user.profile_picture }}" class="pfp" />
             </td>
@@ -74,8 +74,10 @@
         {% if current_user.about %}
           <tr>
             <td class="padding-cell pt-3">Bio:</td>
-            <td class="padding-cell pt-3">
-              <span> {{ current_user.about }} </span>
+            <td class="pt-3">
+              <div class="panel-b p-2" style="font-size:0.9em;">
+                {{ current_user.about }}
+              </div>
             </td>
           </tr>
         {% endif %}
