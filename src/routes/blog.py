@@ -1,6 +1,6 @@
 from src import app, db
-from src.models import Post, Comment, User, Tag, Page
-from flask import render_template, request, flash, redirect, url_for, Response, abort
+from src.models import Post, Comment, User, Tag
+from flask import render_template, request, flash, url_for, Response, abort, redirect
 import requests
 from feedgen.feed import FeedGenerator
 import pytz
@@ -90,16 +90,21 @@ def process_comment(comment_text):
 
 
 @app.route("/submit_comment", methods=["POST"])
-@login_required
 def submit_comment():
     post_id = request.form.get("post_id")
     content = request.form.get("content")
+
+    if not current_user.is_authenticated:
+        flash("You need to be logged in to submit comments.", "warning")
+        return redirect(url_for("view_post", post_id=post_id))
+
     new_comment = Comment(
         content=content,
         post_id=post_id,
         author_id=current_user.id,
         date_posted=dt.now(),
     )
+
     db.session.add(new_comment)
     db.session.commit()
     return redirect(url_for("view_post", post_id=post_id))

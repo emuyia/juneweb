@@ -6,7 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.model.form import InlineFormAdmin
 import flask_admin
 from flask_admin import AdminIndexView, expose
-from flask import redirect, url_for, request, flash
+from flask import url_for, request, flash, redirect
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 from flask_login import UserMixin, current_user, AnonymousUserMixin

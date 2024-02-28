@@ -1,0 +1,17 @@
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes" id="anchor-flash">
+      {% for message in messages %}
+        <li class="mt-3">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    <script>
+      window.addEventListener('DOMContentLoaded', (event) => {
+        const anchor = document.getElementById('flash-messages-anchor');
+        if (anchor) {
+          window.scrollTo(0, anchor.offsetTop);
+        }
+      });
+    </script>
+  {% endif %}
+{% endwith %}
