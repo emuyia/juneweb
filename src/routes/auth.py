@@ -179,7 +179,9 @@ def login():
             password = request.form.get("password")
             email = request.form.get("email") or None
 
-            existing_email = User.query.filter(User.email == email).first() if email else None
+            existing_email = (
+                User.query.filter(User.email == email).first() if email else None
+            )
             if existing_email:
                 flash("Email is already in use.", "error")
                 return redirect(url_for("login"))
@@ -266,14 +268,16 @@ def dashboard():
             new_email = new_email.lower()  # Normalize email to lowercase
 
             # Check if the new email is already in use by another user (not including the current user)
-            if User.query.filter(User.email == new_email, User.id != current_user.id).first():
+            if User.query.filter(
+                User.email == new_email, User.id != current_user.id
+            ).first():
                 flash("Email is already in use.", "error")
-                return redirect(url_for('dashboard'))
+                return redirect(url_for("dashboard"))
 
             # Validate the new email address
             if not validate_email_address(new_email):
                 flash("Invalid email address.", "danger")
-                return redirect(url_for('dashboard'))
+                return redirect(url_for("dashboard"))
 
             # Check if the new email is different from the current email
             if new_email != (current_user.email or "").lower():
@@ -302,7 +306,7 @@ def dashboard():
 
         db.session.commit()
         flash("Changes saved.", "success")
-        return redirect(url_for('dashboard'))
+        return redirect(url_for("dashboard"))
 
     return render_template("dashboard.html")
 

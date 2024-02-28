@@ -312,6 +312,13 @@ footer {
   padding-right: 1em;
 }
 
+.flashes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Components */
 .pfp {
   border: 0px solid var(--border-color-sub);
@@ -523,4 +530,16 @@ form,
 
 .fade-content:not(:first-child) {
   display: none; /* Hide all but the first content div initially */
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(3px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
+.shake {
+  animation: shake 0.5s 0.25s;
 }
