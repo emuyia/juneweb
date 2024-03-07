@@ -51,6 +51,19 @@ document.addEventListener("DOMContentLoaded", function () {
       editor.setTheme("ace/theme/monokai");
     });
 
+    async function formatCode() {
+      try {
+        const formattedCode = await prettier.format(editor.getValue(), {
+          parser: "html",
+          plugins: [prettierPlugins.html],
+        });
+
+        editor.setValue(formattedCode);
+      } catch (error) {
+        console.error("Error formatting code:", error);
+      }
+    }
+
     sourceButton.addEventListener("click", function () {
       if (sourceButton.classList.contains("active")) {
         quill.setContents(quill.clipboard.convert(editor.getValue()));
@@ -62,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
         quill.container.style.display = "none";
         editor.container.style.display = "block";
         sourceButton.classList.add("active");
+        formatCode(); // Automatically format the code when switching to the Ace editor
       }
     });
 
