@@ -44,9 +44,15 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             }
           }
+        },
+        imageResize: {
+          displaySize: true
         }
       }
     });
+
+    // Register the ImageResize module
+    Quill.register("modules/imageResize", ImageResize);
 
     var aceContainer = document.createElement("div");
     aceContainer.style.display = "none";
