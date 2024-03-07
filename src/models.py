@@ -238,9 +238,19 @@ class QuillAdminModelView(AdminModelView):
 class PostModelView(QuillAdminModelView):
     inline_models = (Comment,)
 
+    def render_args(self):
+        args = super().render_args()
+        args["load_quill"] = True
+        return args
+
 
 class AlbumModelView(QuillAdminModelView):
     inline_models = (TrackInlineModelView(Track),)
+
+    def render_args(self):
+        args = super().render_args()
+        args["load_quill"] = True
+        return args
 
 
 class AdminHomeView(AdminIndexView):

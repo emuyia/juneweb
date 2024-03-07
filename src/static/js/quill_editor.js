@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sourceButton.style.marginLeft = "5px";
     sourceButton.style.cssFloat = "right";
 
+    quillContainer.parentNode.insertBefore(sourceButton, quillContainer);
+
     var quill = new Quill(quillContainer, {
       theme: "snow",
       modules: {
@@ -34,30 +36,43 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
 
-    quill.container.parentNode.insertBefore(
-      sourceButton,
-      quill.container.nextSibling,
-    );
+    var aceContainer = document.createElement("div");
+    aceContainer.style.display = "none";
+    quill.container.parentNode.insertBefore(aceContainer, quill.container.nextSibling);
+
+    var editor = ace.edit(aceContainer);
+    editor.setOptions({
+      maxLines: Infinity,
+    });
+    editor.setValue(contentField.value);
+
+    editor.renderer.on("afterRender", function () {
+      editor.session.setMode("ace/mode/html");
+      editor.setTheme("ace/theme/monokai");
+    });
 
     sourceButton.addEventListener("click", function () {
       if (sourceButton.classList.contains("active")) {
-        quill.setContents(quill.clipboard.convert(contentField.value));
-        contentField.style.display = "none";
-        quillContainer.style.display = "block";
+        quill.setContents(quill.clipboard.convert(editor.getValue()));
+        editor.container.style.display = "none";
+        quill.container.style.display = "block";
         sourceButton.classList.remove("active");
       } else {
-        contentField.value = quill.root.innerHTML;
-        quillContainer.style.display = "none";
-        contentField.style.display = "block";
+        editor.setValue(quill.root.innerHTML);
+        quill.container.style.display = "none";
+        editor.container.style.display = "block";
         sourceButton.classList.add("active");
-        sourceButton.parentNode.insertBefore(contentField, sourceButton);
       }
+    });
+
+    quill.on("text-change", function () {
+      contentField.value = quill.root.innerHTML;
     });
 
     var form = contentField.closest("form");
     form.addEventListener("submit", function () {
       if (sourceButton.classList.contains("active")) {
-        contentField.value = quill.root.innerHTML;
+        contentField.value = editor.getValue();
       }
     });
   }
