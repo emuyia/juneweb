@@ -18,6 +18,9 @@
     href="{{ url_for('static', filename='css/admin.css') }}"
     type="text/css"
   />
+
+  <script src="{{ url_for('static', filename='js/prettier/standalone.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/prettier/html.js') }}"></script>
 {% endblock %}
 
 {% block tail_js %}

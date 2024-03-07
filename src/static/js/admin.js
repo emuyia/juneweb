@@ -30,6 +30,28 @@ document.addEventListener("DOMContentLoaded", function () {
       editor.setTheme("ace/theme/monokai");
     });
 
+    // Create a formatting button
+    var formatButton = document.createElement("button");
+    formatButton.textContent = "Clean";
+    formatButton.type = "button";
+    formatButton.style.marginTop = "10px";
+    // formatButton.style.cssFloat = "right";
+    aceContainer.parentNode.insertBefore(formatButton, aceContainer.nextSibling);
+
+    // Add event listener to the formatting button
+    formatButton.addEventListener("click", async function () {
+      try {
+        const formattedCode = await prettier.format(editor.getValue(), {
+          parser: 'html',
+          plugins: [prettierPlugins.html],
+        });
+
+        editor.setValue(formattedCode);
+      } catch (error) {
+        console.error("Error formatting code:", error);
+      }
+    });
+
     // Debounce function to delay the preview update
     function debounce(func, delay) {
       var timeoutId;
