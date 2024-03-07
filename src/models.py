@@ -198,26 +198,53 @@ class CKTextAreaField(TextAreaField):
     widget = CKTextAreaWidget()
 
 
-class TrackInlineModelView(InlineFormAdmin):
-    form_columns = ("id", "track_number", "name", "duration")
+class QuillTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get("class"):
+            kwargs["class"] += " quill-editor"
+        else:
+            kwargs.setdefault("class", "quill-editor")
+        return super(QuillTextAreaWidget, self).__call__(field, **kwargs)
+
+
+class QuillTextAreaField(TextAreaField):
+    widget = QuillTextAreaWidget()
 
 
 class PageModelView(AdminModelView):
     form_columns = ("title", "content", "related_tags", "hidden")
     form_overrides = {
         # 'content': MonospaceTextAreaField
-        "content": CKTextAreaField
+        # "content": CKTextAreaField
+        "content": QuillTextAreaField
     }
+
+    def edit_form(self, obj=None):
+        form = super().edit_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def create_form(self, obj=None):
+        form = super().create_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def on_model_change(self, form, model, is_created):
+        model.content = form["content"].data
+
+
+class TrackInlineModelView(InlineFormAdmin):
+    form_columns = ("id", "track_number", "name", "duration")
 
 
 class PostModelView(AdminModelView):
-    form_overrides = {"content": CKTextAreaField}
+    form_overrides = {"content": QuillTextAreaField}
     inline_models = (Comment,)
 
 
 class AlbumModelView(AdminModelView):
     inline_models = (TrackInlineModelView(Track),)
-    form_overrides = {"content": CKTextAreaField}
+    form_overrides = {"content": QuillTextAreaField}
 
 
 class AdminHomeView(AdminIndexView):

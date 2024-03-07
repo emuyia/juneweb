@@ -3,28 +3,55 @@
 {% block head_css %}
   {{ super() }}
 
-  <script src="{{ url_for('static', filename='js/ckeditor.js') }}"></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
   <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/admin.css') }}"
     type="text/css"
   />
+{% endblock %}
 
-  <script type="text/javascript">
+{% block tail_js %}
+  {{ super() }}
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const editorElement = document.querySelector("textarea.ckeditor");
-      ClassicEditor.create(editorElement)
-        .then((editor) => {
-          editor.ui.focusTracker.on("change:isFocused", (evt, name, value) => {
-            if (!value) {
-              editorElement.value = editor.getData();
-            }
-          });
-        })
-        .catch((error) => {
-          console.error(error);
+      var contentField = document.querySelector('textarea[name="content"]');
+      if (contentField) {
+        var quillContainer = document.createElement("div");
+        quillContainer.innerHTML = contentField.value;
+        contentField.parentNode.insertBefore(quillContainer, contentField);
+        contentField.style.display = "none";
+
+        var quill = new Quill(quillContainer, {
+          theme: "snow",
+          modules: {
+            toolbar: [
+              ["bold", "italic", "underline", "strike"],
+              ["blockquote", "code-block"],
+              [{ header: 1 }, { header: 2 }],
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ script: "sub" }, { script: "super" }],
+              [{ indent: "-1" }, { indent: "+1" }],
+              [{ direction: "rtl" }],
+              [{ size: ["small", false, "large", "huge"] }],
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              [{ color: [] }, { background: [] }],
+              [{ font: [] }],
+              [{ align: [] }],
+              ["clean"],
+            ],
+          },
         });
+
+        // Update the textarea value on form submission
+        var form = contentField.closest("form");
+        form.addEventListener("submit", function () {
+          contentField.value = quill.root.innerHTML;
+        });
+      }
     });
   </script>
 {% endblock %}
