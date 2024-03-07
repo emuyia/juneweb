@@ -253,18 +253,23 @@ class AlbumModelView(QuillAdminModelView):
         return args
 
 
-class AdminHomeView(AdminIndexView):
-    @expose("/")
+class DashboardView(AdminIndexView):
+    def is_visible(self):
+        # This view won't appear in the menu structure
+        return False
+
+    @expose('/')
     def index(self):
-        return self.render("admin_home.html")
+        # Redirect /admin/ to the desired page
+        return redirect(url_for('page.index_view'))
 
 
 admin = flask_admin.Admin(
     app,
-    name="junesroom",
+    name=app.config["SITE_NAME"],
     template_mode="bootstrap4",
     base_template="admin_base.html",
-    index_view=AdminHomeView(),
+    index_view=DashboardView(),
 )
 
 admin.add_view(PageModelView(Page, db.session))

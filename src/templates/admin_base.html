@@ -1,4 +1,11 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin_master.html' %}
+
+{% block menu_links %}
+  {{ super() }}
+  <li>
+    <a href="{{ url_for('dashboard') }}">Back to main site</a>
+  </li>
+{% endblock %}
 
 {% block head_css %}
   {{ super() }}
