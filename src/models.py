@@ -258,10 +258,10 @@ class DashboardView(AdminIndexView):
         # This view won't appear in the menu structure
         return False
 
-    @expose('/')
+    @expose("/")
     def index(self):
         # Redirect /admin/ to the desired page
-        return redirect(url_for('page.index_view'))
+        return redirect(url_for("page.index_view"))
 
 
 admin = flask_admin.Admin(
