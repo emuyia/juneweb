@@ -206,6 +206,9 @@ class PageModelView(AdminModelView):
         args["load_quill"] = False
         return args
 
+    def on_model_change(self, form, model, is_created):
+        model.content = form.content.data
+
 
 class TrackInlineModelView(InlineFormAdmin):
     form_columns = ("id", "track_number", "name", "duration")

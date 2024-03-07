@@ -21,4 +21,5 @@
 
 textarea.monospace {
   font-family: monospace;
+  font-size: 0.7em !important;
 }
