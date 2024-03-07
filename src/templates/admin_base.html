@@ -21,84 +21,9 @@
 {% block tail_js %}
   {{ super() }}
 
-  <script>
-    window.onload = function () {
-      var textareas = document.getElementsByClassName("resize-by-scroll");
-      Array.from(textareas).forEach(function (textarea) {
-        textarea.style.height = textarea.scrollHeight + 100 + "px";
-      });
-    };
-  </script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 
   {% if load_quill %}
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var contentField = document.querySelector('textarea[name="content"]');
-        if (contentField) {
-          var quillContainer = document.createElement("div");
-          quillContainer.innerHTML = contentField.value;
-          contentField.parentNode.insertBefore(quillContainer, contentField);
-          contentField.style.display = "none";
-
-          var sourceButton = document.createElement("button");
-          sourceButton.innerHTML = "Source";
-          sourceButton.type = "button";
-          sourceButton.classList.add("ql-source");
-          sourceButton.style.marginLeft = "5px";
-          sourceButton.style.cssFloat = "right"; // Align the button to the right
-
-          var quill = new Quill(quillContainer, {
-            theme: "snow",
-            modules: {
-              toolbar: [
-                ["bold", "italic", "underline", "strike"],
-                ["blockquote", "code-block"],
-                [{ header: 1 }, { header: 2 }],
-                [{ list: "ordered" }, { list: "bullet" }],
-                [{ script: "sub" }, { script: "super" }],
-                [{ indent: "-1" }, { indent: "+1" }],
-                [{ direction: "rtl" }],
-                [{ size: ["small", false, "large", "huge"] }],
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                [{ color: [] }, { background: [] }],
-                [{ font: [] }],
-                [{ align: [] }],
-                ["clean"],
-              ],
-            },
-          });
-
-          quill.container.parentNode.insertBefore(
-            sourceButton,
-            quill.container.nextSibling,
-          );
-
-          sourceButton.addEventListener("click", function () {
-            if (sourceButton.classList.contains("active")) {
-              quill.setContents(quill.clipboard.convert(contentField.value));
-              contentField.style.display = "none";
-              quillContainer.style.display = "block";
-              sourceButton.classList.remove("active");
-            } else {
-              contentField.value = quill.root.innerHTML;
-              quillContainer.style.display = "none";
-              contentField.style.display = "block";
-              sourceButton.classList.add("active");
-              // Move the source text box above the Source button
-              sourceButton.parentNode.insertBefore(contentField, sourceButton);
-            }
-          });
-
-          // Update the textarea value on form submission
-          var form = contentField.closest("form");
-          form.addEventListener("submit", function () {
-            if (sourceButton.classList.contains("active")) {
-              contentField.value = quill.root.innerHTML;
-            }
-          });
-        }
-      });
-    </script>
+    <script src="{{ url_for('static', filename='js/quill_editor.js') }}"></script>
   {% endif %}
 {% endblock %}

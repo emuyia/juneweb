@@ -163,6 +163,9 @@ class CustomAnonymousUser(AnonymousUserMixin):
         return False
 
 
+#####
+
+
 class AdminModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.has_role("Admin")
@@ -174,10 +177,9 @@ class AdminModelView(ModelView):
 
 class MonospaceTextAreaWidget(TextArea):
     def __call__(self, field, **kwargs):
-        if kwargs.get("class"):
-            kwargs["class"] += " resize-by-scroll monospace"
-        else:
-            kwargs.setdefault("class", "monospace")
+        kwargs["class"] = (
+            kwargs.get("class", "") + " resize-by-scroll monospace"
+        ).strip()
         return super(MonospaceTextAreaWidget, self).__call__(field, **kwargs)
 
 
@@ -185,25 +187,9 @@ class MonospaceTextAreaField(TextAreaField):
     widget = MonospaceTextAreaWidget()
 
 
-class CKTextAreaWidget(TextArea):
-    def __call__(self, field, **kwargs):
-        if kwargs.get("class"):
-            kwargs["class"] += " ckeditor"
-        else:
-            kwargs.setdefault("class", "ckeditor")
-        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
-
-
-class CKTextAreaField(TextAreaField):
-    widget = CKTextAreaWidget()
-
-
 class QuillTextAreaWidget(TextArea):
     def __call__(self, field, **kwargs):
-        if kwargs.get("class"):
-            kwargs["class"] += " quill-editor"
-        else:
-            kwargs.setdefault("class", "quill-editor")
+        kwargs["class"] = (kwargs.get("class", "") + " quill-editor").strip()
         return super(QuillTextAreaWidget, self).__call__(field, **kwargs)
 
 
@@ -225,48 +211,33 @@ class TrackInlineModelView(InlineFormAdmin):
     form_columns = ("id", "track_number", "name", "duration")
 
 
-class PostModelView(AdminModelView):
+class QuillAdminModelView(AdminModelView):
     form_overrides = {"content": QuillTextAreaField}
+
+    def render(self, template, **kwargs):
+        kwargs["load_quill"] = True
+        return super().render(template, **kwargs)
+
+    def edit_form(self, obj=None):
+        form = super().edit_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def create_form(self, obj=None):
+        form = super().create_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def on_model_change(self, form, model, is_created):
+        model.content = form["content"].data
+
+
+class PostModelView(QuillAdminModelView):
     inline_models = (Comment,)
 
-    def render(self, template, **kwargs):
-        kwargs["load_quill"] = True
-        return super().render(template, **kwargs)
 
-    def edit_form(self, obj=None):
-        form = super().edit_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def create_form(self, obj=None):
-        form = super().create_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def on_model_change(self, form, model, is_created):
-        model.content = form["content"].data
-
-
-class AlbumModelView(AdminModelView):
+class AlbumModelView(QuillAdminModelView):
     inline_models = (TrackInlineModelView(Track),)
-    form_overrides = {"content": QuillTextAreaField}
-
-    def render(self, template, **kwargs):
-        kwargs["load_quill"] = True
-        return super().render(template, **kwargs)
-
-    def edit_form(self, obj=None):
-        form = super().edit_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def create_form(self, obj=None):
-        form = super().create_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def on_model_change(self, form, model, is_created):
-        model.content = form["content"].data
 
 
 class AdminHomeView(AdminIndexView):
