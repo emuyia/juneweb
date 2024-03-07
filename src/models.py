@@ -175,7 +175,7 @@ class AdminModelView(ModelView):
 class MonospaceTextAreaWidget(TextArea):
     def __call__(self, field, **kwargs):
         if kwargs.get("class"):
-            kwargs["class"] += " monospace"
+            kwargs["class"] += " resize-by-scroll monospace"
         else:
             kwargs.setdefault("class", "monospace")
         return super(MonospaceTextAreaWidget, self).__call__(field, **kwargs)
@@ -213,11 +213,25 @@ class QuillTextAreaField(TextAreaField):
 
 class PageModelView(AdminModelView):
     form_columns = ("title", "content", "related_tags", "hidden")
-    form_overrides = {
-        # 'content': MonospaceTextAreaField
-        # "content": CKTextAreaField
-        "content": QuillTextAreaField
-    }
+    form_overrides = {"content": MonospaceTextAreaField}
+
+    def render_args(self):
+        args = super().render_args()
+        args["load_quill"] = False
+        return args
+
+
+class TrackInlineModelView(InlineFormAdmin):
+    form_columns = ("id", "track_number", "name", "duration")
+
+
+class PostModelView(AdminModelView):
+    form_overrides = {"content": QuillTextAreaField}
+    inline_models = (Comment,)
+
+    def render(self, template, **kwargs):
+        kwargs["load_quill"] = True
+        return super().render(template, **kwargs)
 
     def edit_form(self, obj=None):
         form = super().edit_form(obj)
@@ -233,18 +247,26 @@ class PageModelView(AdminModelView):
         model.content = form["content"].data
 
 
-class TrackInlineModelView(InlineFormAdmin):
-    form_columns = ("id", "track_number", "name", "duration")
-
-
-class PostModelView(AdminModelView):
-    form_overrides = {"content": QuillTextAreaField}
-    inline_models = (Comment,)
-
-
 class AlbumModelView(AdminModelView):
     inline_models = (TrackInlineModelView(Track),)
     form_overrides = {"content": QuillTextAreaField}
+
+    def render(self, template, **kwargs):
+        kwargs["load_quill"] = True
+        return super().render(template, **kwargs)
+
+    def edit_form(self, obj=None):
+        form = super().edit_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def create_form(self, obj=None):
+        form = super().create_form(obj)
+        form.content = TextAreaField("Content")
+        return form
+
+    def on_model_change(self, form, model, is_created):
+        model.content = form["content"].data
 
 
 class AdminHomeView(AdminIndexView):
