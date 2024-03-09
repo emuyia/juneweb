@@ -1,8 +1,10 @@
+
+// ==============
+// Back button
 window.onbeforeunload = function () {
   sessionStorage.setItem("lastPage", window.location.href);
 };
 
-// Back button
 function goBack() {
   let lastPage = sessionStorage.getItem("lastPage");
   if (lastPage) {
@@ -12,6 +14,9 @@ function goBack() {
   }
 }
 
+
+// ==============
+// Mobile & desktop view
 var dropdownItems = document.querySelectorAll(".nav-item.dropdown");
 
 function updateNavBehavior() {
@@ -49,6 +54,9 @@ function mouseOutEvent() {
 window.addEventListener("resize", updateNavBehavior);
 updateNavBehavior();
 
+
+// ==============
+// Resize textarea by scroll height
 document.addEventListener("DOMContentLoaded", function () {
   var textareas = document.getElementsByClassName("resize-by-scroll");
   Array.from(textareas).forEach(function(textarea) {
