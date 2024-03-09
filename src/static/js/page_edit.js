@@ -1,79 +1,192 @@
 document.addEventListener("DOMContentLoaded", function () {
+  var contentField = document.querySelector('textarea[name="content"]');
+  if (contentField) {
+    if (!contentField.classList.contains("quill-editor")) {
+      var previewContainer = document.createElement("iframe");
+      previewContainer.style.width = "100%";
+      previewContainer.style.height = "350px";
+      previewContainer.style.border = "1px solid #ccc";
+      contentField.parentNode.insertBefore(previewContainer, contentField);
 
-      var contentField = document.querySelector('textarea[name="content"]');
-      if (contentField) {
-      if (!contentField.classList.contains("quill-editor")) {
-        var previewContainer = document.createElement("iframe");
-        previewContainer.style.width = "100%";
-        previewContainer.style.height = "350px";
-        previewContainer.style.border = "1px solid #ccc";
-        contentField.parentNode.insertBefore(previewContainer, contentField);
+      var aceContainer = document.createElement("div");
+      aceContainer.style.height = "400px";
+      contentField.parentNode.insertBefore(aceContainer, contentField);
+      contentField.style.display = "none";
 
+      var editor = ace.edit(aceContainer);
+      editor.setOptions({
+        maxLines: Infinity,
+      });
+      editor.setValue(contentField.value);
 
-            var aceContainer = document.createElement("div");
-            aceContainer.style.height = "400px";
-            contentField.parentNode.insertBefore(aceContainer, contentField);
-            contentField.style.display = "none";
+      editor.renderer.on("afterRender", function () {
+        editor.session.setMode("ace/mode/html");
+        editor.setTheme("ace/theme/monokai");
+      });
 
-            var editor = ace.edit(aceContainer);
-            editor.setOptions({
-              maxLines: Infinity,
-            });
-            editor.setValue(contentField.value);
+      // Create a formatting button
+      var formatButton = document.createElement("button");
+      formatButton.textContent = "Clean";
+      formatButton.type = "button";
+      formatButton.classList.add("btn");
+      formatButton.classList.add("btn-secondary");
+      formatButton.style.marginTop = "10px";
+      formatButton.style.display = "block";
 
-            editor.renderer.on("afterRender", function () {
-              editor.session.setMode("ace/mode/html");
-              editor.setTheme("ace/theme/monokai");
-            });
+      // Add event listener to the formatting button
+      formatButton.addEventListener("click", async function () {
+        try {
+          const formattedCode = await prettier.format(editor.getValue(), {
+            parser: "html",
+            plugins: [prettierPlugins.html],
+          });
 
-            // Create a formatting button
-            var formatButton = document.createElement("button");
-            formatButton.textContent = "Clean";
-            formatButton.type = "button";
-            formatButton.style.marginTop = "10px";
-            // formatButton.style.cssFloat = "right";
-            aceContainer.parentNode.insertBefore(formatButton, aceContainer.nextSibling);
+          editor.setValue(formattedCode);
+        } catch (error) {
+          console.error("Error formatting code:", error);
+        }
+      });
 
-            // Add event listener to the formatting button
-            formatButton.addEventListener("click", async function () {
-              try {
-                const formattedCode = await prettier.format(editor.getValue(), {
-                  parser: 'html',
-                  plugins: [prettierPlugins.html],
-                });
+      // Create a new container for the scratchpad
+      var scratchpadContainer = document.createElement("div");
+      scratchpadContainer.style.marginTop = "20px";
+      aceContainer.parentNode.insertBefore(
+        scratchpadContainer,
+        aceContainer.nextSibling,
+      );
+      scratchpadContainer.style.display = "none";
 
-                editor.setValue(formattedCode);
-              } catch (error) {
-                console.error("Error formatting code:", error);
-              }
-            });
+      // Insert formatting button before scratchpad
+      aceContainer.parentNode.insertBefore(formatButton, scratchpadContainer);
 
-            // Debounce function to delay the preview update
-            function debounce(func, delay) {
-              var timeoutId;
-              return function () {
-                var context = this;
-                var args = arguments;
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(function () {
-                  func.apply(context, args);
-                }, delay);
-              };
-            }
+      // Create a container for the Quill editor
+      var quillContainer = document.createElement("div");
+      quillContainer.style.height = "200px";
+      scratchpadContainer.appendChild(quillContainer);
 
-            // Fetch the root URL and update the preview container
-            fetch("/")
-              .then(function (response) {
-                return response.text();
-              })
-              .then(function (rootHtml) {
-                var parser = new DOMParser();
-                var rootDoc = parser.parseFromString(rootHtml, "text/html");
-                var headContent = rootDoc.head.innerHTML;
+      // Initialize Quill editor
+      var quill = new Quill(quillContainer, {
+        theme: "snow",
+        modules: {
+          toolbar: {
+            container: [
+              ["bold", "italic", "underline", "strike"],
+              ["blockquote", "code-block"],
+              [{ header: 1 }, { header: 2 }],
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ script: "sub" }, { script: "super" }],
+              [{ indent: "-1" }, { indent: "+1" }],
+              [{ direction: "rtl" }],
+              [{ size: ["small", false, "large", "huge"] }],
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              [{ color: [] }, { background: [] }],
+              [{ font: [] }],
+              [{ align: [] }],
+              ["clean"],
+              ["link", "image"],
+            ],
+            handlers: {
+              image: function () {
+                var range = this.quill.getSelection();
+                var value = prompt("Enter the image URL:");
+                if (value) {
+                  this.quill.insertEmbed(
+                    range.index,
+                    "image",
+                    value,
+                    Quill.sources.USER,
+                  );
+                }
+              },
+            },
+          },
+          imageResize: {
+            displaySize: true,
+          },
+        },
+      });
 
-                // Update the preview container with a debounce delay
-                var updatePreview = debounce(function () {
-                  var previewContent = `
+      // Register the ImageResize module
+      Quill.register("modules/imageResize", ImageResize);
+
+      // Create a copy button
+      var copyButton = document.createElement("button");
+      copyButton.textContent = "Copy Source";
+      copyButton.type = "button";
+      copyButton.classList.add("btn");
+      copyButton.classList.add("btn-secondary");
+      copyButton.style.marginLeft = "5px";
+      copyButton.style.cssFloat = "right";
+      copyButton.style.display = "block";
+      quillContainer.parentNode.insertBefore(
+        copyButton,
+        quillContainer.nextSibling,
+      );
+
+      // Copy button click event handler
+      copyButton.addEventListener("click", function () {
+        var contentToCopy = quill.root.innerHTML;
+        navigator.clipboard
+          .writeText(contentToCopy)
+          .then(function () {
+            console.log("Content copied to clipboard");
+          })
+          .catch(function (error) {
+            console.error("Failed to copy content:", error);
+          });
+      });
+
+      // Create a button to toggle the scratchpad visibility
+      var toggleScratchpadButton = document.createElement("button");
+      toggleScratchpadButton.textContent = "Show Scratchpad";
+      toggleScratchpadButton.type = "button";
+      toggleScratchpadButton.classList.add("btn");
+      toggleScratchpadButton.classList.add("btn-secondary");
+      toggleScratchpadButton.style.marginTop = "10px";
+      toggleScratchpadButton.style.marginBottom = "10px";
+      toggleScratchpadButton.style.display = "block";
+      aceContainer.parentNode.insertBefore(
+        toggleScratchpadButton,
+        scratchpadContainer,
+      );
+
+      // Toggle the scratchpad visibility when the button is clicked
+      toggleScratchpadButton.addEventListener("click", function () {
+        if (scratchpadContainer.style.display === "none") {
+          scratchpadContainer.style.display = "block";
+          toggleScratchpadButton.textContent = "Hide Scratchpad";
+        } else {
+          scratchpadContainer.style.display = "none";
+          toggleScratchpadButton.textContent = "Show Scratchpad";
+        }
+      });
+
+      // Debounce function to delay the preview update
+      function debounce(func, delay) {
+        var timeoutId;
+        return function () {
+          var context = this;
+          var args = arguments;
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(function () {
+            func.apply(context, args);
+          }, delay);
+        };
+      }
+
+      // Fetch the root URL and update the preview container
+      fetch("/")
+        .then(function (response) {
+          return response.text();
+        })
+        .then(function (rootHtml) {
+          var parser = new DOMParser();
+          var rootDoc = parser.parseFromString(rootHtml, "text/html");
+          var headContent = rootDoc.head.innerHTML;
+
+          // Update the preview container with a debounce delay
+          var updatePreview = debounce(function () {
+            var previewContent = `
                     <html>
                       <head>
                         ${headContent}
@@ -84,23 +197,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     </html>
                   `;
 
-                  // Save the current scroll position
-                  var scrollX = previewContainer.contentWindow.scrollX;
-                  var scrollY = previewContainer.contentWindow.scrollY;
+            // Save the current scroll position
+            var scrollX = previewContainer.contentWindow.scrollX;
+            var scrollY = previewContainer.contentWindow.scrollY;
 
-                  previewContainer.srcdoc = previewContent;
+            previewContainer.srcdoc = previewContent;
 
-                  // Restore the scroll position after the update
-                  previewContainer.onload = function () {
-                    previewContainer.contentWindow.scrollTo(scrollX, scrollY);
-                  };
-                }, 300); // Adjust the delay (in milliseconds) as needed
+            // Restore the scroll position after the update
+            previewContainer.onload = function () {
+              previewContainer.contentWindow.scrollTo(scrollX, scrollY);
+            };
+          }, 300); // Adjust the delay (in milliseconds) as needed
 
-                // Update the preview container whenever the editor content changes
-                editor.session.on("change", updatePreview);
+          // Update the preview container whenever the editor content changes
+          editor.session.on("change", updatePreview);
 
-                // Initial update of the preview container
-                var initialPreviewContent = `
+          // Initial update of the preview container
+          var initialPreviewContent = `
                   <html>
                     <head>
                       ${headContent}
@@ -110,14 +223,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     </body>
                   </html>
                 `;
-                previewContainer.srcdoc = initialPreviewContent;
-              });
+          previewContainer.srcdoc = initialPreviewContent;
+        });
 
-
-            var form = contentField.closest("form");
-            form.addEventListener("submit", function () {
-              contentField.value = editor.getValue();
-            });
-      }
+      var form = contentField.closest("form");
+      form.addEventListener("submit", function () {
+        contentField.value = editor.getValue();
+      });
+    }
   }
 });

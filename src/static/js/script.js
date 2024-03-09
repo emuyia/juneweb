@@ -1,4 +1,3 @@
-
 // ==============
 // Back button
 window.onbeforeunload = function () {
@@ -13,7 +12,6 @@ function goBack() {
     window.location.href = "home.html";
   }
 }
-
 
 // ==============
 // Mobile & desktop view
@@ -54,12 +52,11 @@ function mouseOutEvent() {
 window.addEventListener("resize", updateNavBehavior);
 updateNavBehavior();
 
-
 // ==============
 // Resize textarea by scroll height
 document.addEventListener("DOMContentLoaded", function () {
   var textareas = document.getElementsByClassName("resize-by-scroll");
-  Array.from(textareas).forEach(function(textarea) {
+  Array.from(textareas).forEach(function (textarea) {
     textarea.style.height = textarea.scrollHeight + "px";
   });
 });

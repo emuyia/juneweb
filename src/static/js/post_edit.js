@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sourceButton.innerHTML = "Source";
     sourceButton.type = "button";
     sourceButton.classList.add("ql-source");
+    sourceButton.classList.add("btn");
+    sourceButton.classList.add("btn-secondary");
     sourceButton.style.marginLeft = "5px";
     sourceButton.style.cssFloat = "right";
 
@@ -33,22 +35,27 @@ document.addEventListener("DOMContentLoaded", function () {
             [{ font: [] }],
             [{ align: [] }],
             ["clean"],
-            ["link", "image"]
+            ["link", "image"],
           ],
           handlers: {
-            image: function() {
+            image: function () {
               var range = this.quill.getSelection();
               var value = prompt("Enter the image URL:");
               if (value) {
-                this.quill.insertEmbed(range.index, "image", value, Quill.sources.USER);
+                this.quill.insertEmbed(
+                  range.index,
+                  "image",
+                  value,
+                  Quill.sources.USER,
+                );
               }
-            }
-          }
+            },
+          },
         },
         imageResize: {
-          displaySize: true
-        }
-      }
+          displaySize: true,
+        },
+      },
     });
 
     // Register the ImageResize module
@@ -56,7 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var aceContainer = document.createElement("div");
     aceContainer.style.display = "none";
-    quill.container.parentNode.insertBefore(aceContainer, quill.container.nextSibling);
+    quill.container.parentNode.insertBefore(
+      aceContainer,
+      quill.container.nextSibling,
+    );
 
     var editor = ace.edit(aceContainer);
     editor.setOptions({
