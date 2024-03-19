@@ -74,8 +74,13 @@
                     <a
                       href="{{ url_for('page', title=page.title) }}"
                       class="nav-link upper m-0 ps-2 pe-2 {% if request.path == url_for('page', title=page.title) %}active-page{% endif %}"
-                      >{{ page.title.replace('-', ' ') }}</a
                     >
+                      {% if '/' in page.title %}
+                        {{ page.title.split('/')[-1].replace('-', ' ') }}
+                      {% else %}
+                        {{ page.title.replace('-', ' ') }}
+                      {% endif %}
+                    </a>
                   </div>
                   {% if not loop.last %}
                     <span class="mx-2">/</span>
