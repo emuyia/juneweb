@@ -9,20 +9,27 @@ document.addEventListener("DOMContentLoaded", function () {
       contentField.parentNode.insertBefore(previewContainer, contentField);
 
       var aceContainer = document.createElement("div");
-      aceContainer.style.height = "400px";
       contentField.parentNode.insertBefore(aceContainer, contentField);
-      contentField.style.display = "none";
 
       var editor = ace.edit(aceContainer);
       editor.setOptions({
         maxLines: Infinity,
       });
-      editor.setValue(contentField.value);
 
       editor.renderer.on("afterRender", function () {
         editor.session.setMode("ace/mode/html");
         editor.setTheme("ace/theme/monokai");
       });
+
+      editor.setValue(contentField.value);
+
+      editor.session.on('change', function() {
+        contentField.value = editor.getValue();
+      });
+
+      contentField.style.display = "none";
+      editor.container.style.height = "400px";
+      editor.container.style.width = "100%";
 
       // Create a formatting button
       var formatButton = document.createElement("button");
