@@ -1,6 +1,6 @@
 from src import app
 from src.routes import wd_wdb, auth
-from src.models import Album, Post, Tag, Page, User, Audio
+from src.models import Album, Post, Tag, Page, User, MusicArchiveAudio
 from flask import (
     render_template,
     render_template_string,
@@ -10,6 +10,8 @@ from flask import (
     request,
 )
 from sqlalchemy import desc
+from urllib.parse import urljoin
+import requests
 
 
 @app.context_processor
@@ -48,7 +50,7 @@ def page(title):
     )
     tags_list = ",".join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).all()
-    audios = Audio.query.order_by(Audio.date.desc(), Audio.name).all()
+    audios = MusicArchiveAudio.query.order_by(MusicArchiveAudio.date.desc(), MusicArchiveAudio.name).all()
     content = render_template_string(
         page.content,
         posts=posts,
@@ -162,3 +164,14 @@ app.jinja_env.filters["emotize"] = replace_emotes
 @app.route("/emotes.json")
 def emotes_json():
     return jsonify(EMOTE_MAP)
+
+
+def exists(url):
+    try:
+        response = requests.head(url)
+        return response.status_code == 200
+    except requests.exceptions.RequestException:
+        return False
+
+
+app.jinja_env.tests['exists'] = exists

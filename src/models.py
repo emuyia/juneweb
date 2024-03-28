@@ -128,11 +128,11 @@ class Track(db.Model):
         return "({}) {}".format(self.id, self.name[:50])
 
 
-class Audio(db.Model):
+class MusicArchiveAudio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    date = db.Column(db.DateTime, nullable=True)
     url = db.Column(db.String(200), nullable=True)
+    date = db.Column(db.DateTime, nullable=True)
 
 
 class Role(db.Model):
@@ -286,4 +286,4 @@ admin.add_view(AdminModelView(Comment, db.session))
 admin.add_view(AlbumModelView(Album, db.session))
 admin.add_view(AdminModelView(Track, db.session))
 admin.add_view(AdminModelView(User, db.session))
-admin.add_view(AdminModelView(Audio, db.session))
+admin.add_view(AdminModelView(MusicArchiveAudio, db.session))

@@ -49,4 +49,6 @@ app.config["MAILERSEND_API_KEY"] = os.environ.get(
     "MAILERSEND_API_KEY", "default_mailersend_api_key"
 )
 
+app.config["MUSIC_ARCHIVE_CDN"] = os.environ.get("MUSIC_ARCHIVE_CDN", "default")
+
 from src import routes, models
