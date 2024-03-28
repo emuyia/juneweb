@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       editor.setValue(contentField.value);
 
-      editor.session.on('change', function() {
+      editor.session.on("change", function () {
         contentField.value = editor.getValue();
       });
 
