@@ -1,6 +1,6 @@
 from src import app
 from src.routes import wd_wdb, auth
-from src.models import Album, Post, Tag, Page, User
+from src.models import Album, Post, Tag, Page, User, Audio
 from flask import (
     render_template,
     render_template_string,
@@ -48,6 +48,7 @@ def page(title):
     )
     tags_list = ",".join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).all()
+    audios = Audio.query.order_by(Audio.date.desc(), Audio.name).all()
     content = render_template_string(
         page.content,
         posts=posts,
@@ -56,6 +57,7 @@ def page(title):
         langtable_item=wd_langtable_item,
         langtable_file=wd_langtable_file,
         documents=wd_documents,
+        audios=audios,
     )
     return render_template(
         "page.html",
@@ -67,6 +69,7 @@ def page(title):
         langtable_item=wd_langtable_item,
         langtable_file=wd_langtable_file,
         documents=wd_documents,
+        audios=audios,
     )
 
 
