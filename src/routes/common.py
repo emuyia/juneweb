@@ -50,7 +50,9 @@ def page(title):
     )
     tags_list = ",".join(tag.name for tag in page.related_tags)
     albums = Album.query.order_by(desc(Album.release_date)).all()
-    audios = MusicArchiveAudio.query.order_by(MusicArchiveAudio.date.desc(), MusicArchiveAudio.name).all()
+    audios = MusicArchiveAudio.query.order_by(
+        MusicArchiveAudio.date.desc(), MusicArchiveAudio.name
+    ).all()
     content = render_template_string(
         page.content,
         posts=posts,
@@ -174,4 +176,4 @@ def exists(url):
         return False
 
 
-app.jinja_env.tests['exists'] = exists
+app.jinja_env.tests["exists"] = exists
