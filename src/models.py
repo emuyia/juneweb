@@ -34,6 +34,7 @@ album_tracks = db.Table(
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
+    redirect_url = db.Column(db.String(300), nullable=True)
     content = db.Column(db.Text, nullable=False)
     related_tags = db.relationship(
         "Tag", secondary=page_tags, backref=db.backref("pages", lazy="dynamic")
@@ -205,7 +206,7 @@ class QuillTextAreaField(TextAreaField):
 
 
 class PageModelView(AdminModelView):
-    form_columns = ("title", "content", "related_tags", "hidden")
+    form_columns = ("title", "redirect_url", "content", "related_tags", "hidden")
     form_overrides = {"content": MonospaceTextAreaField}
 
     def render_args(self):

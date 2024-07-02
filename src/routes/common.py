@@ -42,6 +42,10 @@ def page(title):
     if title == "white-day/documents":
         wd_documents = wd_wdb.get_documents()
 
+    redirect_url = page.redirect_url
+    if redirect_url is not None:
+        return redirect(redirect_url, code=302)
+
     posts = (
         Post.query.join(Post.tags)
         .filter(Tag.id.in_([tag.id for tag in page.related_tags]))
