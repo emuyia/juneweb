@@ -3,6 +3,7 @@
 @font-face {
   font-family: "CustomFont";
   src: url("/static/fonts/PerfectDOSVGA437.ttf") format("truetype");
+  /*src: url('https://fonts.googleapis.com/css?family=Inter');*/
   font-weight: normal;
   font-style: normal;
 }
@@ -376,6 +377,7 @@ footer {
 
 .card-body {
   max-height: var(--card-body-height);
+  overflow: hidden;
 }
 
 .card-footer {
