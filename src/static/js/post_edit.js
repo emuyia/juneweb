@@ -6,17 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     contentField.parentNode.insertBefore(quillContainer, contentField);
     contentField.style.display = "none";
 
-    var sourceButton = document.createElement("button");
-    sourceButton.innerHTML = "Source";
-    sourceButton.type = "button";
-    sourceButton.classList.add("ql-source");
-    sourceButton.classList.add("btn");
-    sourceButton.classList.add("btn-secondary");
-    sourceButton.style.marginLeft = "5px";
-    sourceButton.style.cssFloat = "right";
-
-    quillContainer.parentNode.insertBefore(sourceButton, quillContainer);
-
     var quill = new Quill(quillContainer, {
       theme: "snow",
       modules: {
@@ -58,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
 
-    // Register the ImageResize module
     Quill.register("modules/imageResize", ImageResize);
 
     var aceContainer = document.createElement("div");
@@ -77,34 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
     editor.renderer.on("afterRender", function () {
       editor.session.setMode("ace/mode/html");
       editor.setTheme("ace/theme/monokai");
-    });
-
-    async function formatCode() {
-      try {
-        const formattedCode = await prettier.format(editor.getValue(), {
-          parser: "html",
-          plugins: [prettierPlugins.html],
-        });
-
-        editor.setValue(formattedCode);
-      } catch (error) {
-        console.error("Error formatting code:", error);
-      }
-    }
-
-    sourceButton.addEventListener("click", function () {
-      if (sourceButton.classList.contains("active")) {
-        quill.setContents(quill.clipboard.convert(editor.getValue()));
-        editor.container.style.display = "none";
-        quill.container.style.display = "block";
-        sourceButton.classList.remove("active");
-      } else {
-        editor.setValue(quill.root.innerHTML);
-        quill.container.style.display = "none";
-        editor.container.style.display = "block";
-        sourceButton.classList.add("active");
-        formatCode(); // Automatically format the code when switching to the Ace editor
-      }
     });
 
     quill.on("text-change", function () {
