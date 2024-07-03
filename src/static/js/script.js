@@ -60,3 +60,18 @@ document.addEventListener("DOMContentLoaded", function () {
     textarea.style.height = textarea.scrollHeight + "px";
   });
 });
+
+// ==============
+// Toggle dark/light theme
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', newTheme);
+    localStorage.setItem('theme', newTheme);  // Save the new theme to localStorage
+}
+
+// Load the saved theme from localStorage when the page loads
+window.addEventListener('DOMContentLoaded', (event) => {
+    const savedTheme = localStorage.getItem('theme') || 'dark';  // Default to 'dark' if no theme is saved
+    document.documentElement.setAttribute('data-bs-theme', savedTheme);
+});

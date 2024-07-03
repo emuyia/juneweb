@@ -14,7 +14,35 @@
 }
 
 /* Variables */
-:root {
+:root[data-bs-theme="light"] {
+  /* bg & panel colours */
+  --bg-color: #ffffff;
+  --panel-color: #f8f9fa;
+  --panel-color-a: #e9ecef;
+  --panel-color-b: #dee2e6;
+
+  /* panel detail colours */
+  --border-color: #ced4da;
+  --border-color-sub: #adb5bd;
+  --nav-color-hover: #d6d8db;
+
+  /* txt colours */
+  --text-color: #212529;
+  --text-muted-color: #6c757d;
+  --link-color: #007bff;
+  --link-color-hover: #0056b3;
+  --subscribe-hover: #ffc107;
+  --unsubscribe-hover: #dc3545;
+  --donate-hover: #28a745;
+  --contact-hover: #17a2b8;
+  --danger-hover: red;
+  --debug-text-title: magenta;
+  --debug-text-selected: blue;
+
+  --panel-color: #e9ecef;
+}
+
+:root[data-bs-theme="dark"] {
   /* bg & panel colours */
   --bg-color: #080808;
   --panel-color: #181818;
@@ -25,16 +53,6 @@
   --border-color: #868686;
   --border-color-sub: #666666;
   --nav-color-hover: #383838;
-
-  /* container shapes & sizes */
-  --border-radius: 0px;
-  --border-radius-main: 0px;
-  --border-radius-item: 0px;
-  --border-size-main: 0px;
-  --border-size-a: 0px;
-  --border-size-b: 0px;
-  --miniature-height: 150px;
-  --card-body-height: 200px;
 
   /* txt colours */
   --text-color: #cecece;
@@ -48,6 +66,20 @@
   --danger-hover: red;
   --debug-text-title: magenta;
   --debug-text-selected: blue;
+
+  --panel-color: #181818;
+}
+
+:root {
+   /* container shapes & sizes */
+  --border-radius: 0px;
+  --border-radius-main: 0px;
+  --border-radius-item: 0px;
+  --border-size-main: 0px;
+  --border-size-a: 0px;
+  --border-size-b: 0px;
+  --miniature-height: 150px;
+  --card-body-height: 200px;
 
   /* txt & icon sizes */
   --font-size-sub: 13px;
