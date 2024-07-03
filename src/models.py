@@ -24,12 +24,6 @@ page_tags = db.Table(
     db.Column("tag_id", db.Integer, db.ForeignKey("tag.id")),
 )
 
-album_tracks = db.Table(
-    "album_tracks",
-    db.Column("album_id", db.Integer, db.ForeignKey("album.id")),
-    db.Column("track_id", db.Integer, db.ForeignKey("track.id")),
-)
-
 
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -98,42 +92,6 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "({}) {}".format(self.id, self.content[:50])
-
-
-class Album(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=False)
-    artist = db.Column(db.String(80), nullable=False)
-    release_date = db.Column(DateTime, nullable=False)
-    cover_image = db.Column(db.String(120), nullable=True)
-    tracks = relationship(
-        "Track",
-        cascade="all,delete",
-        secondary=album_tracks,
-        backref=db.backref("albums", cascade="all,delete"),
-    )
-    embed = db.Column(db.Text)
-    content = db.Column(db.Text)
-
-    def __repr__(self):
-        return "({}) {} - {}".format(self.id, self.artist[:50], self.title[:50])
-
-
-class Track(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    duration = db.Column(db.String(50))
-    track_number = db.Column(db.Integer)
-
-    def __repr__(self):
-        return "({}) {}".format(self.id, self.name[:50])
-
-
-class MusicArchiveAudio(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    url = db.Column(db.String(200), nullable=True)
-    date = db.Column(db.DateTime, nullable=True)
 
 
 class Role(db.Model):
@@ -218,10 +176,6 @@ class PageModelView(AdminModelView):
         model.content = form.content.data
 
 
-class TrackInlineModelView(InlineFormAdmin):
-    form_columns = ("id", "track_number", "name", "duration")
-
-
 class QuillAdminModelView(AdminModelView):
     form_overrides = {"content": QuillTextAreaField}
 
@@ -252,15 +206,6 @@ class PostModelView(QuillAdminModelView):
         return args
 
 
-class AlbumModelView(QuillAdminModelView):
-    inline_models = (TrackInlineModelView(Track),)
-
-    def render_args(self):
-        args = super().render_args()
-        args["load_quill"] = True
-        return args
-
-
 class DashboardView(AdminIndexView):
     def is_visible(self):
         # This view won't appear in the menu structure
@@ -284,7 +229,4 @@ admin.add_view(PageModelView(Page, db.session))
 admin.add_view(PostModelView(Post, db.session))
 admin.add_view(AdminModelView(Tag, db.session))
 admin.add_view(AdminModelView(Comment, db.session))
-admin.add_view(AlbumModelView(Album, db.session))
-admin.add_view(AdminModelView(Track, db.session))
 admin.add_view(AdminModelView(User, db.session))
-admin.add_view(AdminModelView(MusicArchiveAudio, db.session))

@@ -1,7 +1,6 @@
 from src import app, db
 from src.models import Post, Comment, User, Tag
 from flask import render_template, request, flash, url_for, Response, abort, redirect
-import requests
 from feedgen.feed import FeedGenerator
 import pytz
 from flask_login import login_required, current_user

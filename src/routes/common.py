@@ -1,6 +1,6 @@
 from src import app
 from src.routes import wd_wdb, auth
-from src.models import Album, Post, Tag, Page, User, MusicArchiveAudio
+from src.models import Post, Tag, Page, User
 from flask import (
     render_template,
     render_template_string,
@@ -9,8 +9,6 @@ from flask import (
     jsonify,
     request,
 )
-from sqlalchemy import desc
-from urllib.parse import urljoin
 import requests
 
 
@@ -53,43 +51,24 @@ def page(title):
         .all()
     )
     tags_list = ",".join(tag.name for tag in page.related_tags)
-    albums = Album.query.order_by(desc(Album.release_date)).all()
-    audios = MusicArchiveAudio.query.order_by(
-        MusicArchiveAudio.date.desc(), MusicArchiveAudio.name
-    ).all()
+
     content = render_template_string(
         page.content,
         posts=posts,
         tags_list=tags_list,
-        albums=albums,
         langtable_item=wd_langtable_item,
         langtable_file=wd_langtable_file,
         documents=wd_documents,
-        audios=audios,
     )
     return render_template(
         "page.html",
         page=page,
         posts=posts,
         tags_list=tags_list,
-        albums=albums,
         content=content,
         langtable_item=wd_langtable_item,
         langtable_file=wd_langtable_file,
         documents=wd_documents,
-        audios=audios,
-    )
-
-
-@app.route("/music/album/<int:album_id>")
-def view_album(album_id):
-    album = Album.query.get(album_id)
-    formatted_release_date = album.release_date.strftime("%d-%m-%Y")
-    album.tracks.sort(
-        key=lambda track: track.track_number
-    )  # Sort tracks by track_number
-    return render_template(
-        "view_album.html", album=album, release_date=formatted_release_date
     )
 
 
