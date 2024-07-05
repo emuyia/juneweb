@@ -45,6 +45,10 @@ def blog():
     )
 
 
+# TODO: add way to create posts from site
+# TODO: add way to edit posts from site
+# TODO: add way to delete posts from site
+
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
     post = Post.query.get(post_id)

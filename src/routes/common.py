@@ -135,6 +135,8 @@ EMOTE_MAP = {
 }
 
 
+# TODO: align emotes with text better
+
 def replace_emotes(text):
     for code, filename in EMOTE_MAP.items():
         text = text.replace(

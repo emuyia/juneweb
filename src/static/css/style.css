@@ -13,6 +13,8 @@
   src: url('https://fonts.googleapis.com/css?family=Inter');
 }
 
+/* TODO: fix search button styling for light mode
+
 /* Variables */
 :root[data-bs-theme="light"] {
   /* bg & panel colours */
