@@ -65,15 +65,15 @@
           >
         </div>
 
-        <div class="p-0 mt-2">
+        <div class="container p-0 mt-2">
           {% if pages %}
             <div class="d-flex justify-content-center">
-              <div class="d-inline-flex align-items-center">
+              <div class="d-inline-flex flex-wrap align-items-center justify-content-center">
                 {% for page in pages %}
                   <div class="me-3 ms-3">
                     <a
                       href="{{ url_for('page', url=page.url) }}"
-                      class="nav-link upper m-0 ps-2 pe-2 {% if request.path == url_for('page', url=page.url) %}active-page{% endif %}"
+                      class="nav-link upper ms-0 me-0 mt-2 mb-0 pt-0 pb-0 ps-2 pe-2 {% if request.path == url_for('page', url=page.url) %}active-page{% endif %}"
                     >
                       {% if '/' in page.title %}
                         {{ page.title.split('/')[-1].replace('-', ' ') }}
@@ -83,14 +83,13 @@
                     </a>
                   </div>
                   {% if not loop.last %}
-                    <span class="mx-2">/</span>
+                    <span class="mx-2"></span>
                   {% endif %}
                 {% endfor %}
               </div>
             </div>
           {% endif %}
         </div>
-        <!--<hr />-->
 
         <div class="p-3 mt-5 panel-main">{% block content %}{% endblock %}</div>
       </main>
