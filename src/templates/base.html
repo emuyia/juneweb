@@ -59,7 +59,7 @@
 
         <div class="brand">
           <a
-            class="{{ 'active' if request.path == url_for('blog') else '' }}"
+            class="{{ 'active' if request.path == url_for('blog') else '' }} brand"
             href="{{ url_for('blog') }}"
             >{{ site_name }}</a
           >

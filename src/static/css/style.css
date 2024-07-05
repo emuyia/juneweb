@@ -29,8 +29,8 @@
   /* txt colours */
   --text-color: #212529;
   --text-muted-color: #6c757d;
-  --link-color: #007bff;
-  --link-color-hover: #0056b3;
+  --link-color: #a62123;
+  --link-color-hover: #f08385;
   --subscribe-hover: #ffc107;
   --unsubscribe-hover: #dc3545;
   --donate-hover: #28a745;
@@ -57,8 +57,8 @@
   /* txt colours */
   --text-color: #cecece;
   --text-muted-color: #909090;
-  --link-color: #eeeee0;
-  --link-color-hover: #bdbeab;
+  --link-color: #a65355;
+  --link-color-hover: #672728;
   --subscribe-hover: #ff8000;
   --unsubscribe-hover: #ff3838;
   --donate-hover: #50da3b;
@@ -102,6 +102,11 @@
 .brand {
   text-align: center !important;
   font-size: var(--font-size-title);
+  color: var(--text-color) !important;
+}
+
+.brand:hover {
+  color: var(--link-color) !important;
 }
 
 .card-title {
