@@ -72,8 +72,8 @@
                 {% for page in pages %}
                   <div class="me-3 ms-3">
                     <a
-                      href="{{ url_for('page', title=page.title) }}"
-                      class="nav-link upper m-0 ps-2 pe-2 {% if request.path == url_for('page', title=page.title) %}active-page{% endif %}"
+                      href="{{ url_for('page', url=page.url) }}"
+                      class="nav-link upper m-0 ps-2 pe-2 {% if request.path == url_for('page', url=page.url) %}active-page{% endif %}"
                     >
                       {% if '/' in page.title %}
                         {{ page.title.split('/')[-1].replace('-', ' ') }}
@@ -105,7 +105,7 @@
           <div>
             <a
               class="text-muted contact"
-              href="{{ url_for('page', title='about') }}"
+              href="{{ url_for('page', url='about') }}"
               target="_self"
               >About</a
             >

@@ -25,19 +25,20 @@ def context_processor():
     )
 
 
-@app.route("/<path:title>")
-def page(title):
-    page = Page.query.filter_by(title=title).first_or_404()
+@app.route("/<path:url>")
+def page(url):
+    page = Page.query.filter_by(url=url).first_or_404()
     wd_langtable_item = None
     wd_langtable_file = wd_wdb.langtable_file
     wd_documents = None
 
     # Check for unique page features
-    if title == "white-day/langtable-search":
+    url = page.url
+    if url == "white-day/langtable-search":
         search_id = request.args.get("search_id")
         if search_id:
             wd_langtable_item = wd_wdb.process_langtable_search(search_id)
-    if title == "white-day/documents":
+    if url == "white-day/documents":
         wd_documents = wd_wdb.get_documents()
 
     redirect_url = page.redirect_url

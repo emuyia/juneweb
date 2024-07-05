@@ -3,7 +3,6 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.model.form import InlineFormAdmin
 import flask_admin
 from flask_admin import AdminIndexView, expose
 from flask import url_for, request, flash, redirect
@@ -28,6 +27,7 @@ page_tags = db.Table(
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
+    url = db.Column(db.String(100), nullable=True)
     redirect_url = db.Column(db.String(300), nullable=True)
     content = db.Column(db.Text, nullable=False)
     related_tags = db.relationship(
@@ -164,7 +164,7 @@ class QuillTextAreaField(TextAreaField):
 
 
 class PageModelView(AdminModelView):
-    form_columns = ("title", "redirect_url", "content", "related_tags", "hidden")
+    form_columns = ("title", "url", "redirect_url", "content", "related_tags", "hidden")
     form_overrides = {"content": MonospaceTextAreaField}
 
     def render_args(self):
