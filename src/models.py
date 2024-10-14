@@ -52,7 +52,7 @@ class Post(db.Model):
     author = db.relationship("User")
     tags = relationship("Tag", secondary=post_tags, backref=db.backref("posts"))
     comments = db.relationship(
-        "Comment", backref="post", lazy=True, cascade="all, delete-orphan"
+        "Comment", backref="post", lazy=True, cascade="all, delete-orphan", order_by="Comment.date_posted.asc()"
     )
     comments_enabled = db.Column(db.Boolean, nullable=False, default=True)
 
