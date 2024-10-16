@@ -29,3 +29,4 @@ click~=8.1.7
 mailersend==0.5.7
 email_validator==2.2.0
 markdown==3.7
+html2text==2024.2.26
