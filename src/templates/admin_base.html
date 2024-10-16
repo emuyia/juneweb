@@ -33,6 +33,7 @@
 
 {% if load_editormd %}
     <script src="{{ url_for('static', filename='editor.md/editormd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='editor.md/languages/en.js') }}"></script>
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", function () {
         var contentMdElement = document.getElementById('content_md');

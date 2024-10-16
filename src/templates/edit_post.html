@@ -24,9 +24,19 @@
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
+{% if current_user.is_authenticated and (current_user.id == post.author_id or current_user.has_role('Admin')) %}
+  <div class="admin-btn-container">
+    <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST" style="display:inline;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-danger btn-sm danger">Delete</button>
+    </form>
+  </div>
+{% endif %}
+
 <!-- Include Editor.md CSS and JS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='editor.md/css/editormd.min.css') }}" />
 <script src="{{ url_for('static', filename='editor.md/editormd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='editor.md/languages/en.js') }}"></script>
 
 <script type="text/javascript">
     var editor = editormd("editor", {
