@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>My Posts</h2>
+
+<h3>Drafts</h3>
+{% if drafts %}
+<ul>
+    {% for post in drafts %}
+    <li>
+        <a href="{{ url_for('edit_post', post_id=post.id) }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have no drafts.</p>
+{% endif %}
+
+<h3>Published Posts</h3>
+{% if published %}
+<ul>
+    {% for post in published %}
+    <li>
+        <a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have no published posts.</p>
+{% endif %}
+{% endblock %}

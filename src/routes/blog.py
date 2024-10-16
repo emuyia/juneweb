@@ -4,15 +4,20 @@ from flask import render_template, request, flash, url_for, Response, abort, red
 from feedgen.feed import FeedGenerator
 import pytz
 from flask_login import login_required, current_user
-from datetime import datetime as dt
+from datetime import datetime, timezone
 from whoosh.index import create_in
-from whoosh.fields import *
+from whoosh.fields import Schema, ID, TEXT, DATETIME, KEYWORD, re
 from whoosh.qparser import MultifieldParser, OrGroup
 from sqlalchemy import event, func
 from apscheduler.schedulers.background import BackgroundScheduler
 from bleach import clean, linkify
 from bs4 import BeautifulSoup
 import os
+from flask_wtf.csrf import CSRFProtect
+from markdown import markdown
+
+
+csrf = CSRFProtect(app)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -20,14 +25,14 @@ def blog():
     selected_tags = request.args.get("tags")
     page = request.args.get("page", 1, type=int)
     posts_per_page = 12  # Number of posts per page.
-    posts = Post.query
+    posts = Post.query.filter_by(status='published')
 
     if selected_tags:
         selected_tags = selected_tags.split(",")
         subquery = (
             db.session.query(Post.id)
             .join(Post.tags)
-            .filter(Tag.name.in_(selected_tags))
+            .filter(Tag.name.in_(selected_tags), Post.status == 'published')
             .group_by(Post.id)
             .having(func.count(Tag.id) == len(selected_tags))
             .subquery()
@@ -45,13 +50,109 @@ def blog():
     )
 
 
-# TODO: add way to create posts from site
-# TODO: add way to edit posts from site
-# TODO: add way to delete posts from site
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def create_post():
+    if request.method == 'POST':
+        title = request.form['title']
+        content_md = request.form['content']  # Retrieve the Markdown content from the form
+        status = request.form.get('status', 'draft')
+
+        # Convert Markdown to HTML using `markdown` library
+        content_html = markdown(content_md, extensions=['fenced_code', 'codehilite'])
+
+        # Sanitize the HTML content
+        cleaned_content = clean(
+            content_html,
+            tags=['p', 'strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'a',
+                  'h1', 'h2', 'h3', 'img', 'hr', 'br', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+            attributes={
+                'a': ['href', 'title', 'target'],
+                'img': ['src', 'alt', 'title', 'width', 'height'],
+                'code': ['class'],
+            },
+            strip=True
+        )
+
+        new_post = Post(
+            title=title,
+            content_md=content_md,  # Store the original Markdown content
+            content=cleaned_content,  # Store the sanitized HTML content
+            status=status,
+            author_id=current_user.id,
+            date_posted=datetime.now(timezone.utc)
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        flash('Post saved successfully.', 'success')
+        return redirect(url_for('view_post', post_id=new_post.id))
+
+    return render_template('create_post.html')
+
+
+@app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if post.author_id != current_user.id and not current_user.has_role('Admin'):
+        flash('You do not have permission to edit this post.', 'danger')
+        return redirect(url_for('view_post', post_id=post.id))
+
+    if request.method == 'POST':
+        post.title = request.form['title']
+        content_md = request.form['content']
+        status = request.form.get('status', 'draft')
+
+        # Convert Markdown to HTML
+        content_html = markdown(content_md, extensions=['fenced_code', 'codehilite'])
+
+        # Sanitize the HTML content
+        cleaned_content = clean(
+            content_html,
+            tags=['p', 'strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'a',
+                  'h1', 'h2', 'h3', 'img', 'hr', 'br', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+            attributes={
+                'a': ['href', 'title', 'target'],
+                'img': ['src', 'alt', 'title', 'width', 'height'],
+                'code': ['class'],
+            },
+            strip=True
+        )
+
+        # Update the post with new content
+        post.content_md = content_md  # Update the Markdown content
+        post.content = cleaned_content  # Update the sanitized HTML content
+        post.status = status
+        db.session.commit()
+        flash('Post updated successfully.', 'success')
+        return redirect(url_for('view_post', post_id=post.id))
+
+    return render_template('edit_post.html', post=post)
+
+
+@app.route('/post/<int:post_id>/delete', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if post.author_id != current_user.id and not current_user.has_role('Admin'):
+        flash('You do not have permission to delete this post.', 'danger')
+        return redirect(url_for('view_post', post_id=post.id))
+
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post deleted successfully.', 'success')
+    return redirect(url_for('blog'))
+
 
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
-    post = Post.query.get(post_id)
+    post = Post.query.get_or_404(post_id)
+    if post.status != 'published':
+        if not current_user.is_authenticated or (post.author_id != current_user.id and not current_user.has_role('Admin')):
+            flash('You do not have permission to view this post.', 'danger')
+            return redirect(url_for('blog'))
     if post.date_updated is None:
         post.date_updated = post.date_posted
     for comment in post.comments:
@@ -105,7 +206,7 @@ def submit_comment():
         content=content,
         post_id=post_id,
         author_id=current_user.id,
-        date_posted=dt.now(),
+        date_posted=datetime.now(timezone.utc),
     )
 
     db.session.add(new_comment)
@@ -165,7 +266,7 @@ index = create_in(index_dir, schema)
 def index_posts():
     with app.app_context():
         writer = index.writer()
-        for post in Post.query.all():
+        for post in Post.query.filter_by(status='published').all():
             writer.add_document(
                 id=str(post.id),
                 title=post.title,
@@ -177,15 +278,16 @@ def index_posts():
 
 
 def add_to_index(mapper, connection, post):
-    writer = index.writer()
-    writer.add_document(
-        id=str(post.id),
-        title=post.title,
-        content=post.content,
-        date_posted=post.date_posted,
-        tags=post.get_tags(),
-    )
-    writer.commit()
+    if post.status == 'published':
+        writer = index.writer()
+        writer.add_document(
+            id=str(post.id),
+            title=post.title,
+            content=post.content,
+            date_posted=post.date_posted,
+            tags=post.get_tags(),
+        )
+        writer.commit()
 
 
 def remove_from_index(mapper, connection, post):
@@ -196,7 +298,8 @@ def remove_from_index(mapper, connection, post):
 
 def update_index(mapper, connection, post):
     remove_from_index(mapper, connection, post)
-    add_to_index(mapper, connection, post)
+    if post.status == 'published':
+        add_to_index(mapper, connection, post)
 
 
 event.listen(Post, "after_insert", add_to_index)
@@ -252,3 +355,11 @@ def feed():
 
     response = fg.rss_str(pretty=True)
     return Response(response, mimetype="application/rss+xml")
+
+
+@app.route('/my_posts')
+@login_required
+def my_posts():
+    drafts = Post.query.filter_by(author_id=current_user.id, status='draft').all()
+    published = Post.query.filter_by(author_id=current_user.id, status='published').all()
+    return render_template('my_posts.html', drafts=drafts, published=published)

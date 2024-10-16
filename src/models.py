@@ -9,6 +9,7 @@ from flask import url_for, request, flash, redirect
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
 from flask_login import UserMixin, current_user, AnonymousUserMixin
+from datetime import datetime, timezone
 
 # association tables
 post_tags = db.Table(
@@ -39,13 +40,21 @@ class Page(db.Model):
         return "({}) {}".format(self.id, self.title[:50])
 
 
+def current_time_utc():
+    return datetime.now(timezone.utc)
+
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
+    content_md = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date_created = db.Column(DateTime)
-    date_posted = db.Column(DateTime, nullable=False)
-    date_updated = db.Column(DateTime)
+    status = db.Column(db.String(20), nullable=False, default='draft')
+
+    date_created = db.Column(DateTime(timezone=True), default=current_time_utc)
+    date_posted = db.Column(DateTime(timezone=True), nullable=False, default=current_time_utc)
+    date_updated = db.Column(DateTime(timezone=True), onupdate=current_time_utc)
+
     author_id = db.Column(
         db.Integer, db.ForeignKey("user.id", name="fk_author_id"), nullable=False
     )
@@ -197,7 +206,8 @@ class QuillAdminModelView(AdminModelView):
         model.content = form["content"].data
 
 
-class PostModelView(QuillAdminModelView):
+#class PostModelView(QuillAdminModelView):
+class PostModelView(AdminModelView):
     inline_models = (Comment,)
 
     def render_args(self):

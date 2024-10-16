@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Post</h2>
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" name="title" id="title" value="{{ post.title }}" required />
+    </div>
+    <div class="mb-3">
+        <label for="editor">Content</label>
+        <div id="editor">
+            <textarea style="display:none;" name="content">{{ post.content_md }}</textarea>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="status">Status</label>
+        <select class="form-control" name="status" id="status">
+            <option value="draft" {% if post.status == 'draft' %}selected{% endif %}>Draft</option>
+            <option value="published" {% if post.status == 'published' %}selected{% endif %}>Published</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<!-- Include Editor.md CSS and JS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='editor.md/css/editormd.min.css') }}" />
+<script src="{{ url_for('static', filename='editor.md/editormd.min.js') }}"></script>
+
+<script type="text/javascript">
+    var editor = editormd("editor", {
+        width: "100%",
+        height: 600,
+        theme : "dark",
+        previewTheme : "dark",
+        editorTheme : 'pastel-on-dark',
+        path : "{{ url_for('static', filename='editor.md/lib/') }}",
+        markdown : {{ post.content_md|tojson|safe }},  // Load the Markdown content
+        saveHTMLToTextarea: true,
+    });
+</script>
+{% endblock %}

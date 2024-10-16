@@ -7,6 +7,7 @@
       method="POST"
       action="{{ url_for('submit_edited_comment', comment_id=comment.id) }}"
     >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <input type="hidden" name="post_id" value="{{ comment.post.id }}" />
       <textarea
         id="content-box"

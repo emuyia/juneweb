@@ -4,10 +4,13 @@ from flask_migrate import Migrate
 from flask_session import Session
 import os
 from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 load_dotenv()
 
 app = Flask(__name__)
+
+csrf = CSRFProtect(app)
 
 app.config["SITE_NAME"] = os.environ.get("SITE_NAME", "website")
 app.config["SITE_DESC"] = os.environ.get("SITE_DESC", "description")

@@ -87,6 +87,7 @@
     <div class="panel-a p-3 rounded mt-3">
       <p class="post-title mt-0" style="font-size:1.6em;">edit user</p>
       <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label for="nickname">Nickname:</label>
         <input
           type="text"
