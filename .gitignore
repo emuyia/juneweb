@@ -25,3 +25,4 @@ dist/
 ._*
 whoosh_index/
 /node_modules/
+/src/static/editor.md/*
