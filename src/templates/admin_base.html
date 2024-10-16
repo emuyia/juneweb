@@ -10,14 +10,13 @@
 {% block head_css %}
   {{ super() }}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+  {% if load_editormd %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='editor.md/css/editormd.min.css') }}">
+  {% endif %}
 
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.css"
-    rel="stylesheet"
-  />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/quill-image-resize@3.0.0/image-resize.min.js"></script>
+  {% if load_ace %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+  {% endif %}
 
   <link
     rel="stylesheet"
@@ -32,8 +31,30 @@
 {% block tail_js %}
   {{ super() }}
 
-  {% if load_quill %}
-    <script src="{{ url_for('static', filename='js/post_edit.js') }}"></script>
+{% if load_editormd %}
+    <script src="{{ url_for('static', filename='editor.md/editormd.min.js') }}"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        var contentMdElement = document.getElementById('content_md');
+        if (contentMdElement) {
+          var editorDiv = document.createElement('div');
+          editorDiv.id = 'editor';
+          contentMdElement.parentNode.insertBefore(editorDiv, contentMdElement);
+          editorDiv.appendChild(contentMdElement);
+
+          var editor = editormd("editor", {
+            width: "100%",
+            height: 640,
+            path: "{{ url_for('static', filename='editor.md/lib/') }}",
+            markdown: contentMdElement.value,
+            saveHTMLToTextarea: true,
+            theme: "dark",
+            previewTheme: "dark",
+            editorTheme: 'pastel-on-dark',
+          });
+        }
+      });
+    </script>
   {% endif %}
 
   <script src="{{ url_for('static', filename='js/page_edit.js') }}"></script>

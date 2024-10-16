@@ -162,58 +162,38 @@ class MonospaceTextAreaField(TextAreaField):
     widget = MonospaceTextAreaWidget()
 
 
-class QuillTextAreaWidget(TextArea):
-    def __call__(self, field, **kwargs):
-        kwargs["class"] = (kwargs.get("class", "") + " quill-editor").strip()
-        return super(QuillTextAreaWidget, self).__call__(field, **kwargs)
-
-
-class QuillTextAreaField(TextAreaField):
-    widget = QuillTextAreaWidget()
-
-
 class PageModelView(AdminModelView):
     form_columns = ("title", "url", "redirect_url", "content", "related_tags", "hidden")
     form_overrides = {"content": MonospaceTextAreaField}
 
-    def render_args(self):
-        args = super().render_args()
-        args["load_quill"] = False
-        return args
+    def render(self, template, **kwargs):
+        kwargs['load_ace'] = True
+        return super().render(template, **kwargs)
 
     def on_model_change(self, form, model, is_created):
         model.content = form.content.data
 
 
-class QuillAdminModelView(AdminModelView):
-    form_overrides = {"content": QuillTextAreaField}
-
-    def render(self, template, **kwargs):
-        kwargs["load_quill"] = True
-        return super().render(template, **kwargs)
-
-    def edit_form(self, obj=None):
-        form = super().edit_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def create_form(self, obj=None):
-        form = super().create_form(obj)
-        form.content = TextAreaField("Content")
-        return form
-
-    def on_model_change(self, form, model, is_created):
-        model.content = form["content"].data
+class EditorMDTextAreaWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        # Add classes for the widget
+        kwargs.setdefault('class_', 'form-control')
+        kwargs.setdefault('id', 'content_md')  # Ensure the ID matches
+        return super().__call__(field, **kwargs)
 
 
-#class PostModelView(QuillAdminModelView):
+class EditorMDTextAreaField(TextAreaField):
+    widget = EditorMDTextAreaWidget()
+
+
 class PostModelView(AdminModelView):
     inline_models = (Comment,)
+    form_overrides = {'content_md': EditorMDTextAreaField}
+    form_columns = ('title', 'content_md', 'status', 'tags', 'comments_enabled')
 
-    def render_args(self):
-        args = super().render_args()
-        args["load_quill"] = True
-        return args
+    def render(self, template, **kwargs):
+        kwargs['load_editormd'] = True  # Flag to load Editor.md
+        return super().render(template, **kwargs)
 
 
 class DashboardView(AdminIndexView):
