@@ -53,6 +53,10 @@ def blog():
 @app.route('/post/new', methods=['GET', 'POST'])
 @login_required
 def create_post():
+    if not current_user.has_role('Admin'):
+        flash('You do not have permission to create posts.', 'danger')
+        return redirect(url_for('blog'))
+
     if request.method == 'POST':
         title = request.form['title']
         content_md = request.form['content']  # Retrieve the Markdown content from the form
