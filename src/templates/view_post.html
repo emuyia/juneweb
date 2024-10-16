@@ -6,9 +6,9 @@
   <div class="pt-2">
     <div class="panel-a p-4 rounded">
       <p class="post-title mt-0">{{ post.title }}</p>
-      <p class="post-content">
-          {{ post.content|emotize|safe }}
-      </p>
+      <div class="post-content">
+        {{ post.content|emotize|safe }}
+      </div>
     </div>
 
     <div class="info d-flex justify-content-between p-3">

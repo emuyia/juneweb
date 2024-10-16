@@ -211,6 +211,10 @@ ul {
   padding: 0;
 }
 
+.post-content p {
+  margin-bottom: 1em;
+}
+
 a,
 .author {
   color: var(--link-color);
