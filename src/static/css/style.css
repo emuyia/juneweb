@@ -334,11 +334,37 @@ footer {
 
 .emote {
     cursor: pointer;
+    vertical-align: -3px;
+   image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -o-crisp-edges;   /* Older Opera */
+    image-rendering: -webkit-optimize-contrast; /* Safari */
+    -ms-interpolation-mode: nearest-neighbor; /* IE */
 }
 
 #emote-legend-container {
     display: flex;
     justify-content: flex-end;
+}
+
+#emote-panel {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    width: 700px;
+}
+
+#emote-panel .emote {
+    vertical-align: middle;
+    width: 28px;
+    height: 28px;
+    margin: 0px;
+    cursor: pointer;
 }
 
 .user-details-table {

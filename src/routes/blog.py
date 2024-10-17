@@ -1,5 +1,6 @@
 from src import app, db
 from src.models import Post, Comment, User, Tag
+from src.routes.common import EMOTE_MAP
 from flask import render_template, request, flash, url_for, Response, abort, redirect
 from feedgen.feed import FeedGenerator
 import pytz
@@ -91,7 +92,7 @@ def create_post():
         flash('Post saved successfully.', 'success')
         return redirect(url_for('view_post', post_id=new_post.id))
 
-    return render_template('create_post.html')
+    return render_template('create_post.html', emote_map=EMOTE_MAP)
 
 
 @app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
@@ -132,7 +133,7 @@ def edit_post(post_id):
         flash('Post updated successfully.', 'success')
         return redirect(url_for('view_post', post_id=post.id))
 
-    return render_template('edit_post.html', post=post)
+    return render_template('edit_post.html', post=post, emote_map=EMOTE_MAP)
 
 
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
@@ -161,7 +162,7 @@ def view_post(post_id):
         post.date_updated = post.date_posted
     for comment in post.comments:
         comment.content = process_comment(comment.content)
-    return render_template("view_post.html", post=post)
+    return render_template("view_post.html", post=post, emote_map=EMOTE_MAP)
 
 
 def process_comment(comment_text):
@@ -237,7 +238,7 @@ def edit_comment(comment_id):
     if comment.author.id != current_user.id:
         flash("You cannot edit someone else's comment.")
         return redirect(url_for("view_post", post_id=comment.post.id))
-    return render_template("edit_comment.html", comment=comment)
+    return render_template("edit_comment.html", comment=comment, emote_map=EMOTE_MAP)
 
 
 @app.route("/comment/edit/<int:comment_id>", methods=["POST"])

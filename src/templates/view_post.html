@@ -177,6 +177,7 @@
           </div>
         {% endfor %}
 
+        <!-- Comment form -->
         <div class="pt-3">
           <form
             method="POST"
@@ -185,30 +186,65 @@
           >
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="post_id" value="{{ post.id }}" />
+
             <textarea
               id="content-box"
               name="content"
               class="form-control mb-2 resize-by-scroll"
               placeholder="Write a comment..."
             ></textarea>
+
             <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <button
-                type="button"
-                id="toggle-emote-legend"
-                class="btn btn-secondary"
-              >
-                Emotes
-              </button>
+              <div class="d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+              <div class="d-flex justify-content-end" id="emote-panel"></div>
             </div>
           </form>
-        </div>
-        <div id="emote-legend-container">
-          <div id="emote-legend" class="p-2"></div>
         </div>
       </div>
     {% endif %}
   </div>
+
+  <!-- Emote Panel JavaScript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Load emotes into the emote panel
+      var emotePanel = document.getElementById('emote-panel');
+
+      var emotes = {{ emote_map|tojson }};
+      for (var code in emotes) {
+        var img = document.createElement('img');
+        img.src = '{{ url_for("static", filename="emotes/") }}' + emotes[code];
+        img.alt = code;
+        img.title = code;
+        img.classList.add('emote');
+        img.addEventListener('click', function () {
+          // Insert emote code into textarea at cursor position
+          var emoteCode = this.title;
+          var textarea = document.getElementById('content-box');
+          insertAtCursor(textarea, emoteCode);
+        });
+        emotePanel.appendChild(img);
+      }
+
+      // Function to insert text at the cursor position in a textarea
+      function insertAtCursor(textarea, text) {
+        var scrollPos = textarea.scrollTop;
+        var caretPos = textarea.selectionStart;
+
+        var front = textarea.value.substring(0, caretPos);
+        var back = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
+        textarea.value = front + text + back;
+        caretPos = caretPos + text.length;
+        textarea.selectionStart = caretPos;
+        textarea.selectionEnd = caretPos;
+        textarea.focus();
+        textarea.scrollTop = scrollPos;
+      }
+    });
+  </script>
+
   <script>
     document.querySelectorAll(".add-username").forEach(function (link) {
       link.addEventListener("click", function () {

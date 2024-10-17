@@ -2,18 +2,23 @@
 
 {% block content %}
 <h2>Edit Post</h2>
+
 <form method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <div class="mb-3">
         <label for="title">Title</label>
         <input type="text" class="form-control" name="title" id="title" value="{{ post.title }}" required />
     </div>
+
     <div class="mb-3">
         <label for="editor">Content</label>
+        <div id="emote-panel"></div>
         <div id="editor">
             <textarea style="display:none;" name="content">{{ post.content_md }}</textarea>
         </div>
     </div>
+
     <div class="mb-3">
         <label for="status">Status</label>
         <select class="form-control" name="status" id="status">
@@ -21,6 +26,7 @@
             <option value="published" {% if post.status == 'published' %}selected{% endif %}>Published</option>
         </select>
     </div>
+
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
@@ -39,15 +45,37 @@
 <script src="{{ url_for('static', filename='editor.md/languages/en.js') }}"></script>
 
 <script type="text/javascript">
-    var editor = editormd("editor", {
-        width: "100%",
-        height: 600,
-        theme : "dark",
-        previewTheme : "dark",
-        editorTheme : 'pastel-on-dark',
-        path : "{{ url_for('static', filename='editor.md/lib/') }}",
-        markdown : {{ post.content_md|tojson|safe }},  // Load the Markdown content
-        saveHTMLToTextarea: true,
+    var editor;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        editor = editormd("editor", {
+            width: "100%",
+            height: 600,
+            theme : "dark",
+            previewTheme : "dark",
+            editorTheme : 'pastel-on-dark',
+            path : "{{ url_for('static', filename='editor.md/lib/') }}",
+            markdown : {{ post.content_md|tojson|safe }},  // Load the Markdown content
+            saveHTMLToTextarea: true,
+        });
+
+        // Load emotes into the emote panel
+        var emotePanel = document.getElementById('emote-panel');
+
+        var emotes = {{ emote_map|tojson }};
+        for (var code in emotes) {
+            var img = document.createElement('img');
+            img.src = '{{ url_for("static", filename="emotes/") }}' + emotes[code];
+            img.alt = code;
+            img.title = code;
+            img.classList.add('emote');
+            img.addEventListener('click', function() {
+                // Insert emote code into Editor.md at the cursor position
+                var emoteCode = this.title;
+                editor.insertValue(emoteCode);
+            });
+            emotePanel.appendChild(img);
+        }
     });
 </script>
 {% endblock %}
